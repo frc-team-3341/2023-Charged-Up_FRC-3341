@@ -46,12 +46,12 @@ double area = ta.getDouble(0.0);
     //We have to add these ports so that we can connect to 
     //the limelight with our code through the robt's wifi
     //PortForwarder.add(5800, "http://10.33.41.11:5801/", 5800);
-    PortForwarder.add(5801, "http://limelight-drswish.local:5801", 5801);
-    PortForwarder.add(5802, "http://limelight-drswish.local:5801", 5802);
-    PortForwarder.add(5803, "http://limelight-drswish.local:5801", 5803);
-    PortForwarder.add(5804, "http://limelight-drswish.local:5801", 5804);
-    PortForwarder.add(5805, "http://limelight-drswish.local:5801", 5805);
-    PortForwarder.add(5800, "http://limelight-drswish.local:5801", 5800);
+    PortForwarder.add(5801, "http://limelight-oslime.local:5801", 5801);
+    PortForwarder.add(5802, "http://limelight-oslime.local:5801", 5802);
+    PortForwarder.add(5803, "http://limelight-oslime.local:5801", 5803);
+    PortForwarder.add(5804, "http://limelight-oslime.local:5801", 5804);
+    PortForwarder.add(5805, "http://limelight-oslime.local:5801", 5805);
+    PortForwarder.add(5800, "http://limelight-oslime.local:5801", 5800);
     
   }
   
