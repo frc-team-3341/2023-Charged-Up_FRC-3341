@@ -17,4 +17,10 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
     public static final int armPort = 2;
   }
+
+  public static class PIDConstants {
+    public static final double armPID_P = 0.012;
+    public static final double armPID_I = 0.0001;
+    public static final double armPID_D = 0.0;
+  }
 }

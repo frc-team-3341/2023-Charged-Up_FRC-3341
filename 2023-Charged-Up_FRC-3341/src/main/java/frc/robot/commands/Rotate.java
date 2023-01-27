@@ -7,11 +7,11 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.*;
 
-public class PivotArm extends CommandBase {
+public class Rotate extends CommandBase {
   /** Creates a new PivotArm. */
   public Arm arm;
   public double angle;
-  public PivotArm(Arm arm, double angle) {
+  public Rotate(Arm arm, double angle) {
     this.arm = arm;
     this.angle = angle;
     addRequirements(arm);

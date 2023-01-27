@@ -4,17 +4,13 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.subsystems.*;
-import frc.robot.commands.*;
+import frc.robot.commands.Rotate;
+import frc.robot.subsystems.Arm;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -24,11 +20,8 @@ import frc.robot.commands.*;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   public final Arm arm = new Arm();
-  public final PivotArm turnToAngleTen = new PivotArm(arm, 10);
-  public final PivotArm turnToAngleThirty = new PivotArm(arm, 30);
 
   public static final Joystick leftJoystick = new Joystick(0);
 
@@ -48,11 +41,14 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    JoystickButton triggerTenDegree = new JoystickButton(leftJoystick, 1);
-    triggerTenDegree.onTrue(turnToAngleTen);
+    JoystickButton triggerStowPos = new JoystickButton(leftJoystick, 5);
+    triggerStowPos.onTrue(new Rotate(arm, 0));
 
-    JoystickButton triggerThirtyDegree = new JoystickButton(leftJoystick, 5);
-    triggerThirtyDegree.onTrue(turnToAngleThirty);
+    JoystickButton triggerMiddlePos = new JoystickButton(leftJoystick, 1);
+    triggerMiddlePos.onTrue(new Rotate(arm, 10));
+
+    JoystickButton triggerGroundPos = new JoystickButton(leftJoystick, 3);
+    triggerGroundPos.onTrue(new Rotate(arm, 30));
   }
 
   /**
