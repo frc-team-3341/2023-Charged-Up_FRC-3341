@@ -16,9 +16,12 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
@@ -28,15 +31,20 @@ public class RobotContainer {
   public static Joystick joy2;
   public Limelight lime;
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  private final CommandXboxController m_driverController = new CommandXboxController(
+      OperatorConstants.kDriverControllerPort);
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
+  
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
-    joy1 = new Joystick(Constants.joyStick1);
-    joy2 = new Joystick(Constants.joyStick2);
+    //joy1 = new Joystick(Constants.joyStick1);
+    //joy2 = new Joystick(Constants.joyStick2);
+    joy1 = new Joystick(0);
+    joy2 = new Joystick(1);
     lime = new Limelight();
   }
 
@@ -52,13 +60,11 @@ public class RobotContainer {
   private void configureBindings() {
 // new documentation only allows for true or false statements
 // here for testing purposes at the moment we use button 0 to go to button 1 using if statements
-    if(joy1.getRawButtonPressed(0)){
-      lime.changepipeline(1);
-    }
+    //JoystickButton pip1 = new JoystickButton(joy1, 4);
+    //pip1.onTrue(lime.changepipeline(0));
     
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
+    new Trigger(m_exampleSubsystem::exampleCondition).onTrue(new ExampleCommand(m_exampleSubsystem));
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
@@ -73,5 +79,12 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return Autos.exampleAuto(m_exampleSubsystem);
+  }
+  
+  public static Joystick getJoystick1 (){
+    return joy1;
+  }
+  public static Joystick getJoystick2 (){
+    return joy2;
   }
 }
