@@ -16,5 +16,16 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final int armPort = 2;
+    public static final int extPort = 5;
+  }
+
+  public static class PIDConstants {
+    public static final double armPID_P = 0.015;
+    public static final double armPID_I = 0.00005;
+    public static final double armPID_D = 0.0;
+  }
+  public static class Measurements {
+    public static final double threadLength = 0.138; //inches per rotation
+    public static final double gearRatio = 1/3; //1 rotation of screw = 3 rotations of motor
   }
 }
