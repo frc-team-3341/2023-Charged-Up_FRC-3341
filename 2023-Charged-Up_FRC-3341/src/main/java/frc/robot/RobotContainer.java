@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.Extend;
 import frc.robot.commands.Rotate;
 import frc.robot.subsystems.Arm;
 
@@ -44,11 +45,17 @@ public class RobotContainer {
     JoystickButton triggerStowPos = new JoystickButton(leftJoystick, 5);
     triggerStowPos.onTrue(new Rotate(arm, 0));
 
-    JoystickButton triggerMiddlePos = new JoystickButton(leftJoystick, 1);
+    JoystickButton triggerMiddlePos = new JoystickButton(leftJoystick, 4);
     triggerMiddlePos.onTrue(new Rotate(arm, 10));
 
-    JoystickButton triggerGroundPos = new JoystickButton(leftJoystick, 3);
-    triggerGroundPos.onTrue(new Rotate(arm, 30));
+    JoystickButton triggerOtherPos = new JoystickButton(leftJoystick, 3);
+    triggerOtherPos.onTrue(new Rotate(arm, 30));
+
+    JoystickButton triggerGroundPos = new JoystickButton(leftJoystick, 6);
+    triggerGroundPos.onTrue(new Rotate(arm, 90));
+
+    JoystickButton triggerMiddleExt = new JoystickButton(leftJoystick, 8);
+    triggerMiddleExt.onTrue(new Extend(arm, 10));
   }
 
   /**

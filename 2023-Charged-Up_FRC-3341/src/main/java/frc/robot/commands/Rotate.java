@@ -20,7 +20,9 @@ public class Rotate extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    arm.setDifferenceInAngle(arm.getAngle() - angle);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

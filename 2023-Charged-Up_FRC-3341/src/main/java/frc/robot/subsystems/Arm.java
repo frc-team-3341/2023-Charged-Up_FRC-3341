@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -23,9 +25,10 @@ import frc.robot.RobotContainer;
 public class Arm extends SubsystemBase {
 
   TalonSRX armTalon = new TalonSRX(Constants.OperatorConstants.armPort);
+  TalonSRX extendingTalon = new TalonSRX(Constants.OperatorConstants.extPort);
 
   // Creates necessary Shuffleboard tab, visible on DriverStation as well
-  private ShuffleboardTab pidTab = Shuffleboard.getTab("Flywheel PID");
+  private ShuffleboardTab pidTab = Shuffleboard.getTab("Arm PID");
   private GenericEntry armPID_P = pidTab.add("Arm PID P", Constants.PIDConstants.armPID_P).getEntry();
   private GenericEntry armPID_I = pidTab.add("Arm PID I", Constants.PIDConstants.armPID_I).getEntry();
   private GenericEntry armPID_D = pidTab.add("Arm PID D", Constants.PIDConstants.armPID_D).getEntry();
@@ -49,11 +52,17 @@ public class Arm extends SubsystemBase {
   // True = Logging, False = Not Logging (default)
   public boolean logOverride = false;
 
+  public double differenceInAngle = 10;
+
   /** Creates a new Arm. */
   public Arm() {
     // Reset encoders to either 0 or otherwise an arbitrary offset
     resetEncoders();
     armTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
+    extendingTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+
+    extendingTalon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
+   
     //armTalon.setSensorPhase(true);
     armTalon.setInverted(true);
 
@@ -65,7 +74,7 @@ public class Arm extends SubsystemBase {
     armPID.setTolerance(0.5);
 
     // Integration range, if we are using the integral term of PID
-    armPID.setIntegratorRange(-10, 10);
+    armPID.setIntegratorRange(-5, 5);
 
     // Only use the datalogger in testing!
 
@@ -86,6 +95,10 @@ public class Arm extends SubsystemBase {
     armTalon.set(ControlMode.PercentOutput, power*0.2+(Math.sin(getAngle())*(1.12/12.0)));
   }
 
+  public void moveExtend(double power) {
+    extendingTalon.set(ControlMode.PercentOutput, power);
+  }
+
   /**
   The robot starts at 0 degrees, and drops down to 90 degrees for the horizontal position.
   Since sin(90) = 1, then we can multiply it by the max holding voltage.
@@ -98,6 +111,11 @@ public class Arm extends SubsystemBase {
   // Returns the angle of the Arm
   public double getAngle() {
     double result = (armTalon.getSelectedSensorPosition(0)/4096.0)*360.0;
+    return result;
+  }
+
+  public double getLeadScrewPos() {
+    double result = (armTalon.getSelectedSensorPosition(0)/4096.0)*Constants.Measurements.gearRatio*Constants.Measurements.threadLength;
     return result;
   }
 
@@ -123,6 +141,10 @@ public class Arm extends SubsystemBase {
    */
   public void setAngle(double angle) {
     this.angle = angle;
+  }
+
+  public void setDifferenceInAngle(double diff) {
+    this.differenceInAngle = diff;
   }
 
   @Override
@@ -151,10 +173,20 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putNumber("Angle: ", getAngle());
 
     // Repeatedly set new PID constants from Driverstation
+    if(differenceInAngle >= 0) {
     armPID.setPID(
-      armPID_P.getDouble(Constants.PIDConstants.armPID_P), 
+      armPID_P.getDouble(0.5/Math.abs(differenceInAngle)), 
       armPID_I.getDouble(Constants.PIDConstants.armPID_I), 
       armPID_D.getDouble(Constants.PIDConstants.armPID_D));
+    }
+    if(differenceInAngle <= 0) {
+      armPID.setPID(
+        armPID_P.getDouble(0.60/Math.abs(differenceInAngle)), 
+        armPID_I.getDouble(Constants.PIDConstants.armPID_I), 
+        armPID_D.getDouble(Constants.PIDConstants.armPID_D));
+      }
+
+    SmartDashboard.putNumber("kP: ", 0.4/differenceInAngle);
   
   }
 }
