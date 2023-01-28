@@ -7,6 +7,8 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.LockOnTarget;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Limelight;
 import edu.wpi.first.wpilibj.Joystick;
@@ -25,9 +27,9 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private static Joystick joy1;
   private static Joystick joy2;
-  private final static DriveTrain drive = new DriveTrain();
+  private final static Drivetrain drive = new Drivetrain();
   private final static Limelight lime = new Limelight();
-  private final static LockOnTarget lock = new LockOnTarget(drive, lime);
+  private final static LockOnTarget lock = new LockOnTarget(lime, drive);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -74,7 +76,7 @@ public class RobotContainer {
   public static Joystick getJoy2(){
     return joy2;
   }
-  public static DriveTrain getDrive(){
+  public static Drivetrain getDrive(){
     return drive;
   }
   public static Limelight getLime(){
