@@ -15,8 +15,8 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 
 public class Drivetrain extends SubsystemBase {
-  private WPI_TalonSRX left = new WPI_TalonSRX(Constants.leftPort);
-  private WPI_TalonSRX right = new WPI_TalonSRX(Constants.rightPort);
+  private static WPI_TalonSRX left = new WPI_TalonSRX(Constants.leftPort);
+  private static WPI_TalonSRX right = new WPI_TalonSRX(Constants.rightPort);
   private double ticksToMeters = (127.0/10581.0)/100.0;
   /** Creates a new DriveTrain. */
   public Drivetrain() {
@@ -30,11 +30,11 @@ left.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
 right.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
 
   }
-  public static static static static static static void tankDrive(double lPower, double rPower){
+  public static void tankDrive(double lPower, double rPower){
     left.set(ControlMode.PercentOutput, lPower);
     right.set(ControlMode.PercentOutput, rPower);
   }
-  public double getPos(){
+  public double getPos(){   
     return((left.getSelectedSensorPosition()+right.getSelectedSensorPosition())/2)*ticksToMeters;
   }
   public void resetEncoders(){

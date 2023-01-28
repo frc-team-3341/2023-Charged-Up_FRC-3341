@@ -45,10 +45,6 @@ private PIDController pid;
     SmartDashboard.putNumber("TV", RobotContainer.getLime().get_tv());
     SmartDashboard.putNumber("X", RobotContainer.getLime().get_tx());
     SmartDashboard.putNumber("Y", RobotContainer.getLime().get_ty());
-
-    if(Limelight.get_tv() == 1){
-kylian m'bappe
-    }
     
   }
 
