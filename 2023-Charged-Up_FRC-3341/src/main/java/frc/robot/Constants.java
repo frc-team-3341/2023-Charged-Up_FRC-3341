@@ -20,6 +20,6 @@ public final class Constants {
   public static final int leftPort = 1;
   public static final int rightPort = 2;
 
-  public static final int joy1 = 0; //This is the ID for the left joystick
-  public static final int joy2 = 1; //This is the ID for the right joystick
+  public static int joy1;
+  public static int joy2;
 }

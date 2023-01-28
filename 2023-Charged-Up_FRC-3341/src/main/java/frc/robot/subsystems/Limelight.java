@@ -5,28 +5,29 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Limelight extends SubsystemBase {
   /** Creates a new Limelight. */
 
-  NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-oslime");
-
+  NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-drsolom");
+ 
   private double txNum;
   private double tyNum;
   private double taNum;
   private int tvNum;
   // Pipeline 0 - reflective tape
-  // Pipeline 1 to 8 - april tags
+  // Pipeline 1 to 7 - april tags
+  // Pipeline 8 - cube 
   // Pipeline 9 - cone
-  // Pipeline 10 - cube 
-  public double ReflectiveTapePipeline = 0;
+  public int pipeline = 0;
 
   // This gets the tx, or the horizontal offset
   // from the crosshair in degrees (-27.0 to 27.0)
@@ -43,25 +44,23 @@ public class Limelight extends SubsystemBase {
   // This gets the tv, which sees if the limelight
   // has a valid target (1) or no valid target (0)
   NetworkTableEntry tv = table.getEntry("tv");
-
-  double x = tx.getDouble(0.0);
-  double y = ty.getDouble(0.0);
-  double area = ta.getDouble(0.0);
-
+  
   public Limelight() {
     // We have to add these ports so that we can connect to
     // the limelight with our code through the robot's wifi
     // PortForwarder.add(5800, "http://10.33.41.11:5801/", 5800);
-    PortForwarder.add(5801, "http://limelight-oslime.local:5801", 5801);
-    PortForwarder.add(5802, "http://limelight-oslime.local:5801", 5802);
-    PortForwarder.add(5803, "http://limelight-oslime.local:5801", 5803);
-    PortForwarder.add(5804, "http://limelight-oslime.local:5801", 5804);
-    PortForwarder.add(5805, "http://limelight-oslime.local:5801", 5805);
-    PortForwarder.add(5800, "http://limelight-oslime.local:5801", 5800);
+    PortForwarder.add(5801, "http://limelight-drsolom.local:5801", 5801);
+    PortForwarder.add(5802, "http://limelight-drsolom.local:5801", 5802);
+    PortForwarder.add(5803, "http://limelight-drsolom.local:5801", 5803);
+    PortForwarder.add(5804, "http://limelight-drsolom.local:5801", 5804);
+    PortForwarder.add(5805, "http://limelight-drsolom.local:5801", 5805);
+    PortForwarder.add(5800, "http://limelight-drsolom.local:5801", 5800);
   }
-  public void changepipeline(int ReflectiveTapePipeline) {
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("getpipe").setNumber(ReflectiveTapePipeline);
+
+  public void changepipeline(int pipeline) {
+    table.getEntry("pipeline").setNumber(pipeline);
   }
+
   public double get_tx() {
     return txNum;
   }
@@ -101,18 +100,20 @@ public class Limelight extends SubsystemBase {
 
     // We will be assigning taNum to the double (0.0-100.0) that limelight returns
     taNum = ta.getDouble(0.0);
-    
     // This will output the x (horizontal offset) from the target in SmartDashboard
-    SmartDashboard.putNumber("LimelightX", x);
+    SmartDashboard.putNumber("LimelightX", txNum);
 
     // This will output the y (vertical offset) from the target in SmartDashboard
-    SmartDashboard.putNumber("LimelightY", y);
+    SmartDashboard.putNumber("LimelightY", tyNum);
 
     // This will output the area of the target in SmartDashboard
-    SmartDashboard.putNumber("LimelightArea", area);
+    SmartDashboard.putNumber("LimelightArea", taNum);
 
     // This will output the value of the target in SmartDashboard (0 or 1)
     SmartDashboard.putNumber("LimelightV", tvNum);
 
+    SmartDashboard.putNumber("PipelineNumber", pipeline);
+    //Actual pipeline number not representative 
+    SmartDashboard.putNumber("PipelineName", table.getEntry("pipeline").getDouble(0));
   }
 }
