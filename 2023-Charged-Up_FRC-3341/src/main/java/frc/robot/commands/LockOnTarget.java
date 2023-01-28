@@ -4,37 +4,32 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class LockOnTarget extends CommandBase {
-  /** Creates a new LockOnTarget. */
+  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
 
-private final Limelight lime;
-private final Drivetrain drive;
-private PIDController pid;
-
-
-  public LockOnTarget(Limelight lime, Drivetrain drive) {
-    // Use addRequirements() here to declare subsystem dependencies.
+  private final Limelight lime;
+  private final Drivetrain Drivetrain;
+  private double target;
+  private double error; 
+  
+  public LockOnTarget(Drivetrain Drivetrain, Limelight lime, double target) {
+    this.Drivetrain = Drivetrain;
     this.lime = lime;
-    this.drive = drive;
-
-
+    this.target = target;
 
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    double kP = 0.0;
-    double kI = 0.0;
-    double kD = 0.0;
-    PIDController pid = new PIDController(kP, kI, kD);
+
+    error = target - Limelight.get_tx();
 
   }
 
@@ -42,19 +37,36 @@ private PIDController pid;
   @Override
   public void execute() {
 
-    SmartDashboard.putNumber("TV", RobotContainer.getLime().get_tv());
-    SmartDashboard.putNumber("X", RobotContainer.getLime().get_tx());
-    SmartDashboard.putNumber("Y", RobotContainer.getLime().get_ty());
-    
+    error = target - Limelight.get_tx();
+    double speed = .3*error/30;
+
+      SmartDashboard.putNumber("Error", error);
+      SmartDashboard.putNumber("LimelightTVNUM", RobotContainer.getLime().get_tv());
+      RobotContainer.getLime();
+      SmartDashboard.putNumber("LimelightX", Limelight.get_tx());
+      SmartDashboard.putNumber("LimelightY", RobotContainer.getLime().get_ty());
+
+    if(Math.abs(speed) < .2){
+      speed = .2 * Math.abs(error)/error;
+    }
+    Drivetrain.tankDrive(-speed, speed);     
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+
+    // This is called when there is a target in sight, so the chassis will stop turning completely
+    Drivetrain.tankDrive(0, 0);
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    
+    // This code should run forever until there is a valid target (reflective tape or yellow ball)
+    //in sight and will continue to repeat
+    return Math.abs(error) <= 1;
+    
   }
 }

@@ -8,7 +8,6 @@ import javax.swing.plaf.TreeUI;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -30,7 +29,7 @@ left.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
 right.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
 
   }
-  public static void tankDrive(double lPower, double rPower){
+  public void tankDrive(double lPower, double rPower){
     left.set(ControlMode.PercentOutput, lPower);
     right.set(ControlMode.PercentOutput, rPower);
   }

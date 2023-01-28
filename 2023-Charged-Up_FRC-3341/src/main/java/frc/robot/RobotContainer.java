@@ -30,7 +30,7 @@ public class RobotContainer {
   //We have to initialize these objects for the SpinToTarget, ProtoTurret, and AutoTurret commands
   private final static Drivetrain drive = new Drivetrain();
   private final static Limelight lime = new Limelight();
-  private final static LockOnTarget lock = new LockOnTarget(lime, drive);
+  private final static LockOnTarget lock = new LockOnTarget(drive, lime, 0);
 
   
   private static Joystick joy1;

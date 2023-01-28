@@ -19,7 +19,7 @@ public class Limelight extends SubsystemBase {
 
   NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-drsolom");
  
-  private double txNum;
+  private static double txNum;
   private double tyNum;
   private double taNum;
   private int tvNum;
@@ -61,7 +61,7 @@ public class Limelight extends SubsystemBase {
     table.getEntry("pipeline").setNumber(pipeline);
   }
 
-  public double get_tx() {
+  public static double get_tx() {
     return txNum;
   }
 
@@ -100,6 +100,7 @@ public class Limelight extends SubsystemBase {
 
     // We will be assigning taNum to the double (0.0-100.0) that limelight returns
     taNum = ta.getDouble(0.0);
+    
     // This will output the x (horizontal offset) from the target in SmartDashboard
     SmartDashboard.putNumber("LimelightX", txNum);
 
