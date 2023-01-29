@@ -15,10 +15,23 @@ import edu.wpi.first.wpilibj.Joystick;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
   public static final int joyStick1 = 0;
   public static final int joyStick2 = 1;
+
   public static class OperatorConstants {
+    
     public static final int kDriverControllerPort = 0;
+
+    public static final int LeftDriveTalonPort = 2;
+    public static final int RightDriveTalonPort = 3;
+    public static final int LeftDriveVictorPort = 4;
+    public static final int RightDriveVictorPort = 5;
+    public static final int YAxis = 1;
+    public static final int XAxis = 0;
+    public static final int Zero = 0;
+    public static final int One = 1;
+
 
   }
 }
