@@ -94,6 +94,9 @@ public class Arm extends SubsystemBase {
   public void moveArm(double power){
     armTalon.set(ControlMode.PercentOutput, power*0.2+(Math.sin(getAngle())*(1.12/12.0)));
   }
+  public void extendArm(double power){
+     extendingTalon.set(ControlMode.PercentOutput, power*0.2+(Math.sin(getAngle())*(1.12/12.0)));
+  }
 
   public void moveExtend(double power) {
     extendingTalon.set(ControlMode.PercentOutput, power);
@@ -149,6 +152,7 @@ public class Arm extends SubsystemBase {
 
   @Override
   public void periodic() {
+    extendArm(RobotContainer.getJoy1().getY());
     if (RobotContainer.getJoy1().getRawButtonReleased(2)) {
       override = !override;
     }

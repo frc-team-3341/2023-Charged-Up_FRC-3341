@@ -16,7 +16,7 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final int armPort = 2;
-    public static final int extPort = 5;
+    public static final int extPort = 4;
   }
 
   public static class PIDConstants {
