@@ -12,21 +12,24 @@ import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Limelight extends SubsystemBase {
   /** Creates a new Limelight. */
 
   NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-drsolom");
+  private Joystick joy1 = RobotContainer.getJoystick1();
+  private Joystick joy2 = RobotContainer.getJoystick2();
  
-  private static double txNum;
+  private double txNum;
   private double tyNum;
   private double taNum;
   private int tvNum;
   // Pipeline 0 - reflective tape
-  // Pipeline 1 to 7 - april tags
-  // Pipeline 8 - cube 
-  // Pipeline 9 - cone
+  // Pipeline 1 to 8 - april tags
+  // Pipeline 9 - cone(may not use)
+  // Pipeline 10 - cube 
   public int pipeline = 0;
 
   // This gets the tx, or the horizontal offset
@@ -61,7 +64,7 @@ public class Limelight extends SubsystemBase {
     table.getEntry("pipeline").setNumber(pipeline);
   }
 
-  public static double get_tx() {
+  public double get_tx() {
     return txNum;
   }
 
@@ -80,6 +83,16 @@ public class Limelight extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+
+    if(joy1.getRawButtonPressed(3)){
+      pipeline = 1;
+      changepipeline(pipeline); 
+    } else if(joy1.getRawButtonPressed(4)){
+      pipeline = 0;
+      changepipeline(pipeline);
+    } else if ()
+    
+    for(int i = 0; 
 
     tx = table.getEntry("tx");
     ty = table.getEntry("ty");
@@ -100,7 +113,6 @@ public class Limelight extends SubsystemBase {
 
     // We will be assigning taNum to the double (0.0-100.0) that limelight returns
     taNum = ta.getDouble(0.0);
-    
     // This will output the x (horizontal offset) from the target in SmartDashboard
     SmartDashboard.putNumber("LimelightX", txNum);
 
