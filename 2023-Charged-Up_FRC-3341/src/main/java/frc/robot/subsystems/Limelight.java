@@ -19,10 +19,8 @@ public class Limelight extends SubsystemBase {
   /** Creates a new Limelight. */
 
   NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-drsolom");
-  private Joystick joy1 = RobotContainer.getJoystick1();
-  private Joystick joy2 = RobotContainer.getJoystick2();
  
-  private double txNum;
+  private static double txNum;
   private double tyNum;
   private double taNum;
   private int tvNum;
@@ -64,7 +62,7 @@ public class Limelight extends SubsystemBase {
     table.getEntry("pipeline").setNumber(pipeline);
   }
 
-  public double get_tx() {
+  public static double get_tx() {
     return txNum;
   }
 
@@ -83,16 +81,6 @@ public class Limelight extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-
-    if(joy1.getRawButtonPressed(3)){
-      pipeline = 1;
-      changepipeline(pipeline); 
-    } else if(joy1.getRawButtonPressed(4)){
-      pipeline = 0;
-      changepipeline(pipeline);
-    } else if ()
-    
-    for(int i = 0; 
 
     tx = table.getEntry("tx");
     ty = table.getEntry("ty");
@@ -113,6 +101,7 @@ public class Limelight extends SubsystemBase {
 
     // We will be assigning taNum to the double (0.0-100.0) that limelight returns
     taNum = ta.getDouble(0.0);
+    
     // This will output the x (horizontal offset) from the target in SmartDashboard
     SmartDashboard.putNumber("LimelightX", txNum);
 
