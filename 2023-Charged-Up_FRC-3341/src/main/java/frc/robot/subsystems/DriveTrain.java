@@ -13,7 +13,10 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
-
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.wpilibj.AnalogAccelerometer;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.SPI;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -32,14 +35,23 @@ public class DriveTrain extends SubsystemBase
   private final WPI_TalonSRX rightDriveTalon;
   private final VictorSPX _leftDriveVictor;
   private final VictorSPX _rightDriveVictor;
+  private final AHRS navX;
+  public boolean logOverride = false;
+  public DoubleLogEntry anglelog;
 
   
   public DriveTrain() 
   {
+    DataLogManager.start();
+    DataLog log = DataLogManager.getLog();
+    anglelog = new DoubleLogEntry(log, "/my/double");
+
+    
     leftDriveTalon = new WPI_TalonSRX(Constants.OperatorConstants.LeftDriveTalonPort);
     rightDriveTalon = new WPI_TalonSRX(Constants.OperatorConstants.RightDriveTalonPort);
     _leftDriveVictor = new VictorSPX(Constants.OperatorConstants.LeftDriveVictorPort);
     _rightDriveVictor = new VictorSPX(Constants.OperatorConstants.RightDriveVictorPort);
+    navX = new AHRS(SPI.Port.kMXP);
 
     _leftDriveVictor.follow(leftDriveTalon);
     _rightDriveVictor.follow(rightDriveTalon);
@@ -61,27 +73,30 @@ public class DriveTrain extends SubsystemBase
     rightDriveTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
     
     // Week 4 Motion Magic
-   leftDriveTalon.config_kP(0, 3, 10);
+   leftDriveTalon.config_kP(0, 2.5, 10);
    leftDriveTalon.config_kI(0, 0, 10);
    leftDriveTalon.config_kD(0, 0, 10);
-   leftDriveTalon.configMotionAcceleration(220, 10);
+   leftDriveTalon.configMotionAcceleration(328, 10);
    leftDriveTalon.configMotionCruiseVelocity(400, 10);
    // If Left Velocity is 200
    // then Left Accel 120
 
-   rightDriveTalon.config_kP(0, 3, 10);
+   rightDriveTalon.config_kP(0, 2.5, 10);
    rightDriveTalon.config_kI(0, 0, 10);
    rightDriveTalon.config_kD(0, 0, 10);
-   rightDriveTalon.configMotionAcceleration(200, 10);
-   rightDriveTalon.configMotionCruiseVelocity(400, 10);
-   // If  Right Velocity is 200
-   // then Right Accel 90
+   rightDriveTalon.configMotionAcceleration(2000, 10);
+   rightDriveTalon.configMotionCruiseVelocity(386, 10);
 
   }
 
+  public void magicDrive(double displacement){
+    leftDriveTalon.set(ControlMode.MotionMagic, Constants.OperatorConstants.tickstoMeters*displacement);
+    rightDriveTalon.set(ControlMode.MotionMagic, Constants.OperatorConstants.tickstoMeters*displacement);
+  }
+
   public void tankDrive(double leftSpeed, double rightSpeed) {
-    rightDriveTalon.set(rightSpeed);
     leftDriveTalon.set(leftSpeed);
+    rightDriveTalon.set(rightSpeed);
   }
 
   
@@ -94,15 +109,22 @@ public class DriveTrain extends SubsystemBase
     return (leftDriveTalon.getSelectedSensorPosition(0) + rightDriveTalon.getSelectedSensorPosition(0)) / 2.0;
   }
 
+  public double getDisplacement(){
+    return (getTicks()/Constants.OperatorConstants.tickstoMeters);
+  }
 
+  public double getYAngle(){
+    return navX.getPitch();
+  }
   @Override
   public void periodic() {
-    
-
-  
     tankDrive(RobotContainer.getJoy1().getY()*-0.2, RobotContainer.getJoy2().getY()*-0.2);
-
-   
+    if (RobotContainer.getJoy1().getRawButtonReleased(12)){
+      logOverride = !logOverride;
+    }
+    if (logOverride){
+      anglelog.append(getYAngle());
+    }
   }
 
   @Override

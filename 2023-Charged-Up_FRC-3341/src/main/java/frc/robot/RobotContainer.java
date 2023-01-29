@@ -19,6 +19,7 @@ public class RobotContainer {
   public static Joystick joystick2;
   public static Joystick joystick1;
   private final TankDrive tankDrive;
+  private final MagicDrive magicDrive;
   private static DriveTrain dt;
   
   // The robot's subsystems and commands are defined here...
@@ -34,7 +35,7 @@ public class RobotContainer {
     // Configure the button bindings
     dt = new DriveTrain();
     tankDrive = new TankDrive(dt, joystick2, joystick1);
-    
+    magicDrive = new MagicDrive(dt, 1.0);
 
   }
   public static Joystick getJoy1() {
@@ -67,7 +68,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand(){
-    return m_autoCommand;
+    return magicDrive;
   }
 
 
