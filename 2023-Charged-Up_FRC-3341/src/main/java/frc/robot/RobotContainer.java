@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.LockOnTarget;
 //import frc.robot.commands.TimedAuto;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Limelight;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -28,7 +28,7 @@ public class RobotContainer {
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
   
   //We have to initialize these objects for the SpinToTarget, ProtoTurret, and AutoTurret commands
-  private final static DriveTrain drive = new DriveTrain();
+  private final static Drivetrain drive = new Drivetrain();
   private final static Limelight lime = new Limelight();
   private final static LockOnTarget lock = new LockOnTarget(drive, lime, 0);
   
@@ -65,7 +65,7 @@ public class RobotContainer {
   public static Joystick getJoy2(){
     return joy2;
   }
-  public static DriveTrain getDrive(){
+  public static Drivetrain getDrive(){
     return drive;
   }
   public static Limelight getLime(){

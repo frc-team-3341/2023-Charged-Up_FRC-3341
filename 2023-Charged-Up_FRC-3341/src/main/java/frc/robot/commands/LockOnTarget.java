@@ -5,7 +5,7 @@
 package frc.robot.commands;
 
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -14,11 +14,11 @@ public class LockOnTarget extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
 
   private final Limelight lime;
-  private final DriveTrain drive;
+  private final Drivetrain drive;
   private double target;
   private double error; 
   
-  public LockOnTarget(DriveTrain drive, Limelight lime, double target) {
+  public LockOnTarget(Drivetrain drive, Limelight lime, double target) {
     this.drive = drive;
     this.lime = lime;
     this.target = target;

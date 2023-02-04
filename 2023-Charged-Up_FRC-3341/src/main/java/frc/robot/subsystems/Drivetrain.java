@@ -23,7 +23,7 @@ import com.kauailabs.navx.frc.AHRS;
 //comment
 
 
-public class DriveTrain extends SubsystemBase 
+public class Drivetrain extends SubsystemBase 
 {
   /** Creates a new ExampleSubsystem. */
   private final WPI_TalonSRX leftDriveTalon;
@@ -32,7 +32,7 @@ public class DriveTrain extends SubsystemBase
   private final VictorSPX _rightDriveVictor;
 
   
-  public DriveTrain() 
+  public Drivetrain() 
   {
     leftDriveTalon = new WPI_TalonSRX(Constants.OperatorConstants.LeftDriveTalonPort);
     rightDriveTalon = new WPI_TalonSRX(Constants.OperatorConstants.RightDriveTalonPort);
