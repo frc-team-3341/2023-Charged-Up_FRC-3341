@@ -4,7 +4,10 @@
 
 package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.networktables.NetworkTable;
@@ -20,14 +23,18 @@ public class CenterToTarget extends CommandBase {
   // Here is the middle of the x and y axis on the target
   public double centerx;
   public double centery;
-
-  public CenterToTarget(Limelight lime) {
+private final Drivetrain drive; 
+private double speed; 
+ private Joystick joystick1 = RobotContainer.getJoy1();
+  public CenterToTarget(Limelight lime, Drivetrain drive) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.lime = lime; 
+    this.drive = drive;
     // Connects limelight subsystem to this command
     addRequirements(lime);
     centerx = lime.get_tx();
     centery = lime.get_ty(); 
+   // speed = 1 - Math.abs(0 - lime.get_tx());
   }
 
   // Called when the command is initially scheduled.
@@ -42,26 +49,28 @@ public class CenterToTarget extends CommandBase {
   public void execute() {
     // You need this because it keeps calling the value instead of only once because the robot is moving 
     centerx = lime.get_tx();
+   // Use this for arm to get the values for the height
     centery = lime.get_ty();
 // IMPORTANT - The screen of limelight it works with negatives(left side of 0) and positives(right side of 0)
     if(centerx > 1) {
-      //drivetrain go left
+      drive.tankDrive(-0.2, 0.2);
     } else if(centerx < -1 ) {
-      //drivetrain go right
+      drive.tankDrive(-0.2, 0.2);
     } else {
-      // turn drive train to 0,0
-    }
+      drive.tankDrive(0, 0);    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) { 
     //always make drivetrain stop in here
+      drive.tankDrive(0, 0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(centerx) < 1;
+     //return Math.abs(centerx) == 0;
+    return joystick1.getRawButtonPressed(3);
   }
 }

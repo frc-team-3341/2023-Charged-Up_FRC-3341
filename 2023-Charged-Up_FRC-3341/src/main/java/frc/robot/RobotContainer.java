@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.commands.CenterToTarget;
 //import frc.robot.commands.DistanceAuto;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.LockOnTarget;
@@ -15,7 +16,8 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Limelight;
 import edu.wpi.first.wpilibj2.command.Command;
-
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.CenterToTarget;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -31,7 +33,7 @@ public class RobotContainer {
   private final static Drivetrain drive = new Drivetrain();
   private final static Limelight lime = new Limelight();
   private final static LockOnTarget lock = new LockOnTarget(drive, lime, 0);
-  
+  private final static CenterToTarget center = new CenterToTarget(lime, drive);
   private static Joystick joy1;
   private static Joystick joy2;
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -48,7 +50,11 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {}
+  private void configureButtonBindings() {
+    JoystickButton toTarget = new JoystickButton(joy1, 3);
+    toTarget.onTrue( new CenterToTarget(lime, drive));
+    
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -56,7 +62,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // We have to return the name of the object, which is spin for SpinToTarget in this case or the code will not work
+    // We have to return the name of the object, which is lock for LockOnTarget in this case or the code will not work
+    // We have to specify which command to run as autonomous command 
     return lock;
   }
   public static Joystick getJoy1(){

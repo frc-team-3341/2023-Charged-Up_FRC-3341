@@ -48,7 +48,7 @@ public class LockOnTarget extends CommandBase {
     if(Math.abs(speed) < .2){
       speed = .2 * Math.abs(error)/error;
     }
-    drive.tankDrive(-speed, speed);     
+    drive.tankDrive(-speed, speed);
   }
 
   // Called once the command ends or is interrupted.

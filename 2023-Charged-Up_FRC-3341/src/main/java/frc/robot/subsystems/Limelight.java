@@ -23,7 +23,7 @@ public class Limelight extends SubsystemBase {
   private static double txNum;
   private double tyNum;
   private double taNum;
-  private int tvNum;
+  private static int tvNum;
   // Pipeline 0 - reflective tape
   // Pipeline 1 to 8 - april tags
   // Pipeline 9 - cone(may not use)
@@ -74,7 +74,7 @@ public class Limelight extends SubsystemBase {
     return taNum;
   }
 
-  public int get_tv() {
+  public static int get_tv() {
     return tvNum;
   }
 
