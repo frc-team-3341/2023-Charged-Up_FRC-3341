@@ -15,10 +15,12 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.Constants;
 import frc.robot.Robot;
+
 import com.kauailabs.navx.frc.AHRS;
 //comment
 
@@ -31,9 +33,10 @@ public class Drivetrain extends SubsystemBase
   private final VictorSPX _leftDriveVictor;
   private final VictorSPX _rightDriveVictor;
 
+  DifferentialDrive diffDrive;
   
-  public Drivetrain() 
-  {
+  public Drivetrain(){
+
     leftDriveTalon = new WPI_TalonSRX(Constants.OperatorConstants.LeftDriveTalonPort);
     rightDriveTalon = new WPI_TalonSRX(Constants.OperatorConstants.RightDriveTalonPort);
     _leftDriveVictor = new VictorSPX(Constants.OperatorConstants.LeftDriveVictorPort);
@@ -45,8 +48,8 @@ public class Drivetrain extends SubsystemBase
     leftDriveTalon.setNeutralMode(NeutralMode.Coast);
     rightDriveTalon.setNeutralMode(NeutralMode.Coast);
 
-    leftDriveTalon.setInverted(false);
-    rightDriveTalon.setInverted(true);
+    leftDriveTalon.setInverted(true);
+    rightDriveTalon.setInverted(false);
     _leftDriveVictor.setInverted(InvertType.FollowMaster);
     _rightDriveVictor.setInverted(InvertType.FollowMaster);
 
@@ -75,6 +78,7 @@ public class Drivetrain extends SubsystemBase
    // If  Right Velocity is 200
    // then Right Accel 90
 
+   diffDrive = new DifferentialDrive(rightDriveTalon, leftDriveTalon);
   }
 
   public void tankDrive(double leftSpeed, double rightSpeed) {
@@ -82,6 +86,9 @@ public class Drivetrain extends SubsystemBase
     leftDriveTalon.set(leftSpeed);
   }
 
+  public void arcadeDrive(double speed, double rotation){
+    diffDrive.arcadeDrive(speed, rotation);
+  }
   
   public void resetEncoders() {
     leftDriveTalon.setSelectedSensorPosition(0,0,10);
@@ -95,14 +102,11 @@ public class Drivetrain extends SubsystemBase
 
   @Override
   public void periodic() {
-  
     tankDrive(RobotContainer.getJoy1().getY()*-0.2, RobotContainer.getJoy2().getY()*-0.2);
-   
   }
 
   @Override
-  public void simulationPeriodic() 
-  {
+  public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
   }
 }

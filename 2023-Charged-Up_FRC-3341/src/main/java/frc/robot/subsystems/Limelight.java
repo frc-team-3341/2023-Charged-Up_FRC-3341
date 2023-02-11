@@ -19,15 +19,17 @@ public class Limelight extends SubsystemBase {
   /** Creates a new Limelight. */
 
   NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-drsolom");
- 
+  private Joystick joystick1 = RobotContainer.getJoy1();
+  private Joystick joystick2 = RobotContainer.getJoy2();
+
   private static double txNum;
   private double tyNum;
   private double taNum;
-  private static int tvNum;
+  private int tvNum;
   // Pipeline 0 - reflective tape
-  // Pipeline 1 to 8 - april tags
-  // Pipeline 9 - cone(may not use)
-  // Pipeline 10 - cube 
+  // Pipeline 1 to 7 - april tags
+  // Pipeline 8 - cube
+  // Pipeline 9 - cone
   public int pipeline = 0;
 
   // This gets the tx, or the horizontal offset
@@ -45,7 +47,7 @@ public class Limelight extends SubsystemBase {
   // This gets the tv, which sees if the limelight
   // has a valid target (1) or no valid target (0)
   NetworkTableEntry tv = table.getEntry("tv");
-  
+
   public Limelight() {
     // We have to add these ports so that we can connect to
     // the limelight with our code through the robot's wifi
@@ -74,13 +76,68 @@ public class Limelight extends SubsystemBase {
     return taNum;
   }
 
-  public static int get_tv() {
+  public int get_tv() {
     return tvNum;
+  }
+
+  public void cycleOddPipe() {
+    for (int i = 0; i < 4; i++) {
+      changepipeline(2 * i + 1);
+      if (tvNum == 1)
+        return;
+    }
+  }
+
+  public void cycleEvenPipe() {
+    for (int i = 0; i < 4; i++) {
+      changepipeline(2 * i + 2);
+      if (tvNum == 1)
+        return;
+    }
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+
+    /*if (joystick1.getRawButtonPressed(3)) {
+      pipeline = 0; // reflective tape
+      changepipeline(pipeline);
+    } else if (joystick1.getRawButtonPressed(4)) {
+      pipeline = 9; // cone
+      changepipeline(pipeline);
+    } else if (joystick1.getRawButtonPressed(5)) {
+      pipeline = 8; // square
+      changepipeline(pipeline);
+    } else if (joystick1.getRawButtonPressed(12)) {
+      pipeline = 1; // april tag 1
+      changepipeline(pipeline);
+    } else if (joystick1.getRawButtonPressed(11)) {
+      pipeline = 2; // april tag 2
+      changepipeline(pipeline);
+    } else if (joystick1.getRawButtonPressed(10)) {
+      pipeline = 3; // april tag 3
+      changepipeline(pipeline);
+    } else if (joystick1.getRawButtonPressed(9)) {
+      pipeline = 4; // april tag 4
+      changepipeline(pipeline);
+    } else if (joystick1.getRawButtonPressed(8)) {
+      pipeline = 5; // april tag 5
+      changepipeline(pipeline);
+    } else if (joystick1.getRawButtonPressed(7)) {
+      pipeline = 6; // april tag 6
+      changepipeline(pipeline);
+    } else if (joystick1.getRawButtonPressed(6)) {
+      pipeline = 7; // april tag 7
+      changepipeline(pipeline);
+    }*/
+
+    if(joystick1.getRawButtonPressed(3)){
+      cycleOddPipe();
+    }
+    if(joystick1.getRawButtonPressed(4)){
+      cycleEvenPipe();
+    }
 
     tx = table.getEntry("tx");
     ty = table.getEntry("ty");
@@ -101,7 +158,6 @@ public class Limelight extends SubsystemBase {
 
     // We will be assigning taNum to the double (0.0-100.0) that limelight returns
     taNum = ta.getDouble(0.0);
-    
     // This will output the x (horizontal offset) from the target in SmartDashboard
     SmartDashboard.putNumber("LimelightX", txNum);
 
@@ -114,8 +170,8 @@ public class Limelight extends SubsystemBase {
     // This will output the value of the target in SmartDashboard (0 or 1)
     SmartDashboard.putNumber("LimelightV", tvNum);
 
-    SmartDashboard.putNumber("PipelineNumber", pipeline);
-    //Actual pipeline number not representative 
-    SmartDashboard.putNumber("PipelineName", table.getEntry("pipeline").getDouble(0));
+    // SmartDashboard.putNumber("PipelineNumber", pipeline);
+    // Actual pipeline number not representative
+    SmartDashboard.putNumber("PipelineName", table.getEntry("pipeline").getDouble(0));// Actual pieplinew
   }
 }
