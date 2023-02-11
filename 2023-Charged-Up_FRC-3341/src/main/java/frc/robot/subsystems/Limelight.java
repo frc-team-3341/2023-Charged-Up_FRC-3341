@@ -8,6 +8,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.HttpCamera;
+import edu.wpi.first.cscore.HttpCamera.HttpCameraKind;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -59,7 +62,8 @@ public class Limelight extends SubsystemBase {
     PortForwarder.add(5805, "http://limelight-drsolom.local:5801", 5805);
     PortForwarder.add(5800, "http://limelight-drsolom.local:5801", 5800);
   }
-
+  
+  
   public void changepipeline(int pipeline) {
     table.getEntry("pipeline").setNumber(pipeline);
   }
@@ -172,6 +176,9 @@ public class Limelight extends SubsystemBase {
 
     // SmartDashboard.putNumber("PipelineNumber", pipeline);
     // Actual pipeline number not representative
-    SmartDashboard.putNumber("PipelineName", table.getEntry("pipeline").getDouble(0));// Actual pieplinew
+    SmartDashboard.putNumber("PipelineName", table.getEntry("pipeline").getDouble(0));// Actual piepline
+
+
+
   }
 }
