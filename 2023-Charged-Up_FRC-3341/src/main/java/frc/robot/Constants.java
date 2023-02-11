@@ -15,8 +15,12 @@ package frc.robot;
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
-    public static final int armPort = 2;
-    public static final int extPort = 4;
+    public static final int armPort = 30; // ID 2 for testing
+    public static final int extPort = 2;
+    public static final int clawPinchPort = 20;
+    public static final int wristPort = 12;
+    public static final int flywheelOne = 30;
+    public static final int flywheelTwo = 31;
   }
 
   public static class PIDConstants {
@@ -27,5 +31,8 @@ public final class Constants {
   public static class Measurements {
     public static final double threadLength = 0.138; //inches per rotation
     public static final double gearRatio = 1/3; //1 rotation of screw = 3 rotations of motor
+    public static final double lowerAngleBound = 0;
+    public static final double upperAngleBound = 100;
+    public static final double degreesToTicks = 360/4096;
   }
 }

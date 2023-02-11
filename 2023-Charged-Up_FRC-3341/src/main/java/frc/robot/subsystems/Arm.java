@@ -42,7 +42,7 @@ public class Arm extends SubsystemBase {
   armPID_I.getDouble(Constants.PIDConstants.armPID_I), 
   armPID_D.getDouble(Constants.PIDConstants.armPID_D));
 
-  public double angle = 0.0;
+  public double targetAngle = 0.0;
 
   // Manual override
   // True = Semi-Auto (default), False = Manual
@@ -61,7 +61,10 @@ public class Arm extends SubsystemBase {
     armTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
     extendingTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
 
-    extendingTalon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
+    // Sets max current limit for amperage
+    armTalon.configPeakCurrentLimit(15);
+
+   extendingTalon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
    
     //armTalon.setSensorPhase(true);
     armTalon.setInverted(true);
@@ -70,8 +73,12 @@ public class Arm extends SubsystemBase {
     armTalon.configPeakOutputForward(0.4);
     armTalon.configPeakOutputReverse(-0.4);
 
+    //sets limits for how far the talon can extend forwards and backwards
+    armTalon.configForwardSoftLimitThreshold(Constants.Measurements.upperAngleBound*Constants.Measurements.degreesToTicks);
+    armTalon.configReverseSoftLimitThreshold(Constants.Measurements.lowerAngleBound*Constants.Measurements.degreesToTicks);
+
     // Tolerance from reaching the setpoint
-    armPID.setTolerance(0.5);
+    armPID.setTolerance(2);
 
     // Integration range, if we are using the integral term of PID
     armPID.setIntegratorRange(-5, 5);
@@ -128,8 +135,8 @@ public class Arm extends SubsystemBase {
   public void updatePID() {
     // Without two clamps: 1.12
     // With clamps: 1.2
-    armTalon.set(ControlMode.PercentOutput, armPID.calculate(getAngle())+(Math.sin(getAngle())*(1.2/12.0)));
-    SmartDashboard.putNumber("PID: ", armPID.calculate(getAngle())+(Math.sin(getAngle())*(1.2/12.0)));
+    armTalon.set(ControlMode.PercentOutput, armPID.calculate(getAngle())+(Math.sin(getAngle())*(1.4/12.0)));
+    SmartDashboard.putNumber("PID: ", armPID.calculate(getAngle())+(Math.sin(getAngle())*(1.4/12.0)));
   }
 
   /**
@@ -142,8 +149,8 @@ public class Arm extends SubsystemBase {
   /** 
   Sets subsystem's internal angle
    */
-  public void setAngle(double angle) {
-    this.angle = angle;
+  public void setTargetAngle(double angle) {
+    this.targetAngle = angle;
   }
 
   public void setDifferenceInAngle(double diff) {
@@ -152,7 +159,7 @@ public class Arm extends SubsystemBase {
 
   @Override
   public void periodic() {
-    extendArm(RobotContainer.getJoy1().getY());
+    extendArm(RobotContainer.getJoy1().getX());
     if (RobotContainer.getJoy1().getRawButtonReleased(2)) {
       override = !override;
     }
@@ -163,8 +170,11 @@ public class Arm extends SubsystemBase {
 
     if (override) {
       moveArm(-1.0*RobotContainer.getJoy1().getY());
+
+      // We want to reset the target angle to the current angle
+      targetAngle = getAngle();
     } else if (!override) {
-      armPID.setSetpoint(angle);
+      armPID.setSetpoint(targetAngle);
       updatePID();
     }
 
@@ -175,22 +185,33 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putNumber("Ticks: ", armTalon.getSelectedSensorPosition(0));
     SmartDashboard.putNumber("Voltage: ", armTalon.getMotorOutputPercent());
     SmartDashboard.putNumber("Angle: ", getAngle());
+    SmartDashboard.putNumber("Angle for Graph: ", getAngle());
 
     // Repeatedly set new PID constants from Driverstation
     if(differenceInAngle >= 0) {
     armPID.setPID(
-      armPID_P.getDouble(0.5/Math.abs(differenceInAngle)), 
+      armPID_P.getDouble(0.70/Math.abs(differenceInAngle)), 
       armPID_I.getDouble(Constants.PIDConstants.armPID_I), 
       armPID_D.getDouble(Constants.PIDConstants.armPID_D));
     }
     if(differenceInAngle <= 0) {
       armPID.setPID(
-        armPID_P.getDouble(0.60/Math.abs(differenceInAngle)), 
+        armPID_P.getDouble(0.70/Math.abs(differenceInAngle)), 
         armPID_I.getDouble(Constants.PIDConstants.armPID_I), 
         armPID_D.getDouble(Constants.PIDConstants.armPID_D));
       }
-
+    
+    if(!override && RobotContainer.getJoy1().getY()>0 && RobotContainer.getJoy1().getTriggerPressed() && targetAngle <= Constants.Measurements.upperAngleBound){
+      SmartDashboard.putString("Status: ", "Incrementing");
+      targetAngle += 10;
+    }
+    else if(!override && RobotContainer.getJoy1().getY()<0 && RobotContainer.getJoy1().getTriggerPressed() && targetAngle >= Constants.Measurements.lowerAngleBound){
+      SmartDashboard.putString("Status: ", "Decrementing");
+      targetAngle -= 10;
+    } else {
+      SmartDashboard.putString("Status: ", "None");
+    }
     SmartDashboard.putNumber("kP: ", 0.4/differenceInAngle);
-  
+    SmartDashboard.putNumber("kI: ", armPID_I.getDouble(Constants.PIDConstants.armPID_I));
   }
 }

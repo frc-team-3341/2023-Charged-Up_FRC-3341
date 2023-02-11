@@ -7,28 +7,23 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.*;
 
-public class Rotate extends CommandBase {
-  /** Creates a new PivotArm. */
-  public Arm arm;
-  public double angle;
-  public Rotate(Arm arm, double angle) {
-    this.arm = arm;
-    this.angle = angle;
-    addRequirements(arm);
+public class ActuateClaw extends CommandBase {
+  public Claw claw;
+
+  /** Creates a new ActuateClaw. */
+  public ActuateClaw(Claw claw) {
+    this.claw = claw;
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(claw);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    arm.setDifferenceInAngle(arm.getAngle() - angle);
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    arm.setTargetAngle(angle);
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
@@ -37,6 +32,6 @@ public class Rotate extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return arm.withinSetpoint();
+    return false;
   }
 }
