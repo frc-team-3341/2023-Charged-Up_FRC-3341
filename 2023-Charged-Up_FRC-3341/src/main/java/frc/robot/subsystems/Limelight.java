@@ -26,9 +26,9 @@ public class Limelight extends SubsystemBase {
   private Joystick joystick2 = RobotContainer.getJoy2();
 
   private static double txNum;
-  private double tyNum;
+  private static double tyNum;
   private double taNum;
-  private int tvNum;
+  private static int tvNum;
   // Pipeline 0 - reflective tape
   // Pipeline 1 to 7 - april tags
   // Pipeline 8 - cube
@@ -72,7 +72,7 @@ public class Limelight extends SubsystemBase {
     return txNum;
   }
 
-  public double get_ty() {
+  public static double get_ty() {
     return tyNum;
   }
 
@@ -80,7 +80,7 @@ public class Limelight extends SubsystemBase {
     return taNum;
   }
 
-  public int get_tv() {
+  public static int get_tv() {
     return tvNum;
   }
 
@@ -136,12 +136,12 @@ public class Limelight extends SubsystemBase {
       changepipeline(pipeline);
     }*/
 
-    if(joystick1.getRawButtonPressed(3)){
+  /*  if(joystick1.getRawButtonPressed(3)){
       cycleOddPipe();
     }
     if(joystick1.getRawButtonPressed(4)){
       cycleEvenPipe();
-    }
+    } */
 
     tx = table.getEntry("tx");
     ty = table.getEntry("ty");
@@ -177,6 +177,7 @@ public class Limelight extends SubsystemBase {
     // SmartDashboard.putNumber("PipelineNumber", pipeline);
     // Actual pipeline number not representative
     SmartDashboard.putNumber("PipelineName", table.getEntry("pipeline").getDouble(0));// Actual piepline
+
 
 
 

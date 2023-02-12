@@ -13,7 +13,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
-
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -34,6 +34,8 @@ public class Drivetrain extends SubsystemBase
   private final VictorSPX _rightDriveVictor;
 
   DifferentialDrive diffDrive;
+  private double ticksToMeters = (127.0/10581.0)/100.0;
+
   
   public Drivetrain(){
 
@@ -79,6 +81,7 @@ public class Drivetrain extends SubsystemBase
    // then Right Accel 90
 
    diffDrive = new DifferentialDrive(rightDriveTalon, leftDriveTalon);
+
   }
 
   public void tankDrive(double leftSpeed, double rightSpeed) {
@@ -97,8 +100,16 @@ public class Drivetrain extends SubsystemBase
 
   public double getTicks() {
     return (leftDriveTalon.getSelectedSensorPosition(0) + rightDriveTalon.getSelectedSensorPosition(0)) / 2.0;
+    
   }
-
+/* 
+  public double getVelocity(double setPoint){
+    PIDController pid = new PIDController(0.93825, 0.0, 0.0);
+    pid.setSetpoint(setPoint);
+    pid.calculate(setPoint);
+    return setPoint;
+  }
+*/
 
   @Override
   public void periodic() {
@@ -108,5 +119,8 @@ public class Drivetrain extends SubsystemBase
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
+  }
+
+  public static void set(double calculate) {
   }
 }

@@ -64,7 +64,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // We have to return the name of the object, which is lock for LockOnTarget in this case or the code will not work
     // We have to specify which command to run as autonomous command 
-    return lock;
+    return center;
   }
   public static Joystick getJoy1(){
     return joy1;
