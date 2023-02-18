@@ -64,9 +64,12 @@ public class Arm extends SubsystemBase {
     // Sets max current limit for amperage
     armTalon.configPeakCurrentLimit(15);
 
-   extendingTalon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
+   // extendingTalon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
+   extendingTalon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
+   extendingTalon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
    
     //armTalon.setSensorPhase(true);
+    //extendingTalon.setInverted(true);
     armTalon.setInverted(true);
 
     // Very important - sets max output, so that PID doesn't output an output that it too high
@@ -76,6 +79,13 @@ public class Arm extends SubsystemBase {
     //sets limits for how far the talon can extend forwards and backwards
     armTalon.configForwardSoftLimitThreshold(Constants.Measurements.upperAngleBound*Constants.Measurements.degreesToTicks);
     armTalon.configReverseSoftLimitThreshold(Constants.Measurements.lowerAngleBound*Constants.Measurements.degreesToTicks);
+
+    // Sets soft limits on extension
+    extendingTalon.configForwardSoftLimitThreshold(0);
+    extendingTalon.configReverseSoftLimitThreshold(31000);
+
+    // Reset Extending Talon
+    extendingTalon.setSelectedSensorPosition(0);
 
     // Tolerance from reaching the setpoint
     armPID.setTolerance(2);
@@ -102,11 +112,17 @@ public class Arm extends SubsystemBase {
     armTalon.set(ControlMode.PercentOutput, power*0.2+(Math.sin(getAngle())*(1.12/12.0)));
   }
   public void extendArm(double power){
-     extendingTalon.set(ControlMode.PercentOutput, power*0.2+(Math.sin(getAngle())*(1.12/12.0)));
-  }
+    //extendingTalon.set(ControlMode.PercentOutput, power);
 
-  public void moveExtend(double power) {
-    extendingTalon.set(ControlMode.PercentOutput, power);
+    if(!(extendingTalon.getSelectedSensorPosition()<Constants.Measurements.lowerScrewBound || extendingTalon.getSelectedSensorPosition()>Constants.Measurements.upperScrewBound)){
+      extendingTalon.set(ControlMode.PercentOutput, power);
+    }
+    else if(extendingTalon.getSelectedSensorPosition()<Constants.Measurements.lowerScrewBound){
+      extendingTalon.set(ControlMode.PercentOutput, 0.1);
+    }
+    else if(extendingTalon.getSelectedSensorPosition()>Constants.Measurements.upperScrewBound){
+      extendingTalon.set(ControlMode.PercentOutput, -0.1);
+    }
   }
 
   /**
@@ -159,7 +175,6 @@ public class Arm extends SubsystemBase {
 
   @Override
   public void periodic() {
-    extendArm(RobotContainer.getJoy1().getX());
     if (RobotContainer.getJoy1().getRawButtonReleased(2)) {
       override = !override;
     }
@@ -170,6 +185,7 @@ public class Arm extends SubsystemBase {
 
     if (override) {
       moveArm(-1.0*RobotContainer.getJoy1().getY());
+      extendArm(-1.0*RobotContainer.getJoy1().getX());
 
       // We want to reset the target angle to the current angle
       targetAngle = getAngle();
@@ -186,6 +202,7 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putNumber("Voltage: ", armTalon.getMotorOutputPercent());
     SmartDashboard.putNumber("Angle: ", getAngle());
     SmartDashboard.putNumber("Angle for Graph: ", getAngle());
+    SmartDashboard.putNumber("Joystick Position: ", RobotContainer.getJoy1().getX());
 
     // Repeatedly set new PID constants from Driverstation
     if(differenceInAngle >= 0) {
@@ -213,5 +230,6 @@ public class Arm extends SubsystemBase {
     }
     SmartDashboard.putNumber("kP: ", 0.4/differenceInAngle);
     SmartDashboard.putNumber("kI: ", armPID_I.getDouble(Constants.PIDConstants.armPID_I));
+    SmartDashboard.putNumber("Lead Screw Raw Pos: ", extendingTalon.getSelectedSensorPosition());
   }
 }
