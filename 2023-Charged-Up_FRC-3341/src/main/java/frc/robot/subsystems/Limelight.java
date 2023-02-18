@@ -84,64 +84,28 @@ public class Limelight extends SubsystemBase {
     return tvNum;
   }
 
-  public void cycleOddPipe() {
-    for (int i = 0; i < 4; i++) {
-      changepipeline(2 * i + 1);
-      if (tvNum == 1)
-        return;
-    }
-  }
-
-  public void cycleEvenPipe() {
-    for (int i = 0; i < 4; i++) {
-      changepipeline(2 * i + 2);
-      if (tvNum == 1)
-        return;
-    }
-  }
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
 
-    /*if (joystick1.getRawButtonPressed(3)) {
-      pipeline = 0; // reflective tape
-      changepipeline(pipeline);
-    } else if (joystick1.getRawButtonPressed(4)) {
-      pipeline = 9; // cone
-      changepipeline(pipeline);
-    } else if (joystick1.getRawButtonPressed(5)) {
-      pipeline = 8; // square
-      changepipeline(pipeline);
-    } else if (joystick1.getRawButtonPressed(12)) {
-      pipeline = 1; // april tag 1
-      changepipeline(pipeline);
-    } else if (joystick1.getRawButtonPressed(11)) {
-      pipeline = 2; // april tag 2
-      changepipeline(pipeline);
-    } else if (joystick1.getRawButtonPressed(10)) {
-      pipeline = 3; // april tag 3
-      changepipeline(pipeline);
-    } else if (joystick1.getRawButtonPressed(9)) {
-      pipeline = 4; // april tag 4
-      changepipeline(pipeline);
-    } else if (joystick1.getRawButtonPressed(8)) {
-      pipeline = 5; // april tag 5
-      changepipeline(pipeline);
-    } else if (joystick1.getRawButtonPressed(7)) {
-      pipeline = 6; // april tag 6
-      changepipeline(pipeline);
-    } else if (joystick1.getRawButtonPressed(6)) {
-      pipeline = 7; // april tag 7
-      changepipeline(pipeline);
-    }*/
+    double targetOffsetAngle_Vertical = ty.getDouble(0.0);
 
-  /*  if(joystick1.getRawButtonPressed(3)){
-      cycleOddPipe();
-    }
-    if(joystick1.getRawButtonPressed(4)){
-      cycleEvenPipe();
-    } */
+    // how many degrees back is your limelight rotated from perfectly vertical?
+    double limelightMountAngleDegrees = 25.0;
+
+    // distance from the center of the Limelight lens to the floor
+    double limelightLensHeightInches = 20.0;
+
+    // distance from the target to the floor
+    double goalHeightInches = 60.0;
+
+    double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
+
+    // Converts degrees to radians
+    double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
+
+    // calculates distance
+    double distanceFromLimelightToGoalInches = (goalHeightInches - limelightLensHeightInches)/Math.tan(angleToGoalRadians);
 
     tx = table.getEntry("tx");
     ty = table.getEntry("ty");
@@ -177,6 +141,9 @@ public class Limelight extends SubsystemBase {
     // SmartDashboard.putNumber("PipelineNumber", pipeline);
     // Actual pipeline number not representative
     SmartDashboard.putNumber("PipelineName", table.getEntry("pipeline").getDouble(0));// Actual piepline
+
+    // This outputs the distance from the limelight to the target
+    SmartDashboard.putNumber("Distance (inches)", distanceFromLimelightToGoalInches);
 
 
 
