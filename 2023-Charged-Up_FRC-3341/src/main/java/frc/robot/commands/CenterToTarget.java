@@ -30,9 +30,11 @@ public class CenterToTarget extends CommandBase {
   public double centery;
   private final TankDrive tankDrive;
   private static Drivetrain drive;
-  public PIDController pid;
-  double speed = 0.0;
-  
+  public PIDController Tpid;
+  public PIDController Fpid;
+  double TurnSpeed = 0.0;  
+  double FowardSpeed = 0.0;
+  double distance;
   
 
   public CenterToTarget(Limelight lime, Drivetrain drive) {
@@ -40,12 +42,15 @@ public class CenterToTarget extends CommandBase {
     tankDrive = new TankDrive(drive, null, null);
     this.lime = lime;
     this.drive = drive;
+
     // Connects limelight subsystem to this command
     addRequirements(drive, lime);
     centerx = Limelight.get_tx();
     centery = Limelight.get_ty();
-    pid = new PIDController(0.0093825*2, 0.0, 0.0);
-    pid.setTolerance(1);
+    Tpid = new PIDController(0.0093825*2, 0.0, 0.0);
+    Fpid = new PIDController(0.001, 0.0, 0.0);
+    Tpid.setTolerance(1);
+    Fpid.setTolerance(1);
   }
 
   // Called when the command is initially scheduled.
@@ -54,8 +59,8 @@ public class CenterToTarget extends CommandBase {
     centerx = Limelight.get_tx();
     centery = Limelight.get_ty();
     drive.resetEncoders();
-    pid.setSetpoint(0.0);
-    
+    Tpid.setSetpoint(0.0);
+    Fpid.setSetpoint(12);
     
   }
 
@@ -66,18 +71,28 @@ public class CenterToTarget extends CommandBase {
     // the robot is moving
     centerx = Limelight.get_tx();
     centery = Limelight.get_ty();
-    speed = pid.calculate(centerx);
+    TurnSpeed = Tpid.calculate(centerx);
+    FowardSpeed = Fpid.calculate(Limelight.getDistance());
+    
+/* 
+    if(Math.abs(distance) < 11.3){
+      speed1 = Math.abs();
+    } else if(Math.abs(distance) > 11.3){
+      speed1 = Math.abs();
+    }
 
     if(Math.abs(speed) > 0.6){
       speed = Math.abs(0.6)*(Math.abs(speed)/speed);
     } else if(Math.abs(speed) < 0.15){
       speed = Math.abs(0.15)*(Math.abs(speed)/speed);
     }
-      drive.tankDrive(speed, -speed);
-    
-      SmartDashboard.putNumber("Speed", speed);
+    */
 
-  }
+      drive.tankDrive(FowardSpeed+TurnSpeed, FowardSpeed-TurnSpeed);
+    
+      SmartDashboard.putNumber("Speed", FowardSpeed);
+  
+}
   
 
   // Called once the command ends or is interrupted.
@@ -89,7 +104,7 @@ public class CenterToTarget extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    //return pid.atSetpoint();
-    return false;
+    return Tpid.atSetpoint() && Fpid.atSetpoint();
+    //return false;
   }
 }

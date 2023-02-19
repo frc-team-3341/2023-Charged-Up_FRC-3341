@@ -29,6 +29,7 @@ public class Limelight extends SubsystemBase {
   private static double tyNum;
   private double taNum;
   private static int tvNum;
+  private static double distance;
   // Pipeline 0 - reflective tape
   // Pipeline 1 to 7 - april tags
   // Pipeline 8 - cube
@@ -68,6 +69,10 @@ public class Limelight extends SubsystemBase {
     table.getEntry("pipeline").setNumber(pipeline);
   }
 
+  public static double getDistance(){
+    return distance;
+  }
+
   public static double get_tx() {
     return txNum;
   }
@@ -89,23 +94,27 @@ public class Limelight extends SubsystemBase {
     // This method will be called once per scheduler run
 
     double targetOffsetAngle_Vertical = ty.getDouble(0.0);
+    SmartDashboard.putNumber("targetOffsetAngle_Vertical", targetOffsetAngle_Vertical);
 
     // how many degrees back is your limelight rotated from perfectly vertical?
-    double limelightMountAngleDegrees = 25.0;
+    double limelightMountAngleDegrees = 0.0;
 
     // distance from the center of the Limelight lens to the floor
-    double limelightLensHeightInches = 20.0;
+    double limelightLensHeightInches = 7.165354;
 
     // distance from the target to the floor
-    double goalHeightInches = 60.0;
+    double goalHeightInches = 2.6717;
 
     double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
+    SmartDashboard.putNumber("angleToGoalDegrees", angleToGoalDegrees);
 
     // Converts degrees to radians
-    double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
+    double angleToGoalRadians = angleToGoalDegrees * (Math.PI / 180.0);
+    SmartDashboard.putNumber("angleToGoalRadians", angleToGoalRadians);
 
     // calculates distance
-    double distanceFromLimelightToGoalInches = (goalHeightInches - limelightLensHeightInches)/Math.tan(angleToGoalRadians);
+    distance = (goalHeightInches - limelightLensHeightInches)/Math.tan(angleToGoalRadians);
+
 
     tx = table.getEntry("tx");
     ty = table.getEntry("ty");
@@ -143,7 +152,7 @@ public class Limelight extends SubsystemBase {
     SmartDashboard.putNumber("PipelineName", table.getEntry("pipeline").getDouble(0));// Actual piepline
 
     // This outputs the distance from the limelight to the target
-    SmartDashboard.putNumber("Distance (inches)", distanceFromLimelightToGoalInches);
+    SmartDashboard.putNumber("Distance (inches)", distance);
 
 
 
