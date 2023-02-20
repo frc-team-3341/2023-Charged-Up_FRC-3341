@@ -7,17 +7,17 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Claw;
 
-public class SetClawPos extends CommandBase {
+public class SetWristPos extends CommandBase {
   
   private Claw claw;
   private double angle;
 
-  /** Rotates the Claw's servo motor(s) to a certain position
+  /** Rotates the Wrist's servo motor(s) to a certain position
   * @param claw - Claw subsystem
-  * @param angle - Desired angle in degrees
+  * @param angle - Desired angle in degrees (-900 deg to 900 deg)
   */
 
-  public SetClawPos(Claw claw, double angle) {
+  public SetWristPos(Claw claw, double angle) {
     this.claw = claw;
     this.angle = angle;
 
@@ -32,9 +32,9 @@ public class SetClawPos extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // Set the servo position to the absolute value of the target angle
-    // It is always safer to use absolute value to prevent error
-    claw.setClawServoPos(Math.abs(angle));
+    // Set the servo position to the value of the target angle plus 180
+    // Since 0 degrees of input is at 180 degrees on the servo, then we have to add 180 in the subsystem
+    claw.setWristServoPos(angle);
   }
 
   // Called once the command ends or is interrupted.
@@ -44,6 +44,6 @@ public class SetClawPos extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return claw.getClawServoPos() == Math.abs(angle);
+    return claw.getWristServoPos() == Math.abs(angle);
   }
 }

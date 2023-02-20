@@ -9,11 +9,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.Extend;
-import frc.robot.commands.Rotate;
-import frc.robot.commands.SetClawPos;
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Claw;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -67,10 +64,10 @@ public class RobotContainer {
     // Tested 2/18/2023 - Only use for testing
     /*
     JoystickButton openClaw = new JoystickButton(leftJoystick, 7);
-    openClaw.onTrue(new SetClawPos(claw, 80));
+    openClaw.onTrue(new SetWristPos(claw, -900));
 
     JoystickButton closeClaw = new JoystickButton(leftJoystick, 8);
-    closeClaw.onTrue(new SetClawPos(claw, 0));
+    closeClaw.onTrue(new SetWristPos(claw, 900));
     */
   }
 

@@ -18,11 +18,8 @@ public final class Constants {
     public static final int armPort = 2; // ID 2 for testing
     public static final int clawPinchPort = 20;
     public static final int extPort = 4;
-    public static final int clawPort = 6;
-    public static final int wristPort = 12;
-    public static final int leftServoPort = 0;
-    public static final int flyWheelOnePort = 30;
-    public static final int flyWheelTwoPort = 31;
+    public static final int clawServoPort = 0;
+    public static final int wristServoPort = 1;
   }
 
   public static class PIDConstants {
@@ -30,6 +27,8 @@ public final class Constants {
     public static final double armPID_I = 0.00005;
     public static final double armPID_D = 0.0;
     public static final double armPID_K = 0.7;
+    public static final double armHoldingVoltage = 1.4; // Used to calculate Feedforward
+    public static final double armManualHoldingVoltage = 1.4; // Manual holding voltage
   }
   public static class Measurements {
     public static final double threadLength = 0.138; // Inches per rotation of leadscrew
@@ -39,10 +38,10 @@ public final class Constants {
     // When the Arm is extended, this limit is activated
     public static final double bumperAngleBound = 90; // Soft Limit for Arm resting on Bumper
 
-    public static final double upperAngleBound = 160; // Maximum pos of Arm, when stowed
+    public static final double upperAngleBound = 160; // Maximum pos of Arm in degrees, when stowed
     public static final double lowerScrewBound = 0.0; // Lower bound for motion of screw (inches)
     public static final double upperScrewBound = 10.0; // Upper bound for motion of screw (inches)
-    public static final double servoAngleLimit = 180.0; // Limit for servo movement (degrees)
+    public static final double servoAngleLimit = 1800.0; // Limit for servo movement (degrees)
     public static final double fullyExtendedLeadScrewThreshold = 5.0;
     public static final double degreesToTicks = 4096.0/360.0;
   }
@@ -70,5 +69,7 @@ public final class Constants {
     public static final int restPositionArm = 9;
     public static final int logButton = 12;
 
+    // Seconds until control (angle, etc.) is incremented/decremented
+    public static final double controlsDelay = 0.1;
   }
 }
