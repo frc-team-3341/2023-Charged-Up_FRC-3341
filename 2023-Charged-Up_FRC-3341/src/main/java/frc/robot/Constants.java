@@ -16,25 +16,59 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final int armPort = 2; // ID 2 for testing
-    public static final int extPort = 4;
     public static final int clawPinchPort = 20;
+    public static final int extPort = 4;
+    public static final int clawPort = 6;
     public static final int wristPort = 12;
-    public static final int flywheelOne = 30;
-    public static final int flywheelTwo = 31;
+    public static final int leftServoPort = 0;
+    public static final int flyWheelOnePort = 30;
+    public static final int flyWheelTwoPort = 31;
   }
 
   public static class PIDConstants {
     public static final double armPID_P = 0.015;
     public static final double armPID_I = 0.00005;
     public static final double armPID_D = 0.0;
+    public static final double armPID_K = 0.7;
   }
   public static class Measurements {
-    public static final double threadLength = 0.138; //inches per rotation
-    public static final double gearRatio = 1/3; //1 rotation of screw = 3 rotations of motor
-    public static final double lowerAngleBound = 0;
-    public static final double upperAngleBound = 100;
-    public static final double lowerScrewBound = 0;
-    public static final double upperScrewBound = 31000;
-    public static final double degreesToTicks = 360/4096;
+    public static final double threadLength = 0.138; // Inches per rotation of leadscrew
+    public static final double gearRatio = 1.0/3.0; // 1 rotation of screw = 3 rotations of leadscrew motor
+    public static final double lowerAngleBound = 0; // Position of Arm when upright
+
+    // When the Arm is extended, this limit is activated
+    public static final double bumperAngleBound = 90; // Soft Limit for Arm resting on Bumper
+
+    public static final double upperAngleBound = 160; // Maximum pos of Arm, when stowed
+    public static final double lowerScrewBound = 0.0; // Lower bound for motion of screw (inches)
+    public static final double upperScrewBound = 10.0; // Upper bound for motion of screw (inches)
+    public static final double servoAngleLimit = 180.0; // Limit for servo movement (degrees)
+    public static final double fullyExtendedLeadScrewThreshold = 5.0;
+    public static final double degreesToTicks = 4096.0/360.0;
+  }
+
+  public static class ButtonMap {
+
+    // Trigger button is used for incrementing and decrementing angle of arm
+
+    // Manual override button
+    public static final int manualOverride = 2;
+
+    // Buttons for Arm rotation
+    public static final int stowPosition = 5;
+    public static final int middlePosition = 4;
+    public static final int otherArbPosition = 3;
+    public static final int groundPosition = 6;
+
+    // Buttons for Claw increment and decrement
+    public static final int clawDecrement = 7;
+    public static final int clawIncrement = 8;
+
+    // Potentially temporary buttons
+    // Useful for testing autonomous commands
+    public static final int fullyExtendedArm = 10;
+    public static final int restPositionArm = 9;
+    public static final int logButton = 12;
+
   }
 }

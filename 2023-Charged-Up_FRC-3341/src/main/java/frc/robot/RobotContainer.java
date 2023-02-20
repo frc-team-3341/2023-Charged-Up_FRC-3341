@@ -11,7 +11,9 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Extend;
 import frc.robot.commands.Rotate;
+import frc.robot.commands.SetClawPos;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Claw;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -23,6 +25,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   public final Arm arm = new Arm();
+  public final Claw claw = new Claw();
 
   public static final Joystick leftJoystick = new Joystick(0);
 
@@ -42,20 +45,33 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    JoystickButton triggerStowPos = new JoystickButton(leftJoystick, 5);
+    JoystickButton triggerStowPos = new JoystickButton(leftJoystick, Constants.ButtonMap.stowPosition);
     triggerStowPos.onTrue(new Rotate(arm, 0));
 
-    JoystickButton triggerMiddlePos = new JoystickButton(leftJoystick, 4);
+    JoystickButton triggerMiddlePos = new JoystickButton(leftJoystick, Constants.ButtonMap.middlePosition);
     triggerMiddlePos.onTrue(new Rotate(arm, 10));
 
-    JoystickButton triggerOtherPos = new JoystickButton(leftJoystick, 3);
+    JoystickButton triggerOtherPos = new JoystickButton(leftJoystick, Constants.ButtonMap.otherArbPosition);
     triggerOtherPos.onTrue(new Rotate(arm, 30));
 
-    JoystickButton triggerGroundPos = new JoystickButton(leftJoystick, 6);
+    JoystickButton triggerGroundPos = new JoystickButton(leftJoystick, Constants.ButtonMap.groundPosition);
     triggerGroundPos.onTrue(new Rotate(arm, 90));
 
-    JoystickButton triggerMiddleExt = new JoystickButton(leftJoystick, 8);
-    triggerMiddleExt.onTrue(new Extend(arm, 10));
+    JoystickButton triggerExt = new JoystickButton(leftJoystick, Constants.ButtonMap.fullyExtendedArm);
+    // Extends 1 inch for testing
+    triggerExt.onTrue(new Extend(arm, 1));
+
+    JoystickButton RestPosExt = new JoystickButton(leftJoystick, Constants.ButtonMap.restPositionArm);
+    RestPosExt.onTrue(new Extend(arm, 0));
+
+    // Tested 2/18/2023 - Only use for testing
+    /*
+    JoystickButton openClaw = new JoystickButton(leftJoystick, 7);
+    openClaw.onTrue(new SetClawPos(claw, 80));
+
+    JoystickButton closeClaw = new JoystickButton(leftJoystick, 8);
+    closeClaw.onTrue(new SetClawPos(claw, 0));
+    */
   }
 
   /**

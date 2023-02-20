@@ -8,23 +8,28 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 
 public class Extend extends CommandBase {
-  /** Creates a new Extend. */
   public Arm arm;
-  private double length;
+  private double position;
   private double direction = 1.0;
-  public Extend(Arm arm, double length) {
-    // Use addRequirements() here to declare subsystem dependencies.
+  /** Extends the Arm's extension to a certain position
+   * @param arm - Arm subsystem
+   * @param position - Desired position in inches
+   */
+  public Extend(Arm arm, double position) {
     this.arm = arm;
-    this.length = length;
+    this.position = position;
+
+    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(arm);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (length >= arm.getLeadScrewPos()) {
+    // Set direction of arm, based upon current position, and desired position
+    if (position >= arm.getLeadScrewPos()) {
       direction = 1.0;
-    } else if (length <= arm.getLeadScrewPos()) {
+    } else if (position <= arm.getLeadScrewPos()) {
       direction = -1.0;
     }
   }
@@ -32,24 +37,38 @@ public class Extend extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    // Extends the arm with some amount of power multiplied by a direction
     arm.extendArm(0.3*direction);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    // Stops the arm when interrupted
     arm.extendArm(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(direction < 0 && length>= arm.getLeadScrewPos()){
+    /*
+     If the direction of the arm's motion is negative, 
+     and the arm's position is equal to or less than the 
+     desired position, then stop.
+    */
+    if (direction < 0 && position >= arm.getLeadScrewPos()) {
       return true;
     }
-    if(direction > 0 && length<= arm.getLeadScrewPos()){
+    /*
+     If the direction of the arm's motion is positive, 
+     and the arm's position is equal to or greater than the 
+     desired position, then stop.
+    */
+    if (direction > 0 && position <= arm.getLeadScrewPos()) {
       return true;
+    } else {
+      // Continue the motion
+      return false;
     }
-    return false;
   }
 }

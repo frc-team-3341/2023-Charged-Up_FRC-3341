@@ -5,14 +5,22 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.*;
+import frc.robot.subsystems.Claw;
 
-public class ActuateClaw extends CommandBase {
-  public Claw claw;
+public class SetClawPos extends CommandBase {
+  
+  private Claw claw;
+  private double angle;
 
-  /** Creates a new ActuateClaw. */
-  public ActuateClaw(Claw claw) {
+  /** Rotates the Claw's servo motor(s) to a certain position
+  * @param claw - Claw subsystem
+  * @param angle - Desired angle in degrees
+  */
+
+  public SetClawPos(Claw claw, double angle) {
     this.claw = claw;
+    this.angle = angle;
+
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(claw);
   }
@@ -23,7 +31,11 @@ public class ActuateClaw extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    // Set the servo position to the absolute value of the target angle
+    // It is always safer to use absolute value to prevent error
+    claw.setClawServoPos(Math.abs(angle));
+  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -32,6 +44,7 @@ public class ActuateClaw extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    // TODO - Fix unit conversions on 5-turn servo
     return false;
   }
 }
