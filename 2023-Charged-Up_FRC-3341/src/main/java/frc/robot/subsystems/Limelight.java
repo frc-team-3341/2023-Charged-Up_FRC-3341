@@ -64,8 +64,7 @@ public class Limelight extends SubsystemBase {
     PortForwarder.add(5800, "http://limelight-drsolom.local:5801", 5800);
   }
   
-  
-  public void changepipeline(int pipeline) {
+    public void changepipeline(int pipeline) {
     table.getEntry("pipeline").setNumber(pipeline);
   }
 
