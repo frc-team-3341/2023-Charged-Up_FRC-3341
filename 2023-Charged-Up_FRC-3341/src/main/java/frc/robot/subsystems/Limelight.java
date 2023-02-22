@@ -20,11 +20,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Limelight extends SubsystemBase {
   /** Creates a new Limelight. */
-
   NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-drsolom");
   private Joystick joystick1 = RobotContainer.getJoy1();
   private Joystick joystick2 = RobotContainer.getJoy2();
-
   private static double txNum;
   private static double tyNum;
   private double taNum;
@@ -39,7 +37,6 @@ public class Limelight extends SubsystemBase {
   private static double CloseAprilTagDistance;
   private static double FarAprilTagDistance;
   private static double Distance_Test;
-
 
   // This gets the tx, or the horizontal offset
   // from the crosshair in degrees (-27.0 to 27.0)
@@ -69,45 +66,16 @@ public class Limelight extends SubsystemBase {
     PortForwarder.add(5800, "http://limelight-drsolom.local:5801", 5800);
   }
   
-    public void changepipeline(int pipeline) {
-    table.getEntry("pipeline").setNumber(pipeline);
-  }
-
-  public static double getCloseReflectiveTapeDistance(){
-    return CloseReflectiveTapeDistance;
-  }
-
-  public static double getFarReflectiveTapeDistance(){
-    return FarReflectiveTapeDistance;
-  }
-
-  public static double getCloseAprilTagDistance(){
-    return CloseAprilTagDistance;
-  }
-
-  public static double getFarAprilTagDistance(){
-    return FarAprilTagDistance;
-  }
-
-  public static double getDistance_Test(){
-    return Distance_Test;
-  }
-
-  public static double get_tx() {
-    return txNum;
-  }
-
-  public static double get_ty() {
-    return tyNum;
-  }
-
-  public double get_ta() {
-    return taNum;
-  }
-
-  public static int get_tv() {
-    return tvNum;
-  }
+  public void changepipeline(int pipeline){ table.getEntry("pipeline").setNumber(pipeline); }
+  public static double get_tx(){ return txNum; }
+  public static double get_ty(){ return tyNum; }
+  public double get_ta(){ return taNum; }
+  public static int get_tv(){ return tvNum; }
+  public static double getCloseReflectiveTapeDistance(){ return CloseReflectiveTapeDistance; }
+  public static double getFarReflectiveTapeDistance(){ return FarReflectiveTapeDistance; }
+  public static double getCloseAprilTagDistance(){ return CloseAprilTagDistance; }
+  public static double getFarAprilTagDistance(){ return FarAprilTagDistance; }
+  public static double getDistance_Test(){ return Distance_Test; }
 
   @Override
   public void periodic() {
@@ -115,23 +83,23 @@ public class Limelight extends SubsystemBase {
 
 // 1st (closest) reflective tape pole
     double pole_1_targetOffsetAngle_Vertical = ty.getDouble(0.0);
-    // how many degrees back is your limelight rotated from perfectly vertical?
-    double pole_1_limelightMountAngleDegrees = 4.0;
-    // distance from the center of the Limelight lens to the floor
+    // How many degrees back is your limelight rotated from perfectly vertical?
+    double pole_1_limelightMountAngleDegrees = 4.1;
+    // Distance from the center of the Limelight lens to the floor
     double pole_1_limelightLensHeightInches = 7.165354;
-    // distance from the target to the floor
+    // Distance from the target to the floor
     double pole_1_goalHeightInches = 34.0;
     double pole_1_angleToGoalDegrees = pole_1_limelightMountAngleDegrees + pole_1_targetOffsetAngle_Vertical;
     // Converts degrees to radians
     double pole_1_angleToGoalRadians = pole_1_angleToGoalDegrees * (Math.PI / 180.0);
-    // calculates distance
+    // Calculates distance
     CloseReflectiveTapeDistance = (pole_1_goalHeightInches - pole_1_limelightLensHeightInches)/Math.tan(pole_1_angleToGoalRadians);
     // This outputs the distance from the limelight to the target
     SmartDashboard.putNumber("CloseReflectiveTapeDistance (inches)", CloseReflectiveTapeDistance);
 
 // 2nd (farthest) reflective tape pole
     double pole_2_targetOffsetAngle_Vertical = ty.getDouble(0.0);
-    double pole_2_limelightMountAngleDegrees = 4.0;
+    double pole_2_limelightMountAngleDegrees = 4.1;
     double pole_2_limelightLensHeightInches = 7.165354;
     double pole_2_goalHeightInches = 46;
     double pole_2_angleToGoalDegrees = pole_2_limelightMountAngleDegrees + pole_2_targetOffsetAngle_Vertical;
@@ -141,7 +109,7 @@ public class Limelight extends SubsystemBase {
 
 // 3rd (closest) april tag shelf
     double pole_3_targetOffsetAngle_Vertical = ty.getDouble(0.0);
-    double pole_3_limelightMountAngleDegrees = 4.0;
+    double pole_3_limelightMountAngleDegrees = 4.1;
     double pole_3_limelightLensHeightInches = 7.165354;
     double pole_3_goalHeightInches = 23.5;
     double pole_3_angleToGoalDegrees = pole_3_limelightMountAngleDegrees + pole_3_targetOffsetAngle_Vertical;
@@ -151,7 +119,7 @@ public class Limelight extends SubsystemBase {
 
 // 4th (farthest) april tag shelf
     double pole_4_targetOffsetAngle_Vertical = ty.getDouble(0.0);
-    double pole_4_limelightMountAngleDegrees = 4.0;
+    double pole_4_limelightMountAngleDegrees = 4.1;
     double pole_4_limelightLensHeightInches = 7.165354;
     double pole_4_goalHeightInches = 35.5;
     double pole_4_angleToGoalDegrees = pole_4_limelightMountAngleDegrees + pole_4_targetOffsetAngle_Vertical;
@@ -161,7 +129,7 @@ public class Limelight extends SubsystemBase {
 
 // test
     double test_targetOffsetAngle_Vertical = ty.getDouble(0.0);
-    double test_limelightMountAngleDegrees = 4.0;
+    double test_limelightMountAngleDegrees = 4.1;
     double test_limelightLensHeightInches = 7.165354;
     double test_goalHeightInches = 15;
     double test_angleToGoalDegrees = test_limelightMountAngleDegrees + test_targetOffsetAngle_Vertical;
@@ -178,16 +146,15 @@ public class Limelight extends SubsystemBase {
     // We will be assigning tvNum to the int (1 or 0) that limelight returns
     tvNum = (int) tv.getDouble(0.0);
 
-    // We will be assigning tyNum to the double (-27.0 to 27.0) that limelight
-    // returns
+    // We will be assigning tyNum to the double (-27.0 to 27.0) that limelight returns
     txNum = tx.getDouble(0.0);
 
-    // We will be assigning tyNum to the double (-20.5 to 20.5) that limelight
-    // returns
+    // We will be assigning tyNum to the double (-20.5 to 20.5) that limelight returns
     tyNum = ty.getDouble(0.0);
 
     // We will be assigning taNum to the double (0.0-100.0) that limelight returns
     taNum = ta.getDouble(0.0);
+
     // This will output the x (horizontal offset) from the target in SmartDashboard
     SmartDashboard.putNumber("LimelightX", txNum);
 
