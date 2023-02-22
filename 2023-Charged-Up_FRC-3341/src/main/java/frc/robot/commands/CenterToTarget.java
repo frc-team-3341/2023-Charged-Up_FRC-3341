@@ -48,7 +48,7 @@ public class CenterToTarget extends CommandBase {
     centerx = Limelight.get_tx();
     centery = Limelight.get_ty();
     Tpid = new PIDController(0.0093825*2, 0.0, 0.0);
-    Fpid = new PIDController(0.001, 0.0, 0.0);
+    Fpid = new PIDController(0.0093825, 0.0, 0.0);
     Tpid.setTolerance(1);
     Fpid.setTolerance(1);
   }
@@ -60,8 +60,7 @@ public class CenterToTarget extends CommandBase {
     centery = Limelight.get_ty();
     drive.resetEncoders();
     Tpid.setSetpoint(0.0);
-    Fpid.setSetpoint(12);
-    
+    Fpid.setSetpoint(0.0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -71,8 +70,8 @@ public class CenterToTarget extends CommandBase {
     // the robot is moving
     centerx = Limelight.get_tx();
     centery = Limelight.get_ty();
-    TurnSpeed = Tpid.calculate(centerx);
-    FowardSpeed = Fpid.calculate(Limelight.getDistance());
+    TurnSpeed = Tpid.calculate(centerx) * 0.3;
+    FowardSpeed = Fpid.calculate(Limelight.getDistance_Test() * 0.3);
     
 /* 
     if(Math.abs(distance) < 11.3){
@@ -80,7 +79,6 @@ public class CenterToTarget extends CommandBase {
     } else if(Math.abs(distance) > 11.3){
       speed1 = Math.abs();
     }
-
     if(Math.abs(speed) > 0.6){
       speed = Math.abs(0.6)*(Math.abs(speed)/speed);
     } else if(Math.abs(speed) < 0.15){
@@ -89,9 +87,7 @@ public class CenterToTarget extends CommandBase {
     */
 
       drive.tankDrive(FowardSpeed+TurnSpeed, FowardSpeed-TurnSpeed);
-    
       SmartDashboard.putNumber("Speed", FowardSpeed);
-  
 }
   
 
