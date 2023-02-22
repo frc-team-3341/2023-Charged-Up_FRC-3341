@@ -34,7 +34,21 @@ public class CenterToTarget extends CommandBase {
     centerx = Limelight.get_tx();
     centery = Limelight.get_ty();
 
-    // PID constants we found through characterization in sysid
+    /* PID constants we found through characterization in sysid
+    
+        P is the Proportional constant 
+          It will correct the error depending on how big the amount of error is:
+          Small amount of error = low correction, High = larger correction 
+          
+        I is the Integral constant
+          It adds up all the past errors to help remove constant errors because
+          no matter how small the constant error, the sum will be significant enough 
+          to adjust the controller output as needed
+          
+        D is the derivative constant
+          It will predict the amount of error in the future because it examines
+          the slope of the change in error 
+    */
     Tpid = new PIDController(0.0093825*2, 0.0, 0.0);
     Fpid = new PIDController(0.0093825, 0.0, 0.0);
 
