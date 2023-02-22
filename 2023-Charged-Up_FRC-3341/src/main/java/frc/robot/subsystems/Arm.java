@@ -75,10 +75,10 @@ public class Arm extends SubsystemBase {
     rotTalon.configPeakCurrentLimit(15);
 
     // Important for future use on final mechanism - configures limit switches for extension
-    // extendingTalon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
-    // extendingTalon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
-    // armTalon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
-    // armTalon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
+    extendingTalon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
+    extendingTalon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
+    rotTalon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
+    rotTalon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
 
     rotTalon.setInverted(true);
 
@@ -122,12 +122,13 @@ public class Arm extends SubsystemBase {
 
   // Tested 1/21/2022
   /**
-  // The testing arm holds with the power of the calculated feedforward, not the action (manual increment of 20%).
-  // This is calculated with sine, where the max voltage is 1.12/12 = 9% voltage
-  // We might need to increase the multiplier on the input, so that when operating manually, the pivot works better for the driver
+  * The testing arm holds with the power of the calculated feedforward, not the action (manual increment of 20%).
+  * This is calculated with sine, where the max voltage is 1.12/12 = 9% voltage
+  * We might need to increase the multiplier on the input, so that when operating manually, the pivot works better for the driver
+  @param power - Percent input into the controller
   */
   public void rotateArm(double power) {
-      rotTalon.set(ControlMode.PercentOutput, power*0.2+(Math.sin(getAngle())*(Constants.PIDConstants.armManualHoldingVoltage/12.0))); 
+      rotTalon.set(ControlMode.PercentOutput, power*0.4+(Math.sin(getAngle())*(Constants.PIDConstants.armManualHoldingVoltage/12.0))); 
   }
   public void extendArm(double power) {
     extendingTalon.set(ControlMode.PercentOutput, power);
@@ -159,7 +160,7 @@ public class Arm extends SubsystemBase {
   }
 
   /**
-  Updates the PID loop with a feedforward value
+  Updates the PID loop with a calculated feedforward value
    */
   public void updatePID() {
     // Without two clamps: 1.12
@@ -177,6 +178,7 @@ public class Arm extends SubsystemBase {
 
   /** 
   Sets subsystem's internal angle
+  @param angle - Angle to set the arm
    */
   public void setTargetAngle(double angle) {
     this.targetAngle = angle;
@@ -184,6 +186,7 @@ public class Arm extends SubsystemBase {
 
   /** 
   Sets subsystem's internal difference in angle, in order to calculate kP
+  @param diff - Difference in angle
    */
   public void setDifferenceInAngle(double diff) {
     this.differenceInAngle = diff;
@@ -198,6 +201,7 @@ public class Arm extends SubsystemBase {
   /**
   Sets the status of control (manual is true, auto is false).
   Useful for auto commands.
+  @param o - Boolean for overriding to manual mode
   */
   public void setOverride(boolean o) {
     override = o;
@@ -231,7 +235,7 @@ public class Arm extends SubsystemBase {
     // If controlling manually
     if (override) {
       // We want to reset the target angle to the current angle
-      rotateArm(-1.0*RobotContainer.getJoy1().getY());
+      rotateArm(RobotContainer.getJoy1().getY());
       targetAngle = getAngle();
     // Else if not controlling manually
     } else if (!override) {
@@ -267,7 +271,7 @@ public class Arm extends SubsystemBase {
     if (!override && RobotContainer.getJoy1().getY() > 0 && RobotContainer.getJoy1().getTriggerPressed() && targetAngle <= Constants.Measurements.upperAngleBound) {
       SmartDashboard.putString("Status: ", "Incrementing");
       targetAngle += 10;
-   // Decrement arm angle if the joystick's y axis is at a negative value, the trigger button is pressed, and the target angle is above a certain bound
+    // Decrement arm angle if the joystick's y axis is at a negative value, the trigger button is pressed, and the target angle is above a certain bound
     } else if (!override && RobotContainer.getJoy1().getY() < 0 && RobotContainer.getJoy1().getTriggerPressed() && targetAngle >= Constants.Measurements.lowerAngleBound) {
       SmartDashboard.putString("Status: ", "Decrementing");
       targetAngle -= 10;

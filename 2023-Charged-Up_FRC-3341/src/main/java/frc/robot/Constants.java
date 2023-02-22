@@ -26,9 +26,9 @@ public final class Constants {
     public static final double armPID_P = 0.015;
     public static final double armPID_I = 0.00005;
     public static final double armPID_D = 0.0;
-    public static final double armPID_K = 0.7;
-    public static final double armHoldingVoltage = 1.4; // Used to calculate Feedforward
-    public static final double armManualHoldingVoltage = 1.4; // Manual holding voltage
+    public static final double armPID_K = 0.7; // Used to calculate kP, from the difference in angle
+    public static final double armHoldingVoltage = 1.1; // Used to calculate Feedforward
+    public static final double armManualHoldingVoltage = 1.9; // Manual holding voltage
   }
   public static class Measurements {
     public static final double threadLength = 0.138; // Inches per rotation of leadscrew
@@ -41,9 +41,13 @@ public final class Constants {
     public static final double upperAngleBound = 160; // Maximum pos of Arm in degrees, when stowed
     public static final double lowerScrewBound = 0.0; // Lower bound for motion of screw (inches)
     public static final double upperScrewBound = 10.0; // Upper bound for motion of screw (inches)
-    public static final double servoAngleLimit = 1800.0; // Limit for servo movement (degrees)
     public static final double fullyExtendedLeadScrewThreshold = 5.0;
     public static final double degreesToTicks = 4096.0/360.0;
+
+    public static final double clawAngleLimit = 80.0; // Limit for servo movement (degrees)
+
+    public static final double wristUpperLimit = 225.0;
+    public static final double wristLowerLimit = -225.0; 
   }
 
   public static class ButtonMap {
@@ -59,9 +63,9 @@ public final class Constants {
     public static final int otherArbPosition = 3;
     public static final int groundPosition = 6;
 
-    // Buttons for Claw increment and decrement
-    public static final int clawDecrement = 7;
-    public static final int clawIncrement = 8;
+    // Power of extension command for Auto
+    // Range: 0.0 to 1.0
+    public static final double extensionPower = 0.3; 
 
     // Potentially temporary buttons
     // Useful for testing autonomous commands
@@ -69,7 +73,16 @@ public final class Constants {
     public static final int restPositionArm = 9;
     public static final int logButton = 12;
 
+    // Wrist Presets
+    public static final int wristLeft = 5;
+    public static final int wristRight = 6;
+    public static final int wristCenter = 4;
+    public static final int clawRest = 3;
+    public static final int clawClosed = 2;
+
     // Seconds until control (angle, etc.) is incremented/decremented
-    public static final double controlsDelay = 0.1;
+    public static final double controlsDelay = 0.02;
+
+    public static final int wristIncrement = 5; // Wrist increment in degrees for semi-auto control
   }
 }

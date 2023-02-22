@@ -17,7 +17,9 @@ public class Claw extends SubsystemBase {
   Servo wristServo = new Servo(Constants.OperatorConstants.wristServoPort);
 
   public boolean clawed = false;
-  private double angle = 0.0;
+  private double clawAngle = 0.0;
+  // The wrist starts at 0.0 degrees, but is physically at 2.5 rotations
+  private double wristAngle = 0.0;
   // Timer for controls
   private Timer controlsTimer = new Timer();
   
@@ -25,6 +27,8 @@ public class Claw extends SubsystemBase {
   // Claw either has 3 talons or 1 - still TBD
   public Claw() {
     controlsTimer.reset();
+    // Sets Wrist to -225 degrees (resting position)
+    wristServo.set(0.0);
   }
 
   /**
@@ -47,20 +51,23 @@ public class Claw extends SubsystemBase {
 
   /**
    * Moves the Wrist to a certain position
-   * @param angle - Position to move the servo (-900 deg to 900 deg)
+   * @param angle - Position to move the servo (-225 deg to 225 deg)
    */
   public void setWristServoPos(double angle) {
+    // The gear ratio of 4:1 is accounted for with the multiplication of 4
+    // Meaning the range of the mechanism is from 225 to -225 degrees
     // The servo turns 5 rotations per 1 value units given
     // We add 2.5 to convert it to the scale of the middlemost value being the center (2.5 rotations)
-    double pos = (((angle)/360.0) + 2.5)/5.0;
+    double pos = (((4*angle)/360.0) + 2.5)/5.0;
     wristServo.setPosition(pos);
   }
 
   /**
   * Gets the Wrist's position
+  * Should be within the range of -225 to 225
   */
   public double getWristServoPos() {
-    double pos = (wristServo.getPosition()*5.0 - 2.5)*360.0;
+    double pos = ((wristServo.getPosition()*5.0 - 2.5)*360.0)/4;
     return pos;
   }
 
@@ -69,21 +76,43 @@ public class Claw extends SubsystemBase {
     // This method will be called once per scheduler run
     // Manually increments and decrements the angle of the Claw
     // This is done when the buttons are pressed, every certain number of seconds
-    
-    if (RobotContainer.getJoy1().getRawButton(Constants.ButtonMap.clawDecrement) && angle > 0.0 && controlsTimer.get() <= Constants.ButtonMap.controlsDelay) {
-      angle -= 5.0;
-      setClawServoPos(angle);
-      controlsTimer.reset();
-    }
-    else if (RobotContainer.getJoy1().getRawButton(Constants.ButtonMap.clawIncrement) && angle < Constants.Measurements.servoAngleLimit && controlsTimer.get() <= Constants.ButtonMap.controlsDelay) {
-      angle += 5.0;
-      setClawServoPos(angle);
-      controlsTimer.reset();
-    } else if (controlsTimer.get() >= Constants.ButtonMap.controlsDelay) {
-      controlsTimer.reset();
+    wristAngle = getWristServoPos();
+    clawAngle = getClawServoPos();
+    if (RobotContainer.getJoy2().getTrigger()) {
+      // If POV is Down, then decrement
+      if (RobotContainer.getJoy2().getPOV() == 180 && clawAngle > 0.0 && controlsTimer.get() <= Constants.ButtonMap.controlsDelay) {
+        clawAngle -= 5.0;
+        setClawServoPos(clawAngle);
+        controlsTimer.reset();
+      }
+      // If POV is Up, then increment
+      else if (RobotContainer.getJoy2().getPOV() == 0 && clawAngle < Constants.Measurements.clawAngleLimit && controlsTimer.get() <= Constants.ButtonMap.controlsDelay) {
+        clawAngle += 5.0;
+        setClawServoPos(clawAngle);
+        controlsTimer.reset();
+      } else if (controlsTimer.get() >= Constants.ButtonMap.controlsDelay) {
+        controlsTimer.reset();
+      }
+
+      // If Y of joystick is Down, > 0, then decrement
+      if (RobotContainer.getJoy2().getY() > 0.2 && wristAngle > Constants.Measurements.wristLowerLimit && controlsTimer.get() <= Constants.ButtonMap.controlsDelay) {
+        wristAngle -= Constants.ButtonMap.wristIncrement;
+        setWristServoPos(wristAngle);
+        controlsTimer.reset();
+      }
+      // If Y of joystick is Up, < 0, then increment
+      else if (RobotContainer.getJoy2().getY() < -0.2 && wristAngle < Constants.Measurements.wristUpperLimit && controlsTimer.get() <= Constants.ButtonMap.controlsDelay) {
+        wristAngle += Constants.ButtonMap.wristIncrement;
+        setWristServoPos(wristAngle);
+        controlsTimer.reset();
+      } else if (controlsTimer.get() >= Constants.ButtonMap.controlsDelay) {
+        controlsTimer.reset();
+      }
     }
 
     SmartDashboard.putNumber("Claw Servo Position", clawServo.getPosition());
-    SmartDashboard.putNumber("Claw Servo Angle:", angle);
+    SmartDashboard.putNumber("Claw Servo Angle:", clawAngle);
+    SmartDashboard.putNumber("Wrist Servo Position", wristServo.getPosition());
+    SmartDashboard.putNumber("Wrist Servo Angle:", wristAngle);
   }
 }

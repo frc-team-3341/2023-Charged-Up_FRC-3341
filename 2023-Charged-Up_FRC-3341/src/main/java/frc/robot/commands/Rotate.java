@@ -10,10 +10,12 @@ import frc.robot.subsystems.*;
 public class Rotate extends CommandBase {
   public Arm arm;
   public double angle;
+
   /** Rotates the Arm to a certain angle using PIDF control
   * @param arm - Arm subsystem
   * @param angle - Desired angle in degrees
   */
+  
   public Rotate(Arm arm, double angle) {
     this.arm = arm;
     this.angle = angle;

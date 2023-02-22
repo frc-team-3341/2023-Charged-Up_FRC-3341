@@ -5,16 +5,19 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Arm;
 
 public class Extend extends CommandBase {
   public Arm arm;
   private double position;
   private double direction = 1.0;
+
   /** Extends the Arm's extension to a certain position
    * @param arm - Arm subsystem
    * @param position - Desired position in inches
    */
+  
   public Extend(Arm arm, double position) {
     this.arm = arm;
     this.position = position;
@@ -38,7 +41,7 @@ public class Extend extends CommandBase {
   @Override
   public void execute() {
     // Extends the arm with some amount of power multiplied by a direction
-    arm.extendArm(0.3*direction);
+    arm.extendArm(Constants.ButtonMap.extensionPower*direction);
   }
 
   // Called once the command ends or is interrupted.

@@ -44,6 +44,6 @@ public class SetWristPos extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return claw.getWristServoPos() == Math.abs(angle);
+    return true;
   }
 }

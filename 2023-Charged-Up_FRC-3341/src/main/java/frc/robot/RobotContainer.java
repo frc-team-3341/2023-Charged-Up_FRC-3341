@@ -25,6 +25,7 @@ public class RobotContainer {
   public final Claw claw = new Claw();
 
   public static final Joystick leftJoystick = new Joystick(0);
+  public static final Joystick rightJoystick = new Joystick(1);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -54,21 +55,28 @@ public class RobotContainer {
     JoystickButton triggerGroundPos = new JoystickButton(leftJoystick, Constants.ButtonMap.groundPosition);
     triggerGroundPos.onTrue(new Rotate(arm, 90));
 
-    JoystickButton triggerExt = new JoystickButton(leftJoystick, Constants.ButtonMap.fullyExtendedArm);
+    // JoystickButton triggerExt = new JoystickButton(leftJoystick, Constants.ButtonMap.fullyExtendedArm);
     // Extends 1 inch for testing
-    triggerExt.onTrue(new Extend(arm, 1));
+    // triggerExt.onTrue(new Extend(arm, 1));
 
-    JoystickButton RestPosExt = new JoystickButton(leftJoystick, Constants.ButtonMap.restPositionArm);
-    RestPosExt.onTrue(new Extend(arm, 0));
+    // JoystickButton RestPosExt = new JoystickButton(leftJoystick, Constants.ButtonMap.restPositionArm);
+    // RestPosExt.onTrue(new Extend(arm, 0));
 
-    // Tested 2/18/2023 - Only use for testing
-    /*
-    JoystickButton openClaw = new JoystickButton(leftJoystick, 7);
-    openClaw.onTrue(new SetWristPos(claw, -900));
+    JoystickButton triggerWristRight = new JoystickButton(rightJoystick, Constants.ButtonMap.wristRight);
+    triggerWristRight.onTrue(new SetWristPos(claw, 225));
 
-    JoystickButton closeClaw = new JoystickButton(leftJoystick, 8);
-    closeClaw.onTrue(new SetWristPos(claw, 900));
-    */
+    JoystickButton triggerWristLeft = new JoystickButton(rightJoystick, Constants.ButtonMap.wristLeft);
+    triggerWristLeft.onTrue(new SetWristPos(claw, -225));
+
+    JoystickButton triggerWristCenter = new JoystickButton(rightJoystick, Constants.ButtonMap.wristCenter);
+    triggerWristCenter.onTrue(new SetWristPos(claw, 0));
+
+    JoystickButton triggerClawRest = new JoystickButton(rightJoystick, Constants.ButtonMap.clawRest);
+    triggerClawRest.onTrue(new SetClawPos(claw, 0));
+
+    JoystickButton triggerClawClosed = new JoystickButton(rightJoystick, Constants.ButtonMap.clawClosed);
+    triggerClawClosed.onTrue(new SetClawPos(claw, 50));
+
   }
 
   /**
@@ -83,5 +91,9 @@ public class RobotContainer {
 
   public static Joystick getJoy1() {
     return leftJoystick;
+  }
+
+  public static Joystick getJoy2() {
+    return rightJoystick;
   }
 }
