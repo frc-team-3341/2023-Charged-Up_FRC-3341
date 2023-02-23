@@ -3,22 +3,10 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
-
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.net.PortForwarder;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class CenterToTarget extends CommandBase {
@@ -30,22 +18,43 @@ public class CenterToTarget extends CommandBase {
   public double centery;
   private final TankDrive tankDrive;
   private static Drivetrain drive;
-  public PIDController pid;
-  double speed = 0.0;
-  
-  
+  public PIDController Tpid;
+  public PIDController Fpid;
+  double TurnSpeed = 0.0;  
+  double FowardSpeed = 0.0;  
 
   public CenterToTarget(Limelight lime, Drivetrain drive) {
     // Use addRequirements() here to declare subsystem dependencies.
     tankDrive = new TankDrive(drive, null, null);
     this.lime = lime;
     this.drive = drive;
+
     // Connects limelight subsystem to this command
     addRequirements(drive, lime);
     centerx = Limelight.get_tx();
     centery = Limelight.get_ty();
-    pid = new PIDController(0.0093825*2, 0.0, 0.0);
-    pid.setTolerance(1);
+
+    /* PID constants we found through characterization in sysid
+    
+        P is the Proportional constant 
+          It will correct the error depending on how big the amount of error is:
+          Small amount of error = low correction, High = larger correction 
+          
+        I is the Integral constant
+          It adds up all the past errors to help remove constant errors because
+          no matter how small the constant error, the sum will be significant enough 
+          to adjust the controller output as needed
+          
+        D is the derivative constant
+          It will predict the amount of error in the future because it examines
+          the slope of the change in error 
+
+    */
+    Tpid = new PIDController(0.0093825*2, 0.0, 0.0);
+    Fpid = new PIDController(0.0093825*2, 0.0, 0.0);
+
+    Tpid.setTolerance(1);
+    Fpid.setTolerance(1);
   }
 
   // Called when the command is initially scheduled.
@@ -54,30 +63,36 @@ public class CenterToTarget extends CommandBase {
     centerx = Limelight.get_tx();
     centery = Limelight.get_ty();
     drive.resetEncoders();
-    pid.setSetpoint(0.0);
-    
+    Tpid.setSetpoint(0.0);
+    Fpid.setSetpoint(0.0);
     
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // You need this because it keeps calling the value instead of only once because
-    // the robot is moving
+    // You need this because it keeps calling the value instead of only once because the robot is moving
     centerx = Limelight.get_tx();
     centery = Limelight.get_ty();
-    speed = pid.calculate(centerx);
-
+    TurnSpeed = Tpid.calculate(centerx) * 0.3;
+    FowardSpeed = Fpid.calculate(Limelight.getDistance_Test() * 0.3);
+    
+    /* 
+    if(Math.abs(distance) < 11.3){
+      speed1 = Math.abs();
+    } else if(Math.abs(distance) > 11.3){
+      speed1 = Math.abs();
+    }
     if(Math.abs(speed) > 0.6){
       speed = Math.abs(0.6)*(Math.abs(speed)/speed);
     } else if(Math.abs(speed) < 0.15){
       speed = Math.abs(0.15)*(Math.abs(speed)/speed);
     }
-      drive.tankDrive(speed, -speed);
+    */
     
-      SmartDashboard.putNumber("Speed", speed);
-
-  }
+    drive.tankDrive(FowardSpeed+TurnSpeed, FowardSpeed-TurnSpeed);
+    SmartDashboard.putNumber("Speed", FowardSpeed);
+}
   
 
   // Called once the command ends or is interrupted.
@@ -89,7 +104,7 @@ public class CenterToTarget extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    //return pid.atSetpoint();
-    return false;
+    return Tpid.atSetpoint() && Fpid.atSetpoint();
+    //return false;
   }
 }
