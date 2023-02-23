@@ -19,17 +19,19 @@ import frc.robot.subsystems.*;
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 
 
 public class RobotContainer {
-  public static Joystick joystick2;
-  public static Joystick joystick1;
-  private final TankDrive tankDrive;
-  private static DriveTrain dt;
-  
   // The robot's subsystems and commands are defined here...
+  
+  //We have to initialize these objects for the SpinToTarget, ProtoTurret, and AutoTurret commands
+  private final static Drivetrain drive = new Drivetrain();
+  private final static Limelight lime = new Limelight();
+  private final static LockOnTarget lock = new LockOnTarget(drive, lime, 0);
+  private final static CenterToTarget center = new CenterToTarget(lime, drive);
 
 
   public final Arm arm = new Arm();
@@ -41,23 +43,11 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    joystick1 = new Joystick(0);
-    joystick2 = new Joystick(1);
-    configureButtonBindings();
     // Configure the button bindings
-    dt = new DriveTrain();
-    tankDrive = new TankDrive(dt, joystick2, joystick1);
-    
-
+    joy1 = new Joystick(Constants.joy1);
+    joy2 = new Joystick(Constants.joy2);
+    configureButtonBindings();
   }
-  public static Joystick getJoy1() {
-    return joystick1;
-
-  }
-  public static Joystick getJoy2() {
-    return joystick2;
-  }
- 
 
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
@@ -66,7 +56,12 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
 
+
   private void configureBindings() {
+  
+    JoystickButton toTarget = new JoystickButton(joy1, 3);
+    toTarget.onTrue( new CenterToTarget(lime, drive));
+    
     JoystickButton triggerStowPos = new JoystickButton(leftJoystick, Constants.ButtonMap.stowPosition);
     triggerStowPos.onTrue(new Rotate(arm, 0));
 
@@ -104,6 +99,7 @@ public class RobotContainer {
   }
 
 
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -125,10 +121,26 @@ public class RobotContainer {
   
    public static DriveTrain getDriveTrain(){
     return dt;
+
+}
+  public static Joystick getJoy1(){
+    return joy1;
+  }
+  public static Joystick getJoy2(){
+    return joy2;
+  }
+  public static Drivetrain getDrive(){
+    return drive;
+  }
+  public static Limelight getLime(){
+    return lime;
   }
 
-  public Command getAutonomousCommand(){
-    return m_autoCommand;
+  public static double get_tv() {
+    return 0;
   }
 
-
+public static double get_ty() {
+    return 0;
+}
+}
