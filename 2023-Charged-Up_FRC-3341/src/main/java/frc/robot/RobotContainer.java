@@ -4,15 +4,23 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.Limelight;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
 
-
+/**
+ * This class is where the bulk of the robot should be declared. Since Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * subsystems, commands, and trigger mappings) should be declared here.
+ */
 
 
 public class RobotContainer {
@@ -22,10 +30,15 @@ public class RobotContainer {
   private static DriveTrain dt;
   
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
+
+  public final Arm arm = new Arm();
+  public final Claw claw = new Claw();
+
+  public static final Joystick leftJoystick = new Joystick(0);
+  public static final Joystick rightJoystick = new Joystick(1);
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
- 
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     joystick1 = new Joystick(0);
@@ -53,7 +66,42 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
 
-  private void configureButtonBindings() {}
+  private void configureBindings() {
+    JoystickButton triggerStowPos = new JoystickButton(leftJoystick, Constants.ButtonMap.stowPosition);
+    triggerStowPos.onTrue(new Rotate(arm, 0));
+
+    JoystickButton triggerMiddlePos = new JoystickButton(leftJoystick, Constants.ButtonMap.middlePosition);
+    triggerMiddlePos.onTrue(new Rotate(arm, 10));
+
+    JoystickButton triggerOtherPos = new JoystickButton(leftJoystick, Constants.ButtonMap.otherArbPosition);
+    triggerOtherPos.onTrue(new Rotate(arm, 30));
+
+    JoystickButton triggerGroundPos = new JoystickButton(leftJoystick, Constants.ButtonMap.groundPosition);
+    triggerGroundPos.onTrue(new Rotate(arm, 90));
+
+    // JoystickButton triggerExt = new JoystickButton(leftJoystick, Constants.ButtonMap.fullyExtendedArm);
+    // Extends 1 inch for testing
+    // triggerExt.onTrue(new Extend(arm, 1));
+
+    // JoystickButton RestPosExt = new JoystickButton(leftJoystick, Constants.ButtonMap.restPositionArm);
+    // RestPosExt.onTrue(new Extend(arm, 0));
+
+    JoystickButton triggerWristRight = new JoystickButton(rightJoystick, Constants.ButtonMap.wristRight);
+    triggerWristRight.onTrue(new SetWristPos(claw, 225));
+
+    JoystickButton triggerWristLeft = new JoystickButton(rightJoystick, Constants.ButtonMap.wristLeft);
+    triggerWristLeft.onTrue(new SetWristPos(claw, -225));
+
+    JoystickButton triggerWristCenter = new JoystickButton(rightJoystick, Constants.ButtonMap.wristCenter);
+    triggerWristCenter.onTrue(new SetWristPos(claw, 0));
+
+    JoystickButton triggerClawRest = new JoystickButton(rightJoystick, Constants.ButtonMap.clawRest);
+    triggerClawRest.onTrue(new SetClawPos(claw, 0));
+
+    JoystickButton triggerClawClosed = new JoystickButton(rightJoystick, Constants.ButtonMap.clawClosed);
+    triggerClawClosed.onTrue(new SetClawPos(claw, 50));
+
+  }
 
 
   /**
@@ -61,6 +109,19 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
+
+  public Command getAutonomousCommand() {
+    // An example command will be run in autonomous
+    return null;
+  }
+
+  public static Joystick getJoy1() {
+    return leftJoystick;
+  }
+
+  public static Joystick getJoy2() {
+    return rightJoystick;
+}
   
    public static DriveTrain getDriveTrain(){
     return dt;
