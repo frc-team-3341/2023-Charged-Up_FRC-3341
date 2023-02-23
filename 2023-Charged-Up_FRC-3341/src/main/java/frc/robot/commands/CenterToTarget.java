@@ -48,10 +48,10 @@ public class CenterToTarget extends CommandBase {
         D is the derivative constant
           It will predict the amount of error in the future because it examines
           the slope of the change in error 
-          
+
     */
     Tpid = new PIDController(0.0093825*2, 0.0, 0.0);
-    Fpid = new PIDController(0.0093825, 0.0, 0.0);
+    Fpid = new PIDController(0.0093825*2, 0.0, 0.0);
 
     Tpid.setTolerance(1);
     Fpid.setTolerance(1);
@@ -65,6 +65,7 @@ public class CenterToTarget extends CommandBase {
     drive.resetEncoders();
     Tpid.setSetpoint(0.0);
     Fpid.setSetpoint(0.0);
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.

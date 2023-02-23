@@ -8,15 +8,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.cscore.HttpCamera;
-import edu.wpi.first.cscore.HttpCamera.HttpCameraKind;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Limelight extends SubsystemBase {
   /** Creates a new Limelight. */
