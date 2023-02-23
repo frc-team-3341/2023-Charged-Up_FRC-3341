@@ -84,7 +84,7 @@ public class Limelight extends SubsystemBase {
 // 1st (closest) reflective tape pole
     double pole_1_targetOffsetAngle_Vertical = ty.getDouble(0.0);
     // How many degrees back is your limelight rotated from perfectly vertical?
-    double pole_1_limelightMountAngleDegrees = 4.1;
+    double pole_1_limelightMountAngleDegrees = 3.15;
     // Distance from the center of the Limelight lens to the floor
     double pole_1_limelightLensHeightInches = 7.165354;
     // Distance from the target to the floor
@@ -99,7 +99,7 @@ public class Limelight extends SubsystemBase {
 
 // 2nd (farthest) reflective tape pole
     double pole_2_targetOffsetAngle_Vertical = ty.getDouble(0.0);
-    double pole_2_limelightMountAngleDegrees = 4.1;
+    double pole_2_limelightMountAngleDegrees = 3.15; 
     double pole_2_limelightLensHeightInches = 7.165354;
     double pole_2_goalHeightInches = 46;
     double pole_2_angleToGoalDegrees = pole_2_limelightMountAngleDegrees + pole_2_targetOffsetAngle_Vertical;
@@ -109,7 +109,7 @@ public class Limelight extends SubsystemBase {
 
 // 3rd (closest) april tag shelf
     double pole_3_targetOffsetAngle_Vertical = ty.getDouble(0.0);
-    double pole_3_limelightMountAngleDegrees = 4.1;
+    double pole_3_limelightMountAngleDegrees = 3.15;
     double pole_3_limelightLensHeightInches = 7.165354;
     double pole_3_goalHeightInches = 23.5;
     double pole_3_angleToGoalDegrees = pole_3_limelightMountAngleDegrees + pole_3_targetOffsetAngle_Vertical;
@@ -119,7 +119,7 @@ public class Limelight extends SubsystemBase {
 
 // 4th (farthest) april tag shelf
     double pole_4_targetOffsetAngle_Vertical = ty.getDouble(0.0);
-    double pole_4_limelightMountAngleDegrees = 4.1;
+    double pole_4_limelightMountAngleDegrees = 3.15; 
     double pole_4_limelightLensHeightInches = 7.165354;
     double pole_4_goalHeightInches = 35.5;
     double pole_4_angleToGoalDegrees = pole_4_limelightMountAngleDegrees + pole_4_targetOffsetAngle_Vertical;
@@ -129,7 +129,7 @@ public class Limelight extends SubsystemBase {
 
 // test
     double test_targetOffsetAngle_Vertical = ty.getDouble(0.0);
-    double test_limelightMountAngleDegrees = 4.1;
+    double test_limelightMountAngleDegrees = 3.15;
     double test_limelightLensHeightInches = 7.165354;
     double test_goalHeightInches = 15;
     double test_angleToGoalDegrees = test_limelightMountAngleDegrees + test_targetOffsetAngle_Vertical;
