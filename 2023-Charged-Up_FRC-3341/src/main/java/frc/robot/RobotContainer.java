@@ -9,9 +9,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.Extend;
-import frc.robot.commands.Rotate;
-import frc.robot.subsystems.Arm;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -23,8 +22,10 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   public final Arm arm = new Arm();
+  public final Claw claw = new Claw();
 
   public static final Joystick leftJoystick = new Joystick(0);
+  public static final Joystick rightJoystick = new Joystick(1);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -42,20 +43,40 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    JoystickButton triggerStowPos = new JoystickButton(leftJoystick, 5);
+    JoystickButton triggerStowPos = new JoystickButton(leftJoystick, Constants.ButtonMap.stowPosition);
     triggerStowPos.onTrue(new Rotate(arm, 0));
 
-    JoystickButton triggerMiddlePos = new JoystickButton(leftJoystick, 4);
+    JoystickButton triggerMiddlePos = new JoystickButton(leftJoystick, Constants.ButtonMap.middlePosition);
     triggerMiddlePos.onTrue(new Rotate(arm, 10));
 
-    JoystickButton triggerOtherPos = new JoystickButton(leftJoystick, 3);
+    JoystickButton triggerOtherPos = new JoystickButton(leftJoystick, Constants.ButtonMap.otherArbPosition);
     triggerOtherPos.onTrue(new Rotate(arm, 30));
 
-    JoystickButton triggerGroundPos = new JoystickButton(leftJoystick, 6);
+    JoystickButton triggerGroundPos = new JoystickButton(leftJoystick, Constants.ButtonMap.groundPosition);
     triggerGroundPos.onTrue(new Rotate(arm, 90));
 
-    JoystickButton triggerMiddleExt = new JoystickButton(leftJoystick, 8);
-    triggerMiddleExt.onTrue(new Extend(arm, 10));
+    // JoystickButton triggerExt = new JoystickButton(leftJoystick, Constants.ButtonMap.fullyExtendedArm);
+    // Extends 1 inch for testing
+    // triggerExt.onTrue(new Extend(arm, 1));
+
+    // JoystickButton RestPosExt = new JoystickButton(leftJoystick, Constants.ButtonMap.restPositionArm);
+    // RestPosExt.onTrue(new Extend(arm, 0));
+
+    JoystickButton triggerWristRight = new JoystickButton(rightJoystick, Constants.ButtonMap.wristRight);
+    triggerWristRight.onTrue(new SetWristPos(claw, 225));
+
+    JoystickButton triggerWristLeft = new JoystickButton(rightJoystick, Constants.ButtonMap.wristLeft);
+    triggerWristLeft.onTrue(new SetWristPos(claw, -225));
+
+    JoystickButton triggerWristCenter = new JoystickButton(rightJoystick, Constants.ButtonMap.wristCenter);
+    triggerWristCenter.onTrue(new SetWristPos(claw, 0));
+
+    JoystickButton triggerClawRest = new JoystickButton(rightJoystick, Constants.ButtonMap.clawRest);
+    triggerClawRest.onTrue(new SetClawPos(claw, 0));
+
+    JoystickButton triggerClawClosed = new JoystickButton(rightJoystick, Constants.ButtonMap.clawClosed);
+    triggerClawClosed.onTrue(new SetClawPos(claw, 50));
+
   }
 
   /**
@@ -70,5 +91,9 @@ public class RobotContainer {
 
   public static Joystick getJoy1() {
     return leftJoystick;
+  }
+
+  public static Joystick getJoy2() {
+    return rightJoystick;
   }
 }
