@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Joystick;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -13,11 +15,27 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
+  public static final int joyStick1 = 0;
+  public static final int joyStick2 = 1;
+  public static final int joyStick3 = 2;
+  public static final int joyStick4 = 3;
+
   public static class OperatorConstants {
+    
+    public static final int LeftDriveTalonPort = 2;
+    public static final int RightDriveTalonPort = 3;
+    public static final int LeftDriveVictorPort = 4;
+    public static final int RightDriveVictorPort = 5;
+    public static final int YAxis = 1;
+    public static final int XAxis = 0;
+    public static final int Zero = 0;
+    public static final int One = 1;
+    
     public static final int kDriverControllerPort = 0;
-    public static final int armPort = 2; // ID 2 for testing
+    public static final int armPort = 10; // ID 2 for testing
     public static final int clawPinchPort = 20;
-    public static final int extPort = 4;
+    public static final int extPort = 11;
     public static final int clawServoPort = 0;
     public static final int wristServoPort = 1;
   }
@@ -84,5 +102,6 @@ public final class Constants {
     public static final double controlsDelay = 0.02;
 
     public static final int wristIncrement = 5; // Wrist increment in degrees for semi-auto control
+
   }
 }

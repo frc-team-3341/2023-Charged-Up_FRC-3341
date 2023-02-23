@@ -4,11 +4,14 @@
 
 package frc.robot;
 
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
@@ -18,30 +21,51 @@ import frc.robot.subsystems.*;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
+
+
 public class RobotContainer {
+  public static Joystick joystick2;
+  public static Joystick joystick1;
+  private final TankDrive tankDrive;
+  private static DriveTrain dt;
+  
   // The robot's subsystems and commands are defined here...
+
 
   public final Arm arm = new Arm();
   public final Claw claw = new Claw();
 
   public static final Joystick leftJoystick = new Joystick(0);
   public static final Joystick rightJoystick = new Joystick(1);
+  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // Configure the trigger bindings
-    configureBindings();
+    joystick1 = new Joystick(0);
+    joystick2 = new Joystick(1);
+    configureButtonBindings();
+    // Configure the button bindings
+    dt = new DriveTrain();
+    tankDrive = new TankDrive(dt, joystick2, joystick1);
+    
+
   }
+  public static Joystick getJoy1() {
+    return joystick1;
+
+  }
+  public static Joystick getJoy2() {
+    return joystick2;
+  }
+ 
 
   /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
+   * Use this method to define your button->command mappings. Buttons can be created by
+   * instantiating a {@link GenericHID} or one of its subclasses ({@link
+   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
+   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
+
   private void configureBindings() {
     JoystickButton triggerStowPos = new JoystickButton(leftJoystick, Constants.ButtonMap.stowPosition);
     triggerStowPos.onTrue(new Rotate(arm, 0));
@@ -79,11 +103,13 @@ public class RobotContainer {
 
   }
 
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
+
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return null;
@@ -95,5 +121,14 @@ public class RobotContainer {
 
   public static Joystick getJoy2() {
     return rightJoystick;
-  }
 }
+  
+   public static DriveTrain getDriveTrain(){
+    return dt;
+  }
+
+  public Command getAutonomousCommand(){
+    return m_autoCommand;
+  }
+
+
