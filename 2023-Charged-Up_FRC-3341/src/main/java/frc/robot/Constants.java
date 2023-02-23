@@ -20,6 +20,11 @@ public final class Constants {
     public static final int extPort = 4;
     public static final int clawServoPort = 0;
     public static final int wristServoPort = 1;
+
+    public static final int leftStarClawServo = 3;
+    public static final int rightStarClawServo = 4;
+    public static final int leftFlywheelPort = 30;
+    public static final int rightFlywheelPort = 31; 
   }
 
   public static class PIDConstants {
@@ -32,6 +37,7 @@ public final class Constants {
   }
   public static class Measurements {
     public static final double threadLength = 0.138; // Inches per rotation of leadscrew
+    public static final double threadLengthStarClaw = 0.3;
     public static final double gearRatio = 1.0/3.0; // 1 rotation of screw = 3 rotations of leadscrew motor
     public static final double lowerAngleBound = 0; // Position of Arm when upright
 
@@ -45,6 +51,8 @@ public final class Constants {
     public static final double degreesToTicks = 4096.0/360.0;
 
     public static final double clawAngleLimit = 80.0; // Limit for servo movement (degrees)
+
+    public static final double starClawPositionLimit = 4.0;
 
     public static final double wristUpperLimit = 225.0;
     public static final double wristLowerLimit = -225.0; 
@@ -79,6 +87,9 @@ public final class Constants {
     public static final int wristCenter = 4;
     public static final int clawRest = 3;
     public static final int clawClosed = 2;
+
+    public static final int flywheelOn = 3;
+    public static final int flywheelOff = 2;
 
     // Seconds until control (angle, etc.) is incremented/decremented
     public static final double controlsDelay = 0.02;
