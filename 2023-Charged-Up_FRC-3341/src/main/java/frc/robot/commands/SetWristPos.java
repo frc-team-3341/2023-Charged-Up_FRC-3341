@@ -4,23 +4,25 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Claw;
 
-/** An example command that uses an example subsystem. */
-public class ExampleCommand extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final ExampleSubsystem m_subsystem;
+public class SetWristPos extends CommandBase {
+  
+  private Claw claw;
+  private double angle;
 
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
-   */
-  public ExampleCommand(ExampleSubsystem subsystem) {
-    m_subsystem = subsystem;
+  /** Rotates the Wrist's servo motor(s) to a certain position
+  * @param claw - Claw subsystem
+  * @param angle - Desired angle in degrees (-900 deg to 900 deg)
+  */
+
+  public SetWristPos(Claw claw, double angle) {
+    this.claw = claw;
+    this.angle = angle;
+
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(subsystem);
+    addRequirements(claw);
   }
 
   // Called when the command is initially scheduled.
@@ -29,7 +31,11 @@ public class ExampleCommand extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    // Set the servo position to the value of the target angle plus 180
+    // Since 0 degrees of input is at 180 degrees on the servo, then we have to add 180 in the subsystem
+    claw.setWristServoPos(angle);
+  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -38,6 +44,6 @@ public class ExampleCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }
