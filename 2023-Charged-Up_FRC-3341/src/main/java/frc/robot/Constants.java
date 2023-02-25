@@ -37,7 +37,7 @@ public final class Constants {
   }
   public static class Measurements {
     public static final double threadLength = 0.138; // Inches per rotation of leadscrew
-    public static final double threadLengthStarClaw = 0.3;
+    public static final double threadLengthStarClaw = 0.3; // Inches per rotation of Star Claw leadscrew
     public static final double gearRatio = 1.0/3.0; // 1 rotation of screw = 3 rotations of leadscrew motor
     public static final double lowerAngleBound = 0; // Position of Arm when upright
 
@@ -88,8 +88,8 @@ public final class Constants {
     public static final int clawRest = 3;
     public static final int clawClosed = 2;
 
-    public static final int flywheelOn = 3;
-    public static final int flywheelOff = 2;
+    // Powered flywheel control on the left joystick
+    public static final int flywheelOn = 7;
 
     // Seconds until control (angle, etc.) is incremented/decremented
     public static final double controlsDelay = 0.02;

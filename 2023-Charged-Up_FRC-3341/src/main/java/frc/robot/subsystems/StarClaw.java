@@ -76,14 +76,6 @@ public class StarClaw extends SubsystemBase {
       }
     }
 
-    if (RobotContainer.getJoy2().getRawButtonPressed(Constants.ButtonMap.flywheelOn)) {
-      setFlywheelPower(0.4);
-    }
-
-    if (RobotContainer.getJoy2().getRawButtonPressed(Constants.ButtonMap.flywheelOff)) {
-      setFlywheelPower(0.0);
-    }
-
     SmartDashboard.putNumber("Claw Raw Servo Position", (leftClawServo.get() + rightClawServo.get()) / 2.0);
     SmartDashboard.putNumber("Claw Servo Position:", clawPosition);
   }
