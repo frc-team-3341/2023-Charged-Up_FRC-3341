@@ -36,10 +36,10 @@ public final class Constants {
     public static final double armManualHoldingVoltage = 1.9; // Manual holding voltage
   }
   public static class Measurements {
-    public static final double threadLength = 0.138; // Inches per rotation of leadscrew
+    public static final double threadLength = 0.375; // Inches per rotation of leadscrew
     public static final double threadLengthStarClaw = 0.3; // Inches per rotation of Star Claw leadscrew
     public static final double gearRatio = 1.0/3.0; // 1 rotation of screw = 3 rotations of leadscrew motor
-    public static final double lowerAngleBound = 0; // Position of Arm when upright
+    public static final double lowerAngleBound = 0; // Position of Arm when down
 
     // When the Arm is extended, this limit is activated
     public static final double bumperAngleBound = 90; // Soft Limit for Arm resting on Bumper
