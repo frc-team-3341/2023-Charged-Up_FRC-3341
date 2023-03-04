@@ -8,6 +8,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.HttpCamera;
+import edu.wpi.first.cscore.MjpegServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -32,6 +36,9 @@ public class Limelight extends SubsystemBase {
   private static double CloseAprilTagDistance;
   private static double FarAprilTagDistance;
   private static double Distance_Test;
+  private MjpegServer server;
+ // private HttpCamera LLFeed;
+  private UsbCamera s;
 
   // This gets the tx, or the horizontal offset
   // from the crosshair in degrees (-27.0 to 27.0)
@@ -59,6 +66,10 @@ public class Limelight extends SubsystemBase {
     PortForwarder.add(5804, "http://limelight-drsolom.local:5801", 5804);
     PortForwarder.add(5805, "http://limelight-drsolom.local:5801", 5805);
     PortForwarder.add(5800, "http://limelight-drsolom.local:5801", 5800);
+
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("Stream").setNumber(2);
+
+
   }
   
   public void changepipeline(int pipeline){ table.getEntry("pipeline").setNumber(pipeline); }
@@ -75,7 +86,6 @@ public class Limelight extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-
 // 1st (closest) reflective tape pole
     double pole_1_targetOffsetAngle_Vertical = ty.getDouble(0.0);
     // How many degrees back is your limelight rotated from perfectly vertical?
