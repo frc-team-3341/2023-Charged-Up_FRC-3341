@@ -21,6 +21,7 @@ public class RaspberryPi extends SubsystemBase {
   private Joystick joystick1 = RobotContainer.getJoy1();
   private Joystick joystick2 = RobotContainer.getJoy2();
   private final PhotonCamera camera;
+  private final PhotonCamera camera_1;
   private PhotonTrackedTarget target;
 
   private boolean hasTarget = false;
@@ -33,7 +34,9 @@ public class RaspberryPi extends SubsystemBase {
 
   public RaspberryPi() {
     camera = new PhotonCamera("Microsoft_LifeCam_HD-3000");
+    camera_1 = new PhotonCamera("Microsoft_LifeCam_HD-3000 (1)");
     camera.setPipelineIndex(0);
+    camera_1.setPipelineIndex(1);
     PortForwarder.add(5800,"photonvision.local", 5800);
   }
 
