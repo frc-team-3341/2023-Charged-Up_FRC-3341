@@ -34,6 +34,7 @@ public class RobotContainer {
 
   public final Arm arm = new Arm();
   public final Claw claw = new Claw();
+  public final StarClaw starClaw = new StarClaw();
 
   public static final Joystick leftJoystick = new Joystick(0);
   public static final Joystick rightJoystick = new Joystick(1);
@@ -95,11 +96,25 @@ public class RobotContainer {
     JoystickButton triggerWristCenter = new JoystickButton(rightJoystick, Constants.ButtonMap.wristCenter);
     triggerWristCenter.onTrue(new SetWristPos(claw, 0));
 
+    
     JoystickButton triggerClawRest = new JoystickButton(rightJoystick, Constants.ButtonMap.clawRest);
     triggerClawRest.onTrue(new SetClawPos(claw, 0));
 
     JoystickButton triggerClawClosed = new JoystickButton(rightJoystick, Constants.ButtonMap.clawClosed);
     triggerClawClosed.onTrue(new SetClawPos(claw, 50));
+    
+
+   /* 
+    JoystickButton triggerClawRest = new JoystickButton(rightJoystick, Constants.ButtonMap.clawRest);
+    triggerClawRest.onTrue(new SetStarClawPos(starClaw, 0));
+
+    JoystickButton triggerClawClosed = new JoystickButton(rightJoystick, Constants.ButtonMap.clawClosed);
+    triggerClawClosed.onTrue(new SetStarClawPos(starClaw, 2));
+
+    JoystickButton triggerFlywheel = new JoystickButton(rightJoystick, Constants.ButtonMap.flywheelOn);
+    triggerClawClosed.onTrue(new SetStarClawFlywheel(starClaw, 0.4));
+    triggerClawClosed.onFalse(new SetStarClawFlywheel(starClaw, 0.0));
+    */
 
   }
 
