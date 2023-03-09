@@ -24,8 +24,14 @@ import frc.robot.subsystems.*;
 public class RobotContainer {
   public static Joystick joystick2;
   public static Joystick joystick1;
+  public static XboxController xbox;
   private final TankDrive tankDrive;
+  private final MagicDrive magicDrive;
   private static DriveTrain dt;
+  private final AutoTurn turn;
+  private final AutoDrive forward;
+  private final AutoBalance balance;
+  private final Docking dock;
   
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
@@ -35,18 +41,31 @@ public class RobotContainer {
   public RobotContainer() {
     joystick1 = new Joystick(0);
     joystick2 = new Joystick(1);
+    xbox = new XboxController(3);
     configureButtonBindings();
     // Configure the button bindings
-    dt = new DriveTrain();
-    tankDrive = new TankDrive(dt, joystick2, joystick1);
     
+    dt = new DriveTrain();
+    dt.resetEncoders();
+    dt.coast();
 
+    tankDrive = new TankDrive(dt, joystick2.getY(), joystick1.getY());
+   // dt.setDefaultCommand(tankDrive);
+    magicDrive = new MagicDrive(dt, 1.0);
+    turn = new AutoTurn(dt, 90);
+    forward = new AutoDrive(dt, 5.69);
+    balance = new AutoBalance(dt);
+    dock = new Docking(dt);
   }
   public static Joystick getJoy1() {
     return joystick1;
   }
   public static Joystick getJoy2() {
     return joystick2;
+  }
+
+  public static XboxController getXBox() {
+    return xbox;
   }
  
 
@@ -68,7 +87,7 @@ public class RobotContainer {
     return dt;
   }
   public Command getAutonomousCommand(){
-    return m_autoCommand;
+    return dock;
   }
 
 }
