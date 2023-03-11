@@ -37,7 +37,7 @@ public class Claw extends SubsystemBase {
   */
   public void setClawServoPos(double angle) {
     // The servo turns 5 rotations per 1 value units given
-    double pos = ((angle/300.0)+0.2);
+    double pos = (angle/300.0);
     clawServo.setPosition(pos);
   }
 
@@ -45,7 +45,7 @@ public class Claw extends SubsystemBase {
   * Gets the Claw's position
   */
   public double getClawServoPos() {
-    double pos = (clawServo.getPosition()-0.2)*300.0;
+    double pos = (clawServo.getPosition())*300.0;
     return pos;
   }
 
