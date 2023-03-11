@@ -78,7 +78,7 @@ public class RobotContainer {
     // JoystickButton RestPosExt = new JoystickButton(leftJoystick, Constants.ButtonMap.restPositionArm);
     // RestPosExt.onTrue(new Extend(arm, 0));
 
-    JoystickButton triggerWristRight = new JoystickButton(joystick1, Constants.ButtonMap.wristRight);
+    /*JoystickButton triggerWristRight = new JoystickButton(joystick1, Constants.ButtonMap.wristRight);
     triggerWristRight.onTrue(new SetWristPos(claw, 225));
 
     JoystickButton triggerWristLeft = new JoystickButton(joystick1, Constants.ButtonMap.wristLeft);
@@ -93,19 +93,19 @@ public class RobotContainer {
 
     JoystickButton triggerClawClosed = new JoystickButton(joystick1, Constants.ButtonMap.clawClosed);
     triggerClawClosed.onTrue(new SetClawPos(claw, 50));
-    
+    */
 
-   /* 
-    JoystickButton triggerClawRest = new JoystickButton(rightJoystick, Constants.ButtonMap.clawRest);
+   
+    JoystickButton triggerClawRest = new JoystickButton(joystick1, Constants.ButtonMap.clawRest);
     triggerClawRest.onTrue(new SetStarClawPos(starClaw, 0));
 
-    JoystickButton triggerClawClosed = new JoystickButton(rightJoystick, Constants.ButtonMap.clawClosed);
+    JoystickButton triggerClawClosed = new JoystickButton(joystick1, Constants.ButtonMap.clawClosed);
     triggerClawClosed.onTrue(new SetStarClawPos(starClaw, 2));
 
-    JoystickButton triggerFlywheel = new JoystickButton(rightJoystick, Constants.ButtonMap.flywheelOn);
+    JoystickButton triggerFlywheel = new JoystickButton(joystick1, Constants.ButtonMap.flywheelOn);
     triggerClawClosed.onTrue(new SetStarClawFlywheel(starClaw, 0.4));
     triggerClawClosed.onFalse(new SetStarClawFlywheel(starClaw, 0.0));
-    */
+    
 
   }
 

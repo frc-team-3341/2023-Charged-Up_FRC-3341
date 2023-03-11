@@ -52,7 +52,7 @@ public final class Constants {
     public static final double armPID_P = 0.015;
     public static final double armPID_I = 0.00005;
     public static final double armPID_D = 0.0;
-    public static final double armPID_K = 0.9; // Used to calculate kP, from the difference in angle
+    public static final double armPID_K = 1.2; // Used to calculate kP, from the difference in angle
     public static final double extPID_P = 0.05; 
     public static final double armHoldingVoltage = 1.1; // Used to calculate Feedforward
     public static final double armManualHoldingVoltage = 1.9; // Manual holding voltage
@@ -62,19 +62,19 @@ public final class Constants {
     public static final double threadLengthStarClaw = 0.3; // Inches per rotation of Star Claw leadscrew
     //public static final double gearRatio = 4.0/3.0; // 1 rotation of screw = 3 rotations of leadscrew motor
     public static final double gearRatio = 1.0/1.0; // 1 rotation of screw = 1 rotation of leadscrew motor
-    public static final double lowerAngleBound = 0; // Position of Arm when down
+    public static final double lowerAngleBound = 5; // Position of Arm when down
 
     // When the Arm is extended, this limit is activated
-    public static final double bumperAngleBound = 9; // Soft Limit for Arm resting on Bumper
+    public static final double bumperAngleBound = 15.0; // Soft Limit for Arm resting on Bumper
 
     public static final double upperAngleBound = 105; // Maximum pos of Arm in degrees, when stowed
-    public static final double lowerScrewBound = 0.0; // Lower bound for motion of screw (inches)
-    public static final double upperScrewBound = 10.0; // Upper bound for motion of screw (inches)
+    public static final double lowerScrewBound = 0.5; // Lower bound for motion of screw (inches)
+    public static final double upperScrewBound = 15.67; // Upper bound for motion of screw (inches)
     public static final double fullyExtendedLeadScrewThreshold = 5.0;
     public static final double degreesToTicks = 4096.0/360.0;
     public static final double ticksToInches = threadLength/4096.0; //4096 ticks per rotation times threadLength
     public static final double maxExtension = 16.67; //in inches
-    public static final double baseExtendPower = 0.5; //Percent of full power/100
+    public static final double baseExtendPower = 0.9; //Percent of full power/100
     public static final double extLimitPower = 0.3; //Percent of full power/100. Power when extention is close to to limit switch
 
     public static final double clawAngleLimit = 160.0; // Limit for servo movement (degrees)
@@ -97,6 +97,9 @@ public final class Constants {
     public static final int middlePosition = 4;
     public static final int otherArbPosition = 3;
     public static final int groundPosition = 6;
+
+    //Set Extension soft limits
+    public static final int extLimitReset = 7;
 
     // Power of extension command for Auto
     // Range: 0.0 to 1.0
