@@ -19,8 +19,8 @@ public class Limelight extends SubsystemBase {
   /** Creates a new Limelight. */
 
   NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-drsolom");
-  private Joystick joy1 = RobotContainer.getJoystick1();
-  private Joystick joy2 = RobotContainer.getJoystick2();
+  private Joystick joy1 = RobotContainer.getJoy1();
+  private Joystick joy2 = RobotContainer.getJoy2();
  
   private double txNum;
   private double tyNum;
@@ -83,7 +83,7 @@ public class Limelight extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-
+/* 
     if(joy1.getRawButtonPressed(3)){
       pipeline = 1;
       changepipeline(pipeline); 
@@ -92,7 +92,7 @@ public class Limelight extends SubsystemBase {
       changepipeline(pipeline);
     } else if ()
     
-    for(int i = 0; 
+    for(int i = 0; */
 
     tx = table.getEntry("tx");
     ty = table.getEntry("ty");

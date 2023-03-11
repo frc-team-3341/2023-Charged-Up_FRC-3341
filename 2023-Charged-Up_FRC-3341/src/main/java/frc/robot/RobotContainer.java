@@ -24,9 +24,10 @@ import frc.robot.subsystems.*;
 
 
 public class RobotContainer {
-  public static Joystick joystick2;
-  public static Joystick joystick1;
-  private final TankDrive tankDrive;
+  public static final Joystick joystick0 = new Joystick(0);
+  public static final Joystick joystick1 = new Joystick(1);
+  public static final Joystick joystick2 = new Joystick(2);
+  // private final TankDrive tankDrive;
   private static DriveTrain dt;
   
   // The robot's subsystems and commands are defined here...
@@ -36,29 +37,19 @@ public class RobotContainer {
   public final Claw claw = new Claw();
   public final StarClaw starClaw = new StarClaw();
 
-  public static final Joystick leftJoystick = new Joystick(0);
-  public static final Joystick rightJoystick = new Joystick(1);
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+  // final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    joystick1 = new Joystick(0);
-    joystick2 = new Joystick(1);
-    configureButtonBindings();
+
+    configureBindings();
     // Configure the button bindings
     dt = new DriveTrain();
-    tankDrive = new TankDrive(dt, joystick2, joystick1);
+    // tankDrive = new TankDrive(dt, joystick0, joystick1);
     
 
   }
-  public static Joystick getJoy1() {
-    return joystick1;
 
-  }
-  public static Joystick getJoy2() {
-    return joystick2;
-  }
- 
 
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
@@ -68,16 +59,16 @@ public class RobotContainer {
    */
 
   private void configureBindings() {
-    JoystickButton triggerStowPos = new JoystickButton(leftJoystick, Constants.ButtonMap.stowPosition);
+    JoystickButton triggerStowPos = new JoystickButton(joystick0, Constants.ButtonMap.stowPosition);
     triggerStowPos.onTrue(new Rotate(arm, 0));
 
-    JoystickButton triggerMiddlePos = new JoystickButton(leftJoystick, Constants.ButtonMap.middlePosition);
-    triggerMiddlePos.onTrue(new Rotate(arm, 10));
+    JoystickButton triggerMiddlePos = new JoystickButton(joystick0, Constants.ButtonMap.middlePosition);
+    triggerMiddlePos.onTrue(new Rotate(arm, 60));
 
-    JoystickButton triggerOtherPos = new JoystickButton(leftJoystick, Constants.ButtonMap.otherArbPosition);
-    triggerOtherPos.onTrue(new Rotate(arm, 30));
+    JoystickButton triggerOtherPos = new JoystickButton(joystick0, Constants.ButtonMap.otherArbPosition);
+    triggerOtherPos.onTrue(new Rotate(arm,50));
 
-    JoystickButton triggerGroundPos = new JoystickButton(leftJoystick, Constants.ButtonMap.groundPosition);
+    JoystickButton triggerGroundPos = new JoystickButton(joystick0, Constants.ButtonMap.groundPosition);
     triggerGroundPos.onTrue(new Rotate(arm, 90));
 
     // JoystickButton triggerExt = new JoystickButton(leftJoystick, Constants.ButtonMap.fullyExtendedArm);
@@ -87,20 +78,20 @@ public class RobotContainer {
     // JoystickButton RestPosExt = new JoystickButton(leftJoystick, Constants.ButtonMap.restPositionArm);
     // RestPosExt.onTrue(new Extend(arm, 0));
 
-    JoystickButton triggerWristRight = new JoystickButton(rightJoystick, Constants.ButtonMap.wristRight);
+    JoystickButton triggerWristRight = new JoystickButton(joystick1, Constants.ButtonMap.wristRight);
     triggerWristRight.onTrue(new SetWristPos(claw, 225));
 
-    JoystickButton triggerWristLeft = new JoystickButton(rightJoystick, Constants.ButtonMap.wristLeft);
+    JoystickButton triggerWristLeft = new JoystickButton(joystick1, Constants.ButtonMap.wristLeft);
     triggerWristLeft.onTrue(new SetWristPos(claw, -225));
 
-    JoystickButton triggerWristCenter = new JoystickButton(rightJoystick, Constants.ButtonMap.wristCenter);
+    JoystickButton triggerWristCenter = new JoystickButton(joystick1, Constants.ButtonMap.wristCenter);
     triggerWristCenter.onTrue(new SetWristPos(claw, 0));
 
     
-    JoystickButton triggerClawRest = new JoystickButton(rightJoystick, Constants.ButtonMap.clawRest);
+    JoystickButton triggerClawRest = new JoystickButton(joystick1, Constants.ButtonMap.clawRest);
     triggerClawRest.onTrue(new SetClawPos(claw, 0));
 
-    JoystickButton triggerClawClosed = new JoystickButton(rightJoystick, Constants.ButtonMap.clawClosed);
+    JoystickButton triggerClawClosed = new JoystickButton(joystick1, Constants.ButtonMap.clawClosed);
     triggerClawClosed.onTrue(new SetClawPos(claw, 50));
     
 
@@ -131,19 +122,21 @@ public class RobotContainer {
   }
 
   public static Joystick getJoy1() {
-    return leftJoystick;
+    return joystick0;
   }
 
   public static Joystick getJoy2() {
-    return rightJoystick;
+    return joystick1;
+}
+
+public static Joystick getJoy3() {
+  return joystick2;
 }
   
    public static DriveTrain getDriveTrain(){
     return dt;
   }
+}
 
-  public Command getAutonomousCommand(){
-    return m_autoCommand;
-  }
 
 
