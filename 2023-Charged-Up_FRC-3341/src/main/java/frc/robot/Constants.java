@@ -119,7 +119,8 @@ public final class Constants {
     public static final int clawClosed = 2;
 
     // Powered flywheel control on the left joystick
-    public static final int flywheelOn = 7;
+    public static final int flywheelIn = 7;
+    public static final int flywheelOut = 8;
 
     // Seconds until control (angle, etc.) is incremented/decremented
     public static final double controlsDelay = 0.02;

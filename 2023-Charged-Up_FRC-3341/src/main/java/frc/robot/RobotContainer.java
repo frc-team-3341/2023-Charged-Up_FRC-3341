@@ -102,11 +102,13 @@ public class RobotContainer {
     JoystickButton triggerClawClosed = new JoystickButton(joystick1, Constants.ButtonMap.clawClosed);
     triggerClawClosed.onTrue(new SetStarClawPos(starClaw, 2));
 
-    JoystickButton triggerFlywheel = new JoystickButton(joystick1, Constants.ButtonMap.flywheelOn);
-    triggerClawClosed.onTrue(new SetStarClawFlywheel(starClaw, 0.4));
-    triggerClawClosed.onFalse(new SetStarClawFlywheel(starClaw, 0.0));
+    JoystickButton triggerFlywheelIn = new JoystickButton(joystick1, Constants.ButtonMap.flywheelIn);
+    triggerFlywheelIn.onTrue(new SetStarClawFlywheel(starClaw, 0.5));
+    triggerFlywheelIn.onFalse(new SetStarClawFlywheel(starClaw, 0.0));
     
-
+    JoystickButton triggerFlywheelOut = new JoystickButton(joystick1, Constants.ButtonMap.flywheelOut);
+    triggerFlywheelOut.onTrue(new SetStarClawFlywheel(starClaw, -0.5));
+    triggerFlywheelOut.onFalse(new SetStarClawFlywheel(starClaw, 0.0));
   }
 
 

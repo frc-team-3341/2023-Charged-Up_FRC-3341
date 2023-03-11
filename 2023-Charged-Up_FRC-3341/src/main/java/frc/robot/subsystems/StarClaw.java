@@ -33,6 +33,9 @@ public class StarClaw extends SubsystemBase {
     leftFlywheel = new TalonSRX(Constants.OperatorConstants.leftFlywheelPort);
     rightFlywheel = new TalonSRX(Constants.OperatorConstants.rightFlywheelPort);
 
+    leftFlywheel.setInverted(true);
+    rightFlywheel.setInverted(false);
+
     leftClawServo.set(0);
     rightClawServo.set(0);
     controlsTimer.reset();
