@@ -37,7 +37,7 @@ public class Claw extends SubsystemBase {
   */
   public void setClawServoPos(double angle) {
     // The servo turns 5 rotations per 1 value units given
-    double pos = ((angle/360.0))/5.0;
+    double pos = ((angle/300.0)+0.2);
     clawServo.setPosition(pos);
   }
 
@@ -45,7 +45,7 @@ public class Claw extends SubsystemBase {
   * Gets the Claw's position
   */
   public double getClawServoPos() {
-    double pos = (clawServo.getPosition()*5.0)*360.0;
+    double pos = (clawServo.getPosition()-0.2)*300.0;
     return pos;
   }
 
@@ -80,14 +80,14 @@ public class Claw extends SubsystemBase {
     clawAngle = getClawServoPos();
     if (RobotContainer.getJoy2().getTrigger()) {
       // If POV is Down, then decrement
-      if (RobotContainer.getJoy2().getPOV() == 180 && clawAngle > 0.0 && controlsTimer.get() <= Constants.ButtonMap.controlsDelay) {
-        clawAngle -= 5.0;
+      if (RobotContainer.getJoy2().getPOV() == 0 && clawAngle > 0.0 && controlsTimer.get() <= Constants.ButtonMap.controlsDelay) {
+        clawAngle -= 3.0;
         setClawServoPos(clawAngle);
         controlsTimer.reset();
       }
       // If POV is Up, then increment
-      else if (RobotContainer.getJoy2().getPOV() == 0 && clawAngle < Constants.Measurements.clawAngleLimit && controlsTimer.get() <= Constants.ButtonMap.controlsDelay) {
-        clawAngle += 5.0;
+      else if (RobotContainer.getJoy2().getPOV() == 180 && clawAngle < Constants.Measurements.clawAngleLimit && controlsTimer.get() <= Constants.ButtonMap.controlsDelay) {
+        clawAngle += 3.0;
         setClawServoPos(clawAngle);
         controlsTimer.reset();
       } else if (controlsTimer.get() >= Constants.ButtonMap.controlsDelay) {

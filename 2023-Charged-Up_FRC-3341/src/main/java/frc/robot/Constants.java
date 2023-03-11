@@ -34,8 +34,11 @@ public final class Constants {
     
     public static final int kDriverControllerPort = 0;
     public static final int armPort = 10; // ID 2 for testing
+    public static final boolean armInvert = true; 
     public static final int clawPinchPort = 20;
+    public static final boolean clawnInvert = false; 
     public static final int extPort = 11;
+    public static final boolean extInvert = false;
     public static final int clawServoPort = 0;
     public static final int wristServoPort = 1;
 
@@ -49,26 +52,32 @@ public final class Constants {
     public static final double armPID_P = 0.015;
     public static final double armPID_I = 0.00005;
     public static final double armPID_D = 0.0;
-    public static final double armPID_K = 0.7; // Used to calculate kP, from the difference in angle
+    public static final double armPID_K = 0.9; // Used to calculate kP, from the difference in angle
+    public static final double extPID_P = 0.05; 
     public static final double armHoldingVoltage = 1.1; // Used to calculate Feedforward
     public static final double armManualHoldingVoltage = 1.9; // Manual holding voltage
   }
   public static class Measurements {
     public static final double threadLength = 0.375; // Inches per rotation of leadscrew
     public static final double threadLengthStarClaw = 0.3; // Inches per rotation of Star Claw leadscrew
-    public static final double gearRatio = 1.0/3.0; // 1 rotation of screw = 3 rotations of leadscrew motor
+    //public static final double gearRatio = 4.0/3.0; // 1 rotation of screw = 3 rotations of leadscrew motor
+    public static final double gearRatio = 1.0/1.0; // 1 rotation of screw = 1 rotation of leadscrew motor
     public static final double lowerAngleBound = 0; // Position of Arm when down
 
     // When the Arm is extended, this limit is activated
-    public static final double bumperAngleBound = 90; // Soft Limit for Arm resting on Bumper
+    public static final double bumperAngleBound = 9; // Soft Limit for Arm resting on Bumper
 
-    public static final double upperAngleBound = 160; // Maximum pos of Arm in degrees, when stowed
+    public static final double upperAngleBound = 105; // Maximum pos of Arm in degrees, when stowed
     public static final double lowerScrewBound = 0.0; // Lower bound for motion of screw (inches)
     public static final double upperScrewBound = 10.0; // Upper bound for motion of screw (inches)
     public static final double fullyExtendedLeadScrewThreshold = 5.0;
     public static final double degreesToTicks = 4096.0/360.0;
+    public static final double ticksToInches = threadLength/4096.0; //4096 ticks per rotation times threadLength
+    public static final double maxExtension = 16.67; //in inches
+    public static final double baseExtendPower = 0.5; //Percent of full power/100
+    public static final double extLimitPower = 0.3; //Percent of full power/100. Power when extention is close to to limit switch
 
-    public static final double clawAngleLimit = 80.0; // Limit for servo movement (degrees)
+    public static final double clawAngleLimit = 160.0; // Limit for servo movement (degrees)
 
     public static final double starClawPositionLimit = 4.0;
 
