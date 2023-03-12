@@ -35,19 +35,19 @@ public class Limelight2 extends SubsystemBase {
 
   // This gets the tx, or the horizontal offset
   // from the crosshair in degrees (-27.0 to 27.0)
-  NetworkTableEntry tx2 = table.getEntry("tx2");
+  NetworkTableEntry tx2 = table.getEntry("tx");
 
   // This gets the ty, or the vertical offset
   // from the crosshair in degrees (-20.5 to 20.5)
-  NetworkTableEntry ty2 = table.getEntry("ty2");
+  NetworkTableEntry ty2 = table.getEntry("ty");
 
   // This gets the ta, or how much in % of the target
   // is visible (0.0-100.0)
-  NetworkTableEntry ta2 = table.getEntry("ta2");
+  NetworkTableEntry ta2 = table.getEntry("ta");
 
   // This gets the tv, which sees if the limelight
   // has a valid target (1) or no valid target (0)
-  NetworkTableEntry tv2 = table.getEntry("tv2");
+  NetworkTableEntry tv2 = table.getEntry("tv");
 
   public Limelight2() {
     // We have to add these ports so that we can connect to
@@ -169,10 +169,10 @@ public class Limelight2 extends SubsystemBase {
     // Actual pipeline number not representative
     SmartDashboard.putNumber("PipelineName2", table.getEntry("pipeline2").getDouble(0));// Actual piepline
 
-    NetworkTableInstance.getDefault().getTable("limelight2").getEntry("tx2").getDouble(0);
-    NetworkTableInstance.getDefault().getTable("limelight2").getEntry("ty2").getDouble(0);
-    NetworkTableInstance.getDefault().getTable("limelight2").getEntry("tv2").getDouble(0);
-    NetworkTableInstance.getDefault().getTable("limelight2").getEntry("ta2").getDouble(0);
+    NetworkTableInstance.getDefault().getTable("limelight2").getEntry("tx").getDouble(0);
+    NetworkTableInstance.getDefault().getTable("limelight2").getEntry("ty").getDouble(0);
+    NetworkTableInstance.getDefault().getTable("limelight2").getEntry("tv").getDouble(0);
+    NetworkTableInstance.getDefault().getTable("limelight2").getEntry("ta").getDouble(0);
     
   }
 }
