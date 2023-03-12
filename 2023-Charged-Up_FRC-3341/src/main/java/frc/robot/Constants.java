@@ -115,8 +115,9 @@ public final class Constants {
     public static final int wristLeft = 5;
     public static final int wristRight = 6;
     public static final int wristCenter = 4;
-    public static final int clawRest = 3;
-    public static final int clawClosed = 2;
+    public static final int clawRest = 12;
+    public static final int clawOpen = 3;
+    public static final int clawClosed = 5;
 
     // Powered flywheel control on the left joystick
     public static final int flywheelIn = 7;
@@ -126,6 +127,7 @@ public final class Constants {
     public static final double controlsDelay = 0.02;
 
     public static final int wristIncrement = 5; // Wrist increment in degrees for semi-auto control
+    public static final int clawIncrement = 5; //claw increment
 
   }
 }

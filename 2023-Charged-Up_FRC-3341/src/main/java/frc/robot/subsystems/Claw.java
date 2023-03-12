@@ -81,13 +81,13 @@ public class Claw extends SubsystemBase {
     if (RobotContainer.getJoy2().getTrigger()) {
       // If POV is Down, then decrement
       if (RobotContainer.getJoy2().getPOV() == 0 && clawAngle > 0.0 && controlsTimer.get() <= Constants.ButtonMap.controlsDelay) {
-        clawAngle -= 3.0;
+        clawAngle -= Constants.ButtonMap.clawIncrement;
         setClawServoPos(clawAngle);
         controlsTimer.reset();
       }
       // If POV is Up, then increment
       else if (RobotContainer.getJoy2().getPOV() == 180 && clawAngle < Constants.Measurements.clawAngleLimit && controlsTimer.get() <= Constants.ButtonMap.controlsDelay) {
-        clawAngle += 3.0;
+        clawAngle += Constants.ButtonMap.clawIncrement;
         setClawServoPos(clawAngle);
         controlsTimer.reset();
       } else if (controlsTimer.get() >= Constants.ButtonMap.controlsDelay) {
