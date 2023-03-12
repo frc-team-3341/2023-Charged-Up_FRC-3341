@@ -168,5 +168,11 @@ public class Limelight2 extends SubsystemBase {
     // SmartDashboard.putNumber("PipelineNumber", pipeline);
     // Actual pipeline number not representative
     SmartDashboard.putNumber("PipelineName2", table.getEntry("pipeline2").getDouble(0));// Actual piepline
+
+    NetworkTableInstance.getDefault().getTable("limelight2").getEntry("tx2").getDouble(0);
+    NetworkTableInstance.getDefault().getTable("limelight2").getEntry("ty2").getDouble(0);
+    NetworkTableInstance.getDefault().getTable("limelight2").getEntry("tv2").getDouble(0);
+    NetworkTableInstance.getDefault().getTable("limelight2").getEntry("ta2").getDouble(0);
+    
   }
 }

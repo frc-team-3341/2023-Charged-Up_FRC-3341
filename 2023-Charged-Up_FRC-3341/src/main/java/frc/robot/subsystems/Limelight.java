@@ -60,7 +60,7 @@ public class Limelight extends SubsystemBase {
     PortForwarder.add(5805, "http://limelight-drsolom.local:5801", 5805);
     PortForwarder.add(5800, "http://limelight-drsolom.local:5801", 5800);
 
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("Stream").setNumber(2);
+   // NetworkTableInstance.getDefault().getTable("limelight").getEntry("Stream").setNumber(2);
 
   }
 
@@ -119,8 +119,7 @@ public class Limelight extends SubsystemBase {
     // Converts degrees to radians
     double pole_1_angleToGoalRadians = pole_1_angleToGoalDegrees * (Math.PI / 180.0);
     // Calculates distance
-    CloseReflectiveTapeDistance = (pole_1_goalHeightInches - pole_1_limelightLensHeightInches)
-        / Math.tan(pole_1_angleToGoalRadians);
+    CloseReflectiveTapeDistance = (pole_1_goalHeightInches - pole_1_limelightLensHeightInches) / Math.tan(pole_1_angleToGoalRadians);
     // This outputs the distance from the limelight to the target
     SmartDashboard.putNumber("CloseReflectiveTapeDistance (inches)", CloseReflectiveTapeDistance);
 
@@ -131,8 +130,7 @@ public class Limelight extends SubsystemBase {
     double pole_2_goalHeightInches = 46;
     double pole_2_angleToGoalDegrees = pole_2_limelightMountAngleDegrees + pole_2_targetOffsetAngle_Vertical;
     double pole_2_angleToGoalRadians = pole_2_angleToGoalDegrees * (Math.PI / 180.0);
-    FarReflectiveTapeDistance = (pole_2_goalHeightInches - pole_2_limelightLensHeightInches)
-        / Math.tan(pole_2_angleToGoalRadians);
+    FarReflectiveTapeDistance = (pole_2_goalHeightInches - pole_2_limelightLensHeightInches) / Math.tan(pole_2_angleToGoalRadians);
     SmartDashboard.putNumber("FarReflectiveTapeDistance (inches)", FarReflectiveTapeDistance);
 
     // 3rd (closest) april tag shelf
@@ -142,8 +140,7 @@ public class Limelight extends SubsystemBase {
     double pole_3_goalHeightInches = 23.5;
     double pole_3_angleToGoalDegrees = pole_3_limelightMountAngleDegrees + pole_3_targetOffsetAngle_Vertical;
     double pole_3_angleToGoalRadians = pole_3_angleToGoalDegrees * (Math.PI / 180.0);
-    CloseAprilTagDistance = (pole_3_goalHeightInches - pole_3_limelightLensHeightInches)
-        / Math.tan(pole_3_angleToGoalRadians);
+    CloseAprilTagDistance = (pole_3_goalHeightInches - pole_3_limelightLensHeightInches) / Math.tan(pole_3_angleToGoalRadians);
     SmartDashboard.putNumber("CloseAprilTagDistance (inches)", CloseAprilTagDistance);
 
     // 4th (farthest) april tag shelf
@@ -153,8 +150,7 @@ public class Limelight extends SubsystemBase {
     double pole_4_goalHeightInches = 35.5;
     double pole_4_angleToGoalDegrees = pole_4_limelightMountAngleDegrees + pole_4_targetOffsetAngle_Vertical;
     double pole_4_angleToGoalRadians = pole_4_angleToGoalDegrees * (Math.PI / 180.0);
-    FarAprilTagDistance = (pole_4_goalHeightInches - pole_4_limelightLensHeightInches)
-        / Math.tan(pole_4_angleToGoalRadians);
+    FarAprilTagDistance = (pole_4_goalHeightInches - pole_4_limelightLensHeightInches) / Math.tan(pole_4_angleToGoalRadians);
     SmartDashboard.putNumber("FarAprilTagDistance (inches)", FarAprilTagDistance);
 
     // test
@@ -201,6 +197,12 @@ public class Limelight extends SubsystemBase {
 
     // SmartDashboard.putNumber("PipelineNumber", pipeline);
     // Actual pipeline number not representative
-    SmartDashboard.putNumber("PipelineName", table.getEntry("pipeline").getDouble(0));// Actual piepline
+    // SmartDashboard.putNumber("PipelineName", table.getEntry("pipeline").getDouble(0));// Actual piepline
+
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0);
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta").getDouble(0);
+    
   }
 }
