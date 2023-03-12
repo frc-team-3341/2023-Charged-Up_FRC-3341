@@ -13,6 +13,7 @@ import frc.robot.commands.LockOnTarget;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.Limelight2;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 /**
@@ -29,6 +30,7 @@ public class RobotContainer {
   //We have to initialize these objects for the SpinToTarget, ProtoTurret, and AutoTurret commands
   private final static Drivetrain drive = new Drivetrain();
   private final static Limelight lime = new Limelight();
+  private final static Limelight2 lime2 = new Limelight2();
   private final static LockOnTarget lock = new LockOnTarget(drive, lime, 0);
   private final static CenterToTarget center = new CenterToTarget(lime, drive);
   private static Joystick joy1;
@@ -75,12 +77,20 @@ public class RobotContainer {
   public static Limelight getLime(){
     return lime;
   }
-
+  public static Limelight2 getLime2(){
+    return lime2;
+  }
   public static double get_tv() {
     return 0;
   }
-
-public static double get_ty() {
+  public static double get_tv2() {
     return 0;
-}
+  }
+  public static double get_ty() {
+    return 0;
+  }
+  public static double get_ty2() {
+    return 0;
+  }
+
 }
