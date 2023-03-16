@@ -5,15 +5,15 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.StarClaw;
+import frc.robot.subsystems.PoweredIntake;
 
-public class SetStarClawFlywheel extends CommandBase {
+public class SetPoweredClawFlywheel extends CommandBase {
   /** Creates a new SetStarClawFlywheel. */
 
-  public StarClaw claw;
+  public PoweredIntake claw;
   public double power;
 
-  public SetStarClawFlywheel(StarClaw claw, double power) {
+  public SetPoweredClawFlywheel(PoweredIntake claw, double power) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.claw = claw;
     this.power = power;

@@ -5,15 +5,15 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.StarClaw;
+import frc.robot.subsystems.PoweredIntake;
 
-public class SetStarClawPos extends CommandBase {
+public class SetPoweredClawPos extends CommandBase {
   /** Creates a new SetStarClawPos. */
 
-  public StarClaw claw;
+  public PoweredIntake claw;
   public double position;
 
-  public SetStarClawPos(StarClaw claw, double position) {
+  public SetPoweredClawPos(PoweredIntake claw, double position) {
     this.claw = claw;
     this.position = position;
   

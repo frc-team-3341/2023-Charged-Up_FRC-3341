@@ -105,6 +105,8 @@ public class Arm extends SubsystemBase {
     extendingTalon.configForwardSoftLimitEnable(true);
     extendingTalon.configReverseSoftLimitEnable(true);
 
+    
+
     // Reset Extending Talon
     extendingTalon.setSelectedSensorPosition(0);
 
@@ -277,12 +279,12 @@ public class Arm extends SubsystemBase {
     if (RobotContainer.getJoy1().getPOV() == 0) {
       //Max extension 16.67 inches
       // Move extension forward at POV pos of 0
-      extendPID.setSetpoint(10.0);
+      extendPID.setSetpoint(7.0);
 
       //extendArm(power);
     }  else if (RobotContainer.getJoy1().getPOV() == 180) {
       // Move extension backward at POV pos of 180
-      extendPID.setSetpoint(-10.0);
+      extendPID.setSetpoint(-7.0);
       //extendArm(-1*power);
     }
     else {

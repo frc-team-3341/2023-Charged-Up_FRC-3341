@@ -35,7 +35,7 @@ public class RobotContainer {
 
   public final Arm arm = new Arm();
   public final Claw claw = new Claw();
-  public final StarClaw starClaw = new StarClaw();
+  public final PoweredIntake poweredIntake = new PoweredIntake();
 
   // final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
@@ -63,13 +63,13 @@ public class RobotContainer {
     triggerStowPos.onTrue(new Rotate(arm, 0));
 
     JoystickButton triggerMiddlePos = new JoystickButton(joystick0, Constants.ButtonMap.middlePosition);
-    triggerMiddlePos.onTrue(new Rotate(arm, 60));
+    triggerMiddlePos.onTrue(new Rotate(arm, 75));
 
-    JoystickButton triggerOtherPos = new JoystickButton(joystick0, Constants.ButtonMap.otherArbPosition);
-    triggerOtherPos.onTrue(new Rotate(arm,50));
+    JoystickButton triggerTopPos = new JoystickButton(joystick0, Constants.ButtonMap.topPosition);
+    triggerTopPos.onTrue(new Rotate(arm,90));
 
     JoystickButton triggerGroundPos = new JoystickButton(joystick0, Constants.ButtonMap.groundPosition);
-    triggerGroundPos.onTrue(new Rotate(arm, 90));
+    triggerGroundPos.onTrue(new Rotate(arm, 20));
 
     // JoystickButton triggerExt = new JoystickButton(leftJoystick, Constants.ButtonMap.fullyExtendedArm);
     // Extends 1 inch for testing
@@ -79,37 +79,40 @@ public class RobotContainer {
     // RestPosExt.onTrue(new Extend(arm, 0));
 
     JoystickButton triggerWristRight = new JoystickButton(joystick1, Constants.ButtonMap.wristRight);
-    triggerWristRight.onTrue(new SetWristPos(claw, 225));
+    triggerWristRight.onTrue(new SetWristPos(claw, 90));
 
     JoystickButton triggerWristLeft = new JoystickButton(joystick1, Constants.ButtonMap.wristLeft);
-    triggerWristLeft.onTrue(new SetWristPos(claw, -225));
+    triggerWristLeft.onTrue(new SetWristPos(claw, -90));
 
     JoystickButton triggerWristCenter = new JoystickButton(joystick1, Constants.ButtonMap.wristCenter);
     triggerWristCenter.onTrue(new SetWristPos(claw, 0));
 
     
-    JoystickButton triggerClawRest = new JoystickButton(joystick2, Constants.ButtonMap.clawRest);
-    triggerClawRest.onTrue(new SetClawPos(claw, 155));
+    JoystickButton triggerClawRest = new JoystickButton(joystick1, Constants.ButtonMap.clawCube); //changed from joystick1 to joystick2
+    triggerClawRest.onTrue(new SetClawPos(claw, 155/2)); //previously 155
 
-    JoystickButton triggerClawClosed = new JoystickButton(joystick2, Constants.ButtonMap.clawClosed);
-    triggerClawClosed.onTrue(new SetClawPos(claw, 100));
+    JoystickButton triggerClawClosed = new JoystickButton(joystick1, Constants.ButtonMap.clawCone);
+    triggerClawClosed.onTrue(new SetClawPos(claw, 100/2)); //previously 100
 
-    JoystickButton triggerClawOpen = new JoystickButton(joystick2, Constants.ButtonMap.clawClosed);
-    triggerClawOpen.onTrue(new SetClawPos(claw, 245));
+    JoystickButton triggerClawOpen = new JoystickButton(joystick1, Constants.ButtonMap.clawOpen);
+    triggerClawOpen.onTrue(new SetClawPos(claw, 245/2));
    
     JoystickButton triggerStarClawRest = new JoystickButton(joystick1, Constants.ButtonMap.clawRest);
-    triggerStarClawRest.onTrue(new SetStarClawPos(starClaw, 0));
+    triggerStarClawRest.onTrue(new SetPoweredClawPos(poweredIntake, 0));
 
     JoystickButton triggerStarClawClosed = new JoystickButton(joystick1, Constants.ButtonMap.clawClosed);
-    triggerStarClawClosed.onTrue(new SetStarClawPos(starClaw, 2));
+    triggerStarClawClosed.onTrue(new SetPoweredClawPos(poweredIntake, 1.5));
+
+    JoystickButton triggerStarClawCube = new JoystickButton(joystick1, Constants.ButtonMap.clawCube);
+    triggerStarClawCube.onTrue(new SetPoweredClawPos(poweredIntake, 0.75));
 
     JoystickButton triggerFlywheelIn = new JoystickButton(joystick1, Constants.ButtonMap.flywheelIn);
-    triggerFlywheelIn.onTrue(new SetStarClawFlywheel(starClaw, 0.5));
-    triggerFlywheelIn.onFalse(new SetStarClawFlywheel(starClaw, 0.0));
+    triggerFlywheelIn.onTrue(new SetPoweredClawFlywheel(poweredIntake, 0.5));
+    triggerFlywheelIn.onFalse(new SetPoweredClawFlywheel(poweredIntake, 0.0));
     
     JoystickButton triggerFlywheelOut = new JoystickButton(joystick1, Constants.ButtonMap.flywheelOut);
-    triggerFlywheelOut.onTrue(new SetStarClawFlywheel(starClaw, -0.5));
-    triggerFlywheelOut.onFalse(new SetStarClawFlywheel(starClaw, 0.0));
+    triggerFlywheelOut.onTrue(new SetPoweredClawFlywheel(poweredIntake, -0.5));
+    triggerFlywheelOut.onFalse(new SetPoweredClawFlywheel(poweredIntake, 0.0));
   }
 
 
