@@ -109,6 +109,11 @@ public class Drivetrain extends SubsystemBase
   @Override
   public void periodic() {
     tankDrive(RobotContainer.getJoy1().getY()*-0.2, RobotContainer.getJoy2().getY()*-0.2);
+<<<<<<< Updated upstream
+=======
+    //tankDrive(RobotContainer.getJoy1().getY()*-0.2, RobotContainer.getJoy1().getThrottle()*-0.2);
+   
+>>>>>>> Stashed changes
   }
 
   @Override
