@@ -13,7 +13,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
-
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -28,16 +28,16 @@ import com.kauailabs.navx.frc.AHRS;
 public class DriveTrain extends SubsystemBase 
 {
   /** Creates a new ExampleSubsystem. */
-  private final WPI_TalonSRX leftDriveTalon;
-  private final WPI_TalonSRX rightDriveTalon;
+  private static final WPI_TalonSRX leftDriveTalon = new WPI_TalonSRX(Constants.OperatorConstants.LeftDriveTalonPort);;
+  private static final WPI_TalonSRX rightDriveTalon = new WPI_TalonSRX(Constants.OperatorConstants.RightDriveTalonPort);;
+  
   private final VictorSPX _leftDriveVictor;
   private final VictorSPX _rightDriveVictor;
 
   
   public DriveTrain() 
   {
-    leftDriveTalon = new WPI_TalonSRX(Constants.OperatorConstants.LeftDriveTalonPort);
-    rightDriveTalon = new WPI_TalonSRX(Constants.OperatorConstants.RightDriveTalonPort);
+
     _leftDriveVictor = new VictorSPX(Constants.OperatorConstants.LeftDriveVictorPort);
     _rightDriveVictor = new VictorSPX(Constants.OperatorConstants.RightDriveVictorPort);
 
@@ -55,16 +55,16 @@ public class DriveTrain extends SubsystemBase
     leftDriveTalon.setSensorPhase(true);
     rightDriveTalon.setSensorPhase(true);
 
-    leftDriveTalon.configFactoryDefault();
+    // leftDriveTalon.configFactoryDefault();
     leftDriveTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
-    rightDriveTalon.configFactoryDefault();
+    // rightDriveTalon.configFactoryDefault();
     rightDriveTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
 
-    leftDriveTalon.configPeakCurrentLimit(20);
-    rightDriveTalon.configPeakCurrentLimit(20);
+    //leftDriveTalon.configPeakCurrentLimit(20);
+    //rightDriveTalon.configPeakCurrentLimit(20);
 
-    leftDriveTalon.enableCurrentLimit(true);
-    rightDriveTalon.enableCurrentLimit(true);
+    //leftDriveTalon.enableCurrentLimit(true);
+    //rightDriveTalon.enableCurrentLimit(true);
     
     // Week 4 Motion Magic
    leftDriveTalon.config_kP(0, 3, 10);
@@ -85,9 +85,19 @@ public class DriveTrain extends SubsystemBase
 
   }
 
+  /**
+   * Sets the Talons in Coast mode
+   */
+  public static void setCoastMode() {
+    leftDriveTalon.setNeutralMode(NeutralMode.Coast);
+    rightDriveTalon.setNeutralMode(NeutralMode.Coast);
+  }
+
   public void tankDrive(double leftSpeed, double rightSpeed) {
     rightDriveTalon.set(rightSpeed);
     leftDriveTalon.set(leftSpeed);
+    SmartDashboard.putNumber("left wheel speed", leftSpeed);
+    SmartDashboard.putNumber("right wheel speed", rightSpeed);
   }
 
   
@@ -103,10 +113,11 @@ public class DriveTrain extends SubsystemBase
 
   @Override
   public void periodic() {
-    
+    SmartDashboard.putNumber("MaxSpeed: ", Constants.Measurements.maxDriveSpeed);
+    double maxSpeed = SmartDashboard.getNumber("MaxSpeed: ", 0.4);
+    Constants.Measurements.maxDriveSpeed = maxSpeed;
 
-  
-    tankDrive(RobotContainer.getJoy3().getY()*-0.4, RobotContainer.getJoy3().getThrottle()*-0.4);
+    tankDrive(RobotContainer.getJoy3().getY()*-maxSpeed, RobotContainer.getJoy3().getThrottle()*-maxSpeed);
 
     SmartDashboard.putNumber("left motor current", leftDriveTalon.getStatorCurrent());
     SmartDashboard.putNumber("right motor current", rightDriveTalon.getStatorCurrent());
