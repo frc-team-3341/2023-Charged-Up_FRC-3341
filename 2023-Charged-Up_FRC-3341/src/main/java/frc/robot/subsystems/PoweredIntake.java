@@ -42,7 +42,7 @@ public class PoweredIntake extends SubsystemBase {
 
     leftClawServo.set(0);
     rightClawServo.set(0);
-    wristServo.set(0.5);
+    //wristServo.set(0.5);
     controlsTimer.reset();
     
   }
@@ -93,13 +93,13 @@ public class PoweredIntake extends SubsystemBase {
     if (RobotContainer.getJoy2().getTrigger()) {
       // If POV is Down, then decrement
       if (RobotContainer.getJoy2().getPOV() == 180 && clawPosition > 0.0 && controlsTimer.get() <= Constants.ButtonMap.controlsDelay) {
-        clawPosition -= 0.25;
+        clawPosition -= 0.005;
         setClawPos(clawPosition);
         controlsTimer.reset();
       }
       // If POV is Up, then increment
       else if (RobotContainer.getJoy2().getPOV() == 0 && clawPosition < Constants.Measurements.starClawPositionLimit && controlsTimer.get() <= Constants.ButtonMap.controlsDelay) {
-        clawPosition += 0.25;
+        clawPosition += 0.005;
         setClawPos(clawPosition);
         controlsTimer.reset();
       } else if (controlsTimer.get() >= Constants.ButtonMap.controlsDelay) {
