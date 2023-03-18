@@ -5,18 +5,19 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.StarClaw;
+import frc.robot.subsystems.PoweredIntake;
 
-public class SetStarClawFlywheel extends CommandBase {
-  /** Creates a new SetStarClawFlywheel. */
+public class SetPoweredClawPos extends CommandBase {
+  /** Creates a new SetStarClawPos. */
 
-  public StarClaw claw;
-  public double power;
+  public PoweredIntake claw;
+  public double position;
 
-  public SetStarClawFlywheel(StarClaw claw, double power) {
-    // Use addRequirements() here to declare subsystem dependencies.
+  public SetPoweredClawPos(PoweredIntake claw, double position) {
     this.claw = claw;
-    this.power = power;
+    this.position = position;
+  
+    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(claw);
   }
 
@@ -27,18 +28,16 @@ public class SetStarClawFlywheel extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    claw.setFlywheelPower(power);
+    claw.setClawPos(position);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return claw.getClawPos() == Math.abs(position);
   }
 }
