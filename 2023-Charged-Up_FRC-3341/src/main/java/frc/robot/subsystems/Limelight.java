@@ -199,11 +199,10 @@ public class Limelight extends SubsystemBase {
     // Actual pipeline number not representative
     // SmartDashboard.putNumber("PipelineName", table.getEntry("pipeline").getDouble(0));// Actual piepline
 
-    /* 
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0);
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta").getDouble(0); */
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta").getDouble(0);
     
   }
 }

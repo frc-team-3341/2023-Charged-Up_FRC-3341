@@ -38,7 +38,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
-    joy1 = new Joystick(Constants.joy1);
+    joy1 = new Joystick(Constants.joyStick1);
     joy2 = new Joystick(Constants.joy2);
     configureButtonBindings();
   }

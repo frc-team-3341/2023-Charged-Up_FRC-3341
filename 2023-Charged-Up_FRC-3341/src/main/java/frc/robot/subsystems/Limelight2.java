@@ -16,17 +16,16 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 public class Limelight2 extends SubsystemBase {
   /** Creates a new Limelight. */
   NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-shuzah");
-  private Joystick joystick1 = RobotContainer.getJoy1();
   private Joystick joystick2 = RobotContainer.getJoy2();
-  private static double txNum2;
-  private static double tyNum2;
-  private double taNum2;
-  private static int tvNum2;
+  private static double txNum;
+  private static double tyNum;
+  private double taNum;
+  private static int tvNum;
   // Pipeline 0 - reflective tape
   // Pipeline 1 to 7 - april tags
   // Pipeline 8 - cube
   // Pipeline 9 - cone
-  public int pipeline = 0;
+  public int pipeline2 = 0;
   private static double CloseReflectiveTapeDistance2;
   private static double FarReflectiveTapeDistance2;
   private static double CloseAprilTagDistance2;
@@ -35,19 +34,19 @@ public class Limelight2 extends SubsystemBase {
 
   // This gets the tx, or the horizontal offset
   // from the crosshair in degrees (-27.0 to 27.0)
-  NetworkTableEntry tx2 = table.getEntry("tx");
+  NetworkTableEntry tx = table.getEntry("tx");
 
   // This gets the ty, or the vertical offset
   // from the crosshair in degrees (-20.5 to 20.5)
-  NetworkTableEntry ty2 = table.getEntry("ty");
+  NetworkTableEntry ty = table.getEntry("ty");
 
   // This gets the ta, or how much in % of the target
   // is visible (0.0-100.0)
-  NetworkTableEntry ta2 = table.getEntry("ta");
+  NetworkTableEntry ta = table.getEntry("ta");
 
   // This gets the tv, which sees if the limelight
   // has a valid target (1) or no valid target (0)
-  NetworkTableEntry tv2 = table.getEntry("tv");
+  NetworkTableEntry tv = table.getEntry("tv");
 
   public Limelight2() {
     // We have to add these ports so that we can connect to
@@ -63,11 +62,17 @@ public class Limelight2 extends SubsystemBase {
     //NetworkTableInstance.getDefault().getTable("limelight").getEntry("Stream").setNumber(2);
   }
   
-  public void changepipeline(int pipeline2){ table.getEntry("pipeline2").setNumber(pipeline2); }
-  public static double get_tx2(){ return txNum2; }
-  public static double get_ty2(){ return tyNum2; }
-  public double get_ta2(){ return taNum2; }
-  public static int get_tv2(){ return tvNum2; }
+  public void changepipeline(int pipeline2){ 
+    table.getEntry("pipeline2").setNumber(pipeline2); 
+  }
+  public static double get_tx(){ 
+    return txNum; 
+  }
+  public static double get_ty(){ 
+    return tyNum; 
+  }
+  public double get_ta(){ return taNum; }
+  public static int get_tv(){ return tvNum; }
   public static double getCloseReflectiveTapeDistance2(){ return CloseReflectiveTapeDistance2; }
   public static double getFarReflectiveTapeDistance2(){ return FarReflectiveTapeDistance2; }
   public static double getCloseAprilTagDistance2(){ return CloseAprilTagDistance2; }
@@ -77,8 +82,38 @@ public class Limelight2 extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+
+    if (RobotContainer.getJoy1().getRawButtonPressed(3)) {
+      pipeline2 = 0; // reflective tape
+      changepipeline(pipeline2);
+    } else if (RobotContainer.getJoy1().getRawButtonPressed(4)) {
+      pipeline2 = 9; // cone
+      changepipeline(pipeline2);
+    } else if (RobotContainer.getJoy1().getRawButtonPressed(5)) {
+      pipeline2 = 8; // square
+      changepipeline(pipeline2);
+    } else if (RobotContainer.getJoy1().getRawButtonPressed(6)) {
+      pipeline2 = 1; // april tag 1
+      changepipeline(pipeline2);
+    } else if (RobotContainer.getJoy1().getRawButtonPressed(7)) {
+      pipeline2 = 2; // april tag 2
+      changepipeline(pipeline2);
+    } else if (RobotContainer.getJoy1().getRawButtonPressed(8)) {
+      pipeline2 = 3; // april tag 3
+      changepipeline(pipeline2);
+    } else if (RobotContainer.getJoy1().getRawButtonPressed(9)) {
+      pipeline2 = 4; // april tag 4
+      changepipeline(pipeline2);
+    } else if (RobotContainer.getJoy1().getRawButtonPressed(10)) {
+      pipeline2 = 5; // april tag 5
+      changepipeline(pipeline2);
+    } else if (RobotContainer.getJoy1().getRawButtonPressed(11)) {
+      pipeline2 = 6; // april tag 6
+      changepipeline(pipeline2);
+    } 
+
 // 1st (closest) reflective tape pole
-    double pole_1_targetOffsetAngle_Vertical2 = ty2.getDouble(0.0);
+    double pole_1_targetOffsetAngle_Vertical2 = ty.getDouble(0.0);
     // How many degrees back is your limelight rotated from perfectly vertical?
     double pole_1_limelightMountAngleDegrees2 = 3.15;
     // Distance from the center of the Limelight lens to the floor
@@ -94,7 +129,7 @@ public class Limelight2 extends SubsystemBase {
     SmartDashboard.putNumber("CloseReflectiveTapeDistance2 (inches)", CloseReflectiveTapeDistance2);
 
 // 2nd (farthest) reflective tape pole
-    double pole_2_targetOffsetAngle_Vertical2 = ty2.getDouble(0.0);
+    double pole_2_targetOffsetAngle_Vertical2 = ty.getDouble(0.0);
     double pole_2_limelightMountAngleDegrees2 = 3.15; 
     double pole_2_limelightLensHeightInches2 = 7.165354;
     double pole_2_goalHeightInches2 = 46;
@@ -104,7 +139,7 @@ public class Limelight2 extends SubsystemBase {
     SmartDashboard.putNumber("FarReflectiveTapeDistance2 (inches)", FarReflectiveTapeDistance2);
 
 // 3rd (closest) april tag shelf
-    double pole_3_targetOffsetAngle_Vertical2 = ty2.getDouble(0.0);
+    double pole_3_targetOffsetAngle_Vertical2 = ty.getDouble(0.0);
     double pole_3_limelightMountAngleDegrees2 = 3.15;
     double pole_3_limelightLensHeightInches2 = 7.165354;
     double pole_3_goalHeightInches2 = 23.5;
@@ -114,7 +149,7 @@ public class Limelight2 extends SubsystemBase {
     SmartDashboard.putNumber("CloseAprilTagDistance2 (inches)", CloseAprilTagDistance2);
 
 // 4th (farthest) april tag shelf
-    double pole_4_targetOffsetAngle_Vertical2 = ty2.getDouble(0.0);
+    double pole_4_targetOffsetAngle_Vertical2 = ty.getDouble(0.0);
     double pole_4_limelightMountAngleDegrees2 = 3.15; 
     double pole_4_limelightLensHeightInches2 = 7.165354;
     double pole_4_goalHeightInches2 = 35.5;
@@ -124,7 +159,7 @@ public class Limelight2 extends SubsystemBase {
     SmartDashboard.putNumber("FarAprilTagDistance2 (inches)", FarAprilTagDistance2);
 
 // test
-    double test_targetOffsetAngle_Vertical2 = ty2.getDouble(0.0);
+    double test_targetOffsetAngle_Vertical2 = ty.getDouble(0.0);
     double test_limelightMountAngleDegrees2 = 3.15;
     double test_limelightLensHeightInches2 = 7.165354;
     double test_goalHeightInches2 = 15;
@@ -133,44 +168,44 @@ public class Limelight2 extends SubsystemBase {
     Distance_Test2 = (test_goalHeightInches2 - test_limelightLensHeightInches2)/Math.tan(test_angleToGoalRadians2);
     SmartDashboard.putNumber("Distance_Test2 (inches)", Distance_Test2);
 
-    tx2 = table.getEntry("tx2");
-    ty2 = table.getEntry("ty2");
-    ta2 = table.getEntry("ta2");
-    tv2 = table.getEntry("tv2");
+    tx = table.getEntry("tx");
+    ty = table.getEntry("ty");
+    ta = table.getEntry("ta");
+    tv = table.getEntry("tv");
 
     // tvNum can be either 1 or 0, so we instantiate by adding (int) in front
     // We will be assigning tvNum to the int (1 or 0) that limelight returns
-    tvNum2 = (int) tv2.getDouble(0.0);
+    tvNum = (int) tv.getDouble(0.0);
 
     // We will be assigning tyNum to the double (-27.0 to 27.0) that limelight returns
-    txNum2 = tx2.getDouble(0.0);
+    txNum = tx.getDouble(0.0);
 
     // We will be assigning tyNum to the double (-20.5 to 20.5) that limelight returns
-    tyNum2 = ty2.getDouble(0.0);
+    tyNum = ty.getDouble(0.0);
 
     // We will be assigning taNum to the double (0.0-100.0) that limelight returns
-    taNum2 = ta2.getDouble(0.0);
+    taNum = ta.getDouble(0.0);
 
     // This will output the x (horizontal offset) from the target in SmartDashboard
-    SmartDashboard.putNumber("LimelightX2", txNum2);
+    SmartDashboard.putNumber("LimelightX2", txNum);
 
     // This will output the y (vertical offset) from the target in SmartDashboard
-    SmartDashboard.putNumber("LimelightY2", tyNum2);
+    SmartDashboard.putNumber("LimelightY2", tyNum);
 
     // This will output the area of the target in SmartDashboard
-    SmartDashboard.putNumber("LimelightArea2", taNum2);
+    SmartDashboard.putNumber("LimelightArea2", taNum);
 
     // This will output the value of the target in SmartDashboard (0 or 1)
-    SmartDashboard.putNumber("LimelightV2", tvNum2);
+    SmartDashboard.putNumber("LimelightV2", tvNum);
 
     // SmartDashboard.putNumber("PipelineNumber", pipeline);
     // Actual pipeline number not representative
     SmartDashboard.putNumber("PipelineName2", table.getEntry("pipeline2").getDouble(0));// Actual piepline
 
-    NetworkTableInstance.getDefault().getTable("limelight-shuzah").getEntry("tx").getDouble(0);
-    NetworkTableInstance.getDefault().getTable("limelight-shuzah").getEntry("ty").getDouble(0);
-    NetworkTableInstance.getDefault().getTable("limelight-shuzah").getEntry("tv").getDouble(0);
-    NetworkTableInstance.getDefault().getTable("limelight-shuzah").getEntry("ta").getDouble(0);
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0);
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta").getDouble(0);
     
   }
 }
