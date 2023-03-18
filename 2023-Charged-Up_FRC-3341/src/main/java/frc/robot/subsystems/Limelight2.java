@@ -61,8 +61,6 @@ public class Limelight2 extends SubsystemBase {
     PortForwarder.add(5800, "http://limelight-shuzah.local:5801", 5800);
 
     //NetworkTableInstance.getDefault().getTable("limelight").getEntry("Stream").setNumber(2);
-
-
   }
   
   public void changepipeline(int pipeline2){ table.getEntry("pipeline2").setNumber(pipeline2); }
