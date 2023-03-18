@@ -80,7 +80,15 @@ public final class Constants {
 
     public static final double clawAngleLimit = 245.0; // Limit for servo movement (degrees)
 
-    public static final double starClawPositionLimit = 4.0;
+    public static final double starClawPositionLimit = 1.34;
+    public static final double poweredIntakeConePinch = 1.32;
+    public static final double poweredIntakeCubePinch = .75;
+    public static final double poweredIntakeOpenPinch = 0;
+    public static final double poweredIntakeConePinchCanRotatePos =1.235833;
+
+    public static double maxDriveSpeed = 0.25;
+
+    
 
     public static final double wristUpperLimit = 225.0;
     public static final double wristLowerLimit = -225.0; 
@@ -96,10 +104,10 @@ public final class Constants {
     public static final int manualOverride = 2;
 
     // Buttons for Arm rotation
-    public static final int stowPosition = 6;
+    public static final int stowPosition = 3;
     public static final int middlePosition = 4;
-    public static final int topPosition = 5;
-    public static final int groundPosition = 3;
+    public static final int topPosition = 6;
+    public static final int groundPosition = 5;
 
     //Set Extension soft limits
     public static final int extLimitReset = 7;
@@ -115,8 +123,8 @@ public final class Constants {
     public static final int logButton = 12;
 
     // Wrist Presets
-    public static final int wristLeft = 5;
-    public static final int wristRight = 6;
+    public static final int wristNinety = 5;
+    public static final int wristOneEighty = 6;
     public static final int wristCenter = 4;
 
     // Claw Presets
@@ -124,7 +132,9 @@ public final class Constants {
     public static final int clawClosed = 10;
 
     // For powered claw
-    public static final int clawRest = 12;
+    //public static final int clawRest = 12;
+
+    public static final int poweredIntakeConePinchCanRotate = 10;
 
     public static final int clawCube = 11;
     public static final int clawCone = 12;
