@@ -60,7 +60,7 @@ public class Limelight2 extends SubsystemBase {
     PortForwarder.add(5805, "http://limelight-shuzah.local:5801", 5805);
     PortForwarder.add(5800, "http://limelight-shuzah.local:5801", 5800);
 
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("Stream").setNumber(2);
+    //NetworkTableInstance.getDefault().getTable("limelight").getEntry("Stream").setNumber(2);
 
 
   }
@@ -169,10 +169,10 @@ public class Limelight2 extends SubsystemBase {
     // Actual pipeline number not representative
     SmartDashboard.putNumber("PipelineName2", table.getEntry("pipeline2").getDouble(0));// Actual piepline
 
-    NetworkTableInstance.getDefault().getTable("limelight2").getEntry("tx").getDouble(0);
-    NetworkTableInstance.getDefault().getTable("limelight2").getEntry("ty").getDouble(0);
-    NetworkTableInstance.getDefault().getTable("limelight2").getEntry("tv").getDouble(0);
-    NetworkTableInstance.getDefault().getTable("limelight2").getEntry("ta").getDouble(0);
+    NetworkTableInstance.getDefault().getTable("limelight-shuzah").getEntry("tx").getDouble(0);
+    NetworkTableInstance.getDefault().getTable("limelight-shuzah").getEntry("ty").getDouble(0);
+    NetworkTableInstance.getDefault().getTable("limelight-shuzah").getEntry("tv").getDouble(0);
+    NetworkTableInstance.getDefault().getTable("limelight-shuzah").getEntry("ta").getDouble(0);
     
   }
 }
