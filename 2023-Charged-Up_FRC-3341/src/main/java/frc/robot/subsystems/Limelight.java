@@ -108,7 +108,7 @@ public class Limelight extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
 
-   /*  if (RobotContainer.getJoy1().getRawButtonPressed(1)) {
+     if (RobotContainer.getJoy1().getRawButtonPressed(1)) {
       pipeline = 0; // reflective tape
       changepipeline(pipeline);
 
@@ -135,7 +135,7 @@ public class Limelight extends SubsystemBase {
     } else if (RobotContainer.getJoy1().getRawButtonPressed(8)) {
       pipeline = 6; // april tag 4 or 8
       changepipeline(pipeline);
-    } */
+    } 
 
     // 1st (closest) reflective tape pole
     double pole_1_targetOffsetAngle_Vertical = ty.getDouble(0.0);
@@ -184,14 +184,14 @@ public class Limelight extends SubsystemBase {
     SmartDashboard.putNumber("Top Shelf", FarAprilTagDistance);
 
     // test
-    double test_targetOffsetAngle_Vertical = ty.getDouble(0.0);
+    /* double test_targetOffsetAngle_Vertical = ty.getDouble(0.0);
     double test_limelightMountAngleDegrees = 3.15;
     double test_limelightLensHeightInches = 7.165354;
     double test_goalHeightInches = 15;
     double test_angleToGoalDegrees = test_limelightMountAngleDegrees + test_targetOffsetAngle_Vertical;
     double test_angleToGoalRadians = test_angleToGoalDegrees * (Math.PI / 180.0);
     Distance_Test = (test_goalHeightInches - test_limelightLensHeightInches) / Math.tan(test_angleToGoalRadians);
-    SmartDashboard.putNumber("Test", Distance_Test);
+    SmartDashboard.putNumber("Test", Distance_Test); */
 
     tx = table.getEntry("tx");
     ty = table.getEntry("ty");
