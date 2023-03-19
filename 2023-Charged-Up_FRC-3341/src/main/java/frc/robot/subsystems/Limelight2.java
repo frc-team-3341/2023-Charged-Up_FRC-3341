@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -62,15 +63,9 @@ public class Limelight2 extends SubsystemBase {
     //NetworkTableInstance.getDefault().getTable("limelight").getEntry("Stream").setNumber(2);
   }
   
-  public void changepipeline(int pipeline2){ 
-    table.getEntry("pipeline2").setNumber(pipeline2); 
-  }
-  public static double get_tx(){ 
-    return txNum; 
-  }
-  public static double get_ty(){ 
-    return tyNum; 
-  }
+  public void changepipeline(int pipeline2){ table.getEntry("pipeline").setNumber(pipeline2); }
+  public static double get_tx(){ return txNum; }
+  public static double get_ty(){ return tyNum; }
   public double get_ta(){ return taNum; }
   public static int get_tv(){ return tvNum; }
   public static double getCloseReflectiveTapeDistance2(){ return CloseReflectiveTapeDistance2; }
@@ -83,32 +78,32 @@ public class Limelight2 extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
 
-    if (RobotContainer.getJoy1().getRawButtonPressed(3)) {
+    if (RobotContainer.getJoy1().getRawButtonPressed(1)) {
       pipeline2 = 0; // reflective tape
       changepipeline(pipeline2);
-    } else if (RobotContainer.getJoy1().getRawButtonPressed(4)) {
-      pipeline2 = 9; // cone
+
+    } else if (RobotContainer.getJoy1().getRawButtonPressed(2)) {
+      pipeline2 = 1; // cone
       changepipeline(pipeline2);
+
+    } else if (RobotContainer.getJoy1().getRawButtonPressed(3)) {
+      pipeline2 = 2; // square
+      changepipeline(pipeline2);
+
     } else if (RobotContainer.getJoy1().getRawButtonPressed(5)) {
-      pipeline2 = 8; // square
+      pipeline2 = 3; // april tag 1 or 5
       changepipeline(pipeline2);
+
     } else if (RobotContainer.getJoy1().getRawButtonPressed(6)) {
-      pipeline2 = 1; // april tag 1
+      pipeline2 = 4; // april tag 2 or 6
       changepipeline(pipeline2);
+
     } else if (RobotContainer.getJoy1().getRawButtonPressed(7)) {
-      pipeline2 = 2; // april tag 2
+      pipeline2 = 5; // april tag 3 or 7
       changepipeline(pipeline2);
+
     } else if (RobotContainer.getJoy1().getRawButtonPressed(8)) {
-      pipeline2 = 3; // april tag 3
-      changepipeline(pipeline2);
-    } else if (RobotContainer.getJoy1().getRawButtonPressed(9)) {
-      pipeline2 = 4; // april tag 4
-      changepipeline(pipeline2);
-    } else if (RobotContainer.getJoy1().getRawButtonPressed(10)) {
-      pipeline2 = 5; // april tag 5
-      changepipeline(pipeline2);
-    } else if (RobotContainer.getJoy1().getRawButtonPressed(11)) {
-      pipeline2 = 6; // april tag 6
+      pipeline2 = 6; // april tag 4 or 8
       changepipeline(pipeline2);
     } 
 
@@ -126,7 +121,7 @@ public class Limelight2 extends SubsystemBase {
     // Calculates distance
     CloseReflectiveTapeDistance2 = (pole_1_goalHeightInches2 - pole_1_limelightLensHeightInches2)/Math.tan(pole_1_angleToGoalRadians2);
     // This outputs the distance from the limelight to the target
-    SmartDashboard.putNumber("CloseReflectiveTapeDistance2 (inches)", CloseReflectiveTapeDistance2);
+    SmartDashboard.putNumber("Bottom Pole2", CloseReflectiveTapeDistance2);
 
 // 2nd (farthest) reflective tape pole
     double pole_2_targetOffsetAngle_Vertical2 = ty.getDouble(0.0);
@@ -136,7 +131,7 @@ public class Limelight2 extends SubsystemBase {
     double pole_2_angleToGoalDegrees2 = pole_2_limelightMountAngleDegrees2 + pole_2_targetOffsetAngle_Vertical2;
     double pole_2_angleToGoalRadians2 = pole_2_angleToGoalDegrees2 * (Math.PI / 180.0);
     FarReflectiveTapeDistance2 = (pole_2_goalHeightInches2 - pole_2_limelightLensHeightInches2)/Math.tan(pole_2_angleToGoalRadians2);
-    SmartDashboard.putNumber("FarReflectiveTapeDistance2 (inches)", FarReflectiveTapeDistance2);
+    SmartDashboard.putNumber("Top Pole2", FarReflectiveTapeDistance2);
 
 // 3rd (closest) april tag shelf
     double pole_3_targetOffsetAngle_Vertical2 = ty.getDouble(0.0);
@@ -146,7 +141,7 @@ public class Limelight2 extends SubsystemBase {
     double pole_3_angleToGoalDegrees2 = pole_3_limelightMountAngleDegrees2 + pole_3_targetOffsetAngle_Vertical2;
     double pole_3_angleToGoalRadians2 = pole_3_angleToGoalDegrees2 * (Math.PI / 180.0);
     CloseAprilTagDistance2 = (pole_3_goalHeightInches2 - pole_3_limelightLensHeightInches2)/Math.tan(pole_3_angleToGoalRadians2);
-    SmartDashboard.putNumber("CloseAprilTagDistance2 (inches)", CloseAprilTagDistance2);
+    SmartDashboard.putNumber("Bottom Shelf2", CloseAprilTagDistance2);
 
 // 4th (farthest) april tag shelf
     double pole_4_targetOffsetAngle_Vertical2 = ty.getDouble(0.0);
@@ -156,7 +151,7 @@ public class Limelight2 extends SubsystemBase {
     double pole_4_angleToGoalDegrees2 = pole_4_limelightMountAngleDegrees2 + pole_4_targetOffsetAngle_Vertical2;
     double pole_4_angleToGoalRadians2 = pole_4_angleToGoalDegrees2 * (Math.PI / 180.0);
     FarAprilTagDistance2 = (pole_4_goalHeightInches2 - pole_4_limelightLensHeightInches2)/Math.tan(pole_4_angleToGoalRadians2);
-    SmartDashboard.putNumber("FarAprilTagDistance2 (inches)", FarAprilTagDistance2);
+    SmartDashboard.putNumber("Top Shelf2", FarAprilTagDistance2);
 
 // test
     double test_targetOffsetAngle_Vertical2 = ty.getDouble(0.0);
@@ -166,7 +161,7 @@ public class Limelight2 extends SubsystemBase {
     double test_angleToGoalDegrees2 = test_limelightMountAngleDegrees2 + test_targetOffsetAngle_Vertical2;
     double test_angleToGoalRadians2 = test_angleToGoalDegrees2 * (Math.PI / 180.0);
     Distance_Test2 = (test_goalHeightInches2 - test_limelightLensHeightInches2)/Math.tan(test_angleToGoalRadians2);
-    SmartDashboard.putNumber("Distance_Test2 (inches)", Distance_Test2);
+    SmartDashboard.putNumber("Test2", Distance_Test2);
 
     tx = table.getEntry("tx");
     ty = table.getEntry("ty");
@@ -200,7 +195,7 @@ public class Limelight2 extends SubsystemBase {
 
     // SmartDashboard.putNumber("PipelineNumber", pipeline);
     // Actual pipeline number not representative
-    SmartDashboard.putNumber("PipelineName2", table.getEntry("pipeline2").getDouble(0));// Actual piepline
+    SmartDashboard.putNumber("PipelineName2", table.getEntry("pipeline").getDouble(0));// Actual piepline
 
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
