@@ -86,9 +86,7 @@ public final class Constants {
     public static final double poweredIntakeOpenPinch = 0;
     public static final double poweredIntakeConePinchCanRotatePos =1.235833;
 
-    public static double maxDriveSpeed = 0.25;
-
-    
+    public static double maxDriveSpeed = 0.6;
 
     public static final double wristUpperLimit = 225.0;
     public static final double wristLowerLimit = -225.0; 

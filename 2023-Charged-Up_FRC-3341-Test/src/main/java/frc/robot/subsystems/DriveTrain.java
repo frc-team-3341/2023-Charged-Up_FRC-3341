@@ -28,8 +28,8 @@ import com.kauailabs.navx.frc.AHRS;
 public class DriveTrain extends SubsystemBase 
 {
   /** Creates a new ExampleSubsystem. */
-  private static final WPI_TalonSRX leftDriveTalon = new WPI_TalonSRX(Constants.OperatorConstants.LeftDriveTalonPort);;
-  private static final WPI_TalonSRX rightDriveTalon = new WPI_TalonSRX(Constants.OperatorConstants.RightDriveTalonPort);;
+  private static final WPI_TalonSRX leftDriveTalon = new WPI_TalonSRX(Constants.OperatorConstants.LeftDriveTalonPort);
+  private static final WPI_TalonSRX rightDriveTalon = new WPI_TalonSRX(Constants.OperatorConstants.RightDriveTalonPort);
   
   private final VictorSPX _leftDriveVictor;
   private final VictorSPX _rightDriveVictor;
@@ -37,15 +37,14 @@ public class DriveTrain extends SubsystemBase
   
   public DriveTrain() 
   {
+    leftDriveTalon.setNeutralMode(NeutralMode.Coast);
+    rightDriveTalon.setNeutralMode(NeutralMode.Coast);
 
     _leftDriveVictor = new VictorSPX(Constants.OperatorConstants.LeftDriveVictorPort);
     _rightDriveVictor = new VictorSPX(Constants.OperatorConstants.RightDriveVictorPort);
 
     _leftDriveVictor.follow(leftDriveTalon);
     _rightDriveVictor.follow(rightDriveTalon);
-  
-    leftDriveTalon.setNeutralMode(NeutralMode.Coast);
-    rightDriveTalon.setNeutralMode(NeutralMode.Coast);
 
     leftDriveTalon.setInverted(false);
     rightDriveTalon.setInverted(true);
@@ -59,6 +58,9 @@ public class DriveTrain extends SubsystemBase
     leftDriveTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
     // rightDriveTalon.configFactoryDefault();
     rightDriveTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+
+    leftDriveTalon.setNeutralMode(NeutralMode.Coast);
+    rightDriveTalon.setNeutralMode(NeutralMode.Coast);
 
     //leftDriveTalon.configPeakCurrentLimit(20);
     //rightDriveTalon.configPeakCurrentLimit(20);
@@ -91,6 +93,7 @@ public class DriveTrain extends SubsystemBase
   public static void setCoastMode() {
     leftDriveTalon.setNeutralMode(NeutralMode.Coast);
     rightDriveTalon.setNeutralMode(NeutralMode.Coast);
+    
   }
 
   public void tankDrive(double leftSpeed, double rightSpeed) {
@@ -113,11 +116,13 @@ public class DriveTrain extends SubsystemBase
 
   @Override
   public void periodic() {
+    setCoastMode();
+
     SmartDashboard.putNumber("MaxSpeed: ", Constants.Measurements.maxDriveSpeed);
     double maxSpeed = SmartDashboard.getNumber("MaxSpeed: ", 0.4);
     Constants.Measurements.maxDriveSpeed = maxSpeed;
 
-    tankDrive(RobotContainer.getJoy3().getY()*-maxSpeed, RobotContainer.getJoy3().getThrottle()*-maxSpeed);
+    tankDrive(Math.pow(Math.abs(RobotContainer.getJoy3().getY()), 1.8)*Math.signum(RobotContainer.getJoy3().getY())*-maxSpeed, Math.pow(Math.abs(RobotContainer.getJoy3().getThrottle()), 1.8)*Math.signum(RobotContainer.getJoy3().getThrottle())*-maxSpeed);
 
     SmartDashboard.putNumber("left motor current", leftDriveTalon.getStatorCurrent());
     SmartDashboard.putNumber("right motor current", rightDriveTalon.getStatorCurrent());
