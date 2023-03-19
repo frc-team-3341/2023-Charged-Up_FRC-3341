@@ -50,7 +50,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    JoystickButton toTarget = new JoystickButton(joy1, 3);
+    JoystickButton toTarget = new JoystickButton(joy1, 4);
     toTarget.onTrue( new CenterToTarget(lime, drive));
     
   }
