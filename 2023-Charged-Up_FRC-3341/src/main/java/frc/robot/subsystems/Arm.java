@@ -8,10 +8,12 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.networktables.NetworkTableInstance.NetworkMode;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -20,7 +22,9 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
+import frc.robot.Constants.Measurements;
 import frc.robot.Constants;
+import frc.robot.Robot;
 
 public class Arm extends SubsystemBase {
 
@@ -43,6 +47,8 @@ public class Arm extends SubsystemBase {
   armPID_P.getDouble(Constants.PIDConstants.armPID_P), 
   armPID_I.getDouble(Constants.PIDConstants.armPID_I), 
   armPID_D.getDouble(Constants.PIDConstants.armPID_D));
+
+  public PIDController extendPID = new PIDController(Constants.PIDConstants.extPID_P, 0, 0);
 
   // Creates target angle variable
   private double targetAngle = 0.0;
@@ -67,7 +73,7 @@ public class Arm extends SubsystemBase {
   /** Creates a new Arm. */
   public Arm() {
     // Reset encoders to either 0 or otherwise an arbitrary offset
-    resetEncoders();
+    // resetEncoders();
     rotTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
     extendingTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
 
@@ -80,12 +86,12 @@ public class Arm extends SubsystemBase {
     rotTalon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
     rotTalon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
 
-    rotTalon.setInverted(true);
+    rotTalon.setInverted(Constants.OperatorConstants.armInvert);
 
     // Very important - sets max output, so that PID doesn't output an output that it too high
     // Might be changed based upon Arm's torque and sensitivity to voltage
-    rotTalon.configPeakOutputForward(0.4);
-    rotTalon.configPeakOutputReverse(-0.4);
+    rotTalon.configPeakOutputForward(1.0);
+    rotTalon.configPeakOutputReverse(-1.0);
 
     // Sets limits for how far the talon can extend forwards and backwards
     rotTalon.configForwardSoftLimitThreshold(Constants.Measurements.upperAngleBound*Constants.Measurements.degreesToTicks);
@@ -99,8 +105,13 @@ public class Arm extends SubsystemBase {
     extendingTalon.configForwardSoftLimitEnable(true);
     extendingTalon.configReverseSoftLimitEnable(true);
 
+    
+
     // Reset Extending Talon
     extendingTalon.setSelectedSensorPosition(0);
+
+    // Set tolerance of PID
+    extendPID.setTolerance(0.2);
 
     // Tolerance from reaching the setpoint
     armPID.setTolerance(2);
@@ -128,10 +139,15 @@ public class Arm extends SubsystemBase {
   @param power - Percent input into the controller
   */
   public void rotateArm(double power) {
-      rotTalon.set(ControlMode.PercentOutput, power*0.4+(Math.sin(getAngle())*(Constants.PIDConstants.armManualHoldingVoltage/12.0))); 
+      if(power == 0)rotTalon.setNeutralMode(NeutralMode.Brake);
+      else rotTalon.setNeutralMode(NeutralMode.Coast);
+
+      rotTalon.set(ControlMode.PercentOutput, power*1.0+(Math.sin(getAngle())*(Constants.PIDConstants.armManualHoldingVoltage/12.0))); 
   }
+
   public void extendArm(double power) {
     extendingTalon.set(ControlMode.PercentOutput, power);
+    //((extendingTalon.getSelectedSensorPosition(0)/4096.0)*Constants.Measurements.threadLength)/Constants.Measurements.gearRatio
   }
 
   /**
@@ -160,14 +176,48 @@ public class Arm extends SubsystemBase {
   }
 
   /**
+   * Returns the velocity of the extension
+  @return velocity - The velocity of the extension in inches/sec
+   */
+  public double getLeadScrewVelocity() {
+    double velocity = (((extendingTalon.getSelectedSensorVelocity(0)*10.0)/4096.0)*Constants.Measurements.threadLength)/Constants.Measurements.gearRatio;
+    return velocity;
+  }
+
+  /**
+   * Sets the setpoint of the PID controller
+   */
+  public void setExtendPIDSetpoint(double setpoint) {
+    extendPID.setSetpoint(setpoint);
+  }
+
+  /**
   Updates the PID loop with a calculated feedforward value
    */
-  public void updatePID() {
+  public void updateRotatePID() {
     // Without two clamps: 1.12
     // With clamps: 1.2
     rotTalon.set(ControlMode.PercentOutput, armPID.calculate(getAngle())+(Math.sin(getAngle())*(Constants.PIDConstants.armHoldingVoltage/12.0)));
     SmartDashboard.putNumber("PID: ", armPID.calculate(getAngle())+(Math.sin(getAngle())*(Constants.PIDConstants.armHoldingVoltage/12.0)));
   }
+
+  public void updateExtendPID() {
+    if(RobotContainer.getJoy1().getPOV() == 0 &&getLeadScrewPos() > Constants.Measurements.maxExtension-1){
+      extendingTalon.set(ControlMode.PercentOutput, Constants.Measurements.extLimitPower);
+    }
+    else if(RobotContainer.getJoy1().getPOV() == 180 &&getLeadScrewPos()<0.5){
+      extendingTalon.set(ControlMode.PercentOutput, -2*Constants.Measurements.extLimitPower);
+    }
+    
+    else if(RobotContainer.getJoy1().getPOV() == 0){
+      extendingTalon.set(ControlMode.PercentOutput, extendPID.calculate(getLeadScrewVelocity()) + Constants.Measurements.baseExtendPower);
+    }
+    else if(RobotContainer.getJoy1().getPOV() == 180){
+      extendingTalon.set(ControlMode.PercentOutput, extendPID.calculate(getLeadScrewVelocity()) - Constants.Measurements.baseExtendPower);
+    }
+    
+  }
+
 
   /**
   Whether the PID controller is at the setpoint.
@@ -210,7 +260,7 @@ public class Arm extends SubsystemBase {
   // Runs periodically  
   @Override
   public void periodic() {
-
+    //extendingTalon.set(ControlMode.PercentOutput, RobotContainer.getJoy1().getX());
     // Button to toggle between manual and PID control
     if (RobotContainer.getJoy1().getRawButtonReleased(Constants.ButtonMap.manualOverride)) {
       override = !override;
@@ -221,26 +271,48 @@ public class Arm extends SubsystemBase {
       logOverride = !logOverride;
     }
 
+    // power is a function of distance with max power at half extension
+    //double power =  (Constants.Measurements.maxExtendPower * (1 - Math.pow(extendingTalon.getSelectedSensorPosition()*Constants.Measurements.ticksToInches - Constants.Measurements.maxExtension/2, 8)));
+    //if(power < Constants.Measurements.minExtendPower) power = Constants.Measurements.minExtendPower;
+    updateExtendPID();
+    // SmartDashboard.putNumber("Extension Power", power);
     if (RobotContainer.getJoy1().getPOV() == 0) {
+      //Max extension 16.67 inches
       // Move extension forward at POV pos of 0
-      extendArm(0.4);
+      extendPID.setSetpoint(7.0);
+
+      //extendArm(power);
     }  else if (RobotContainer.getJoy1().getPOV() == 180) {
       // Move extension backward at POV pos of 180
-      extendArm(-0.4);
+      extendPID.setSetpoint(-7.0);
+      //extendArm(-1*power);
     }
     else {
       extendArm(0);
     }
 
+    if (RobotContainer.getJoy1().getRawButton(Constants.ButtonMap.extLimitReset)) {
+      extendingTalon.configForwardSoftLimitEnable(false);
+      extendingTalon.configReverseSoftLimitEnable(false);
+      rotTalon.configForwardSoftLimitEnable(false);
+      rotTalon.configReverseSoftLimitEnable(false);
+    } else if (RobotContainer.getJoy1().getRawButton(Constants.ButtonMap.extLimitReset) == false) {
+      extendingTalon.configForwardSoftLimitEnable(true);
+      extendingTalon.configReverseSoftLimitEnable(true);
+      rotTalon.configForwardSoftLimitEnable(true);
+      rotTalon.configReverseSoftLimitEnable(true);
+    }
+    
+
     // If controlling manually
     if (override) {
       // We want to reset the target angle to the current angle
-      rotateArm(RobotContainer.getJoy1().getY());
+      rotateArm(-RobotContainer.getJoy1().getY());
       targetAngle = getAngle();
     // Else if not controlling manually
     } else if (!override) {
       armPID.setSetpoint(targetAngle);
-      updatePID();
+      updateRotatePID();
     }
 
     // Override for logging button (REMOVE IN FINAL CODE)
@@ -281,12 +353,23 @@ public class Arm extends SubsystemBase {
 
     // Enable/Disable Soft limits when the leadscrew extends a certain amount
     // This is so that it can stow safely, yet extend beyond the frame to pick up field elements
-    if (getLeadScrewPos() >= Constants.Measurements.fullyExtendedLeadScrewThreshold) {
-      rotTalon.configForwardSoftLimitThreshold(Constants.Measurements.bumperAngleBound*Constants.Measurements.degreesToTicks);
-      rotTalon.configForwardSoftLimitEnable(true);
-    } else if (getLeadScrewPos() <  Constants.Measurements.fullyExtendedLeadScrewThreshold) {
-      rotTalon.configForwardSoftLimitThreshold(Constants.Measurements.upperAngleBound*Constants.Measurements.degreesToTicks);
-      rotTalon.configForwardSoftLimitEnable(true);
+    if (getLeadScrewPos() >= Constants.Measurements.fullyExtendedLeadScrewThreshold && RobotContainer.getJoy1().getRawButton(Constants.ButtonMap.extLimitReset) == false) {
+      rotTalon.configReverseSoftLimitThreshold(Constants.Measurements.bumperAngleBound*Constants.Measurements.degreesToTicks);
+      rotTalon.configReverseSoftLimitEnable(true);
+    } else if (getLeadScrewPos() <  Constants.Measurements.fullyExtendedLeadScrewThreshold && RobotContainer.getJoy1().getRawButton(Constants.ButtonMap.extLimitReset) == false) {
+      rotTalon.configReverseSoftLimitThreshold(Constants.Measurements.lowerAngleBound*Constants.Measurements.degreesToTicks);
+      rotTalon.configReverseSoftLimitEnable(true);
+    }
+
+    if (rotTalon.isRevLimitSwitchClosed() == 0.0) {
+      rotTalon.setSelectedSensorPosition(0);
+    }
+
+    if (extendingTalon.isRevLimitSwitchClosed() == 0.0) {
+      extendingTalon.setSelectedSensorPosition(0);
+    }
+    if(extendingTalon.isFwdLimitSwitchClosed() == 0.0) {
+      extendingTalon.setSelectedSensorPosition(Constants.Measurements.maxExtension/Constants.Measurements.ticksToInches);
     }
 
     // Prints status of certain things to the DriverStation
@@ -294,11 +377,25 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putNumber("kI: ", armPID_I.getDouble(Constants.PIDConstants.armPID_I));
     SmartDashboard.putNumber("Lead Screw Raw Pos: ", extendingTalon.getSelectedSensorPosition());
     SmartDashboard.putNumber("Extension Pos In Inches: ", getLeadScrewPos());
+    SmartDashboard.putNumber("Extension Velocity: ", getLeadScrewVelocity());
     SmartDashboard.putNumber("POV Angle", RobotContainer.getJoy1().getPOV());
     SmartDashboard.putNumber("Arm Ticks: ", rotTalon.getSelectedSensorPosition(0));
     SmartDashboard.putNumber("Arm Voltage: ", rotTalon.getMotorOutputPercent());
     SmartDashboard.putNumber("Arm Angle: ", getAngle());
     SmartDashboard.putNumber("Joystick Y Position: ", RobotContainer.getJoy1().getY());
+    SmartDashboard.putNumber("Current", rotTalon.getStatorCurrent());
+    SmartDashboard.putNumber("Ext Current", extendingTalon.getStatorCurrent());
+
     
+
+    SmartDashboard.putNumber("Rot Reverse", rotTalon.isRevLimitSwitchClosed());
+    SmartDashboard.putNumber("Rot Forward", rotTalon.isFwdLimitSwitchClosed());
+
+    SmartDashboard.putNumber("Ext Reverse", extendingTalon.isRevLimitSwitchClosed());
+    SmartDashboard.putNumber("Ext Forward", extendingTalon.isFwdLimitSwitchClosed());
+   
+    
+    SmartDashboard.putNumber("Extension Current", extendingTalon.getStatorCurrent());
+    SmartDashboard.putNumber("Extension PID", extendPID.calculate(getLeadScrewPos()));
   }
 }
