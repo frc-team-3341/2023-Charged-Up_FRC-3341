@@ -126,6 +126,10 @@ public class DriveTrain extends SubsystemBase
 
     SmartDashboard.putNumber("left motor current", leftDriveTalon.getStatorCurrent());
     SmartDashboard.putNumber("right motor current", rightDriveTalon.getStatorCurrent());
+    SmartDashboard.putNumber("right motor joystick", Math.pow(Math.abs(RobotContainer.getJoy3().getY()), 1.8)*Math.signum(RobotContainer.getJoy3().getY())*-maxSpeed);
+    SmartDashboard.putNumber("left motor joystick",  Math.pow(Math.abs(RobotContainer.getJoy3().getThrottle()), 1.8)*Math.signum(RobotContainer.getJoy3().getThrottle())*-maxSpeed);
+
+
   }
 
   @Override
