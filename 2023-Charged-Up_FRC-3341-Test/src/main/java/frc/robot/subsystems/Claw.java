@@ -14,7 +14,7 @@ import frc.robot.RobotContainer;
 public class Claw extends SubsystemBase {
 
   Servo clawServo = new Servo(Constants.OperatorConstants.clawServoPort);
-  Servo wristServo = new Servo(Constants.OperatorConstants.wristServoPort);
+  Servo wristServo = new Servo(8);
 
   public boolean clawed = false;
   private double clawAngle = 0.0;
@@ -29,7 +29,7 @@ public class Claw extends SubsystemBase {
     controlsTimer.reset();
     // Sets Wrist to 0 degrees (resting position)
     clawServo.set(0.5);
-    wristServo.set(0.5);
+   wristServo.set(0.5);
   }
 
   /**

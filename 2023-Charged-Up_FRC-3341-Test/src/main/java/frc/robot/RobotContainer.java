@@ -34,7 +34,7 @@ public class RobotContainer {
 
 
   public final Arm arm = new Arm();
-  //public final Claw claw = new Claw();
+  public final Claw claw = new Claw();
   public final PoweredIntake poweredIntake = new PoweredIntake();
 
   // final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
@@ -96,9 +96,9 @@ public class RobotContainer {
     triggerClawClosed.onTrue(new SetClawPos(claw, 100/2)); //previously 100
 
     JoystickButton triggerClawOpen = new JoystickButton(joystick1, Constants.ButtonMap.clawOpen);
-    triggerClawOpen.onTrue(new SetClawPos(claw, 245/2));*/
-   
-    JoystickButton triggerStarClawRest = new JoystickButton(joystick1, Constants.ButtonMap.clawOpen);
+    triggerClawOpen.onTrue(new SetClawPos(claw, 245/2));
+   */
+   JoystickButton triggerStarClawRest = new JoystickButton(joystick1, Constants.ButtonMap.clawOpen);
     triggerStarClawRest.onTrue(new SetPoweredClawPos(poweredIntake, Constants.Measurements.poweredIntakeOpenPinch));
 
     JoystickButton triggerStarClawClosed = new JoystickButton(joystick1, Constants.ButtonMap.clawCone);

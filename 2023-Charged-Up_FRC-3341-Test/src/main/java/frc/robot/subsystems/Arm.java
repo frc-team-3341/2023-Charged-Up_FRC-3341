@@ -73,7 +73,7 @@ public class Arm extends SubsystemBase {
   /** Creates a new Arm. */
   public Arm() {
     // Reset encoders to either 0 or otherwise an arbitrary offset
-    resetEncoders();
+    // resetEncoders();
     rotTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
     extendingTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
 
