@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Limelight;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -16,21 +17,21 @@ public class CenterToTarget extends CommandBase {
   // Here is the middle of the x and y axis on the target
   public double centerx;
   public double centery;
-  private final TankDrive tankDrive;
-  private static DriveTrain dt;
+  //private final TankDrive tankDrive;
+  private DriveTrain dt;
   public PIDController Tpid;
   public PIDController Fpid;
   double TurnSpeed = 0.0;  
   double FowardSpeed = 0.0;  
 
-  public CenterToTarget(Limelight lime, Drivetrain drive) {
+  public CenterToTarget(Limelight lime, DriveTrain dt) {
     // Use addRequirements() here to declare subsystem dependencies.
-    tankDrive = new TankDrive(dt, null, null);
+    //tankDrive = new TankDrive(dt, RobotContainer.getJoy2(), null);
     this.lime = lime;
     this.dt = dt;
 
     // Connects limelight subsystem to this command
-    addRequirements(dt, lime);
+    
     centerx = Limelight.get_tx();
     centery = Limelight.get_ty();
 
@@ -53,8 +54,10 @@ public class CenterToTarget extends CommandBase {
     Tpid = new PIDController(0.0093825*2, 0.0, 0.0);
     Fpid = new PIDController(0.0093825*2, 0.0, 0.0);
 
-    Tpid.setTolerance(1);
-    Fpid.setTolerance(1);
+    Tpid.setTolerance(4);
+    Fpid.setTolerance(4);
+
+    addRequirements(lime, dt);
   }
 
   // Called when the command is initially scheduled.
@@ -74,8 +77,8 @@ public class CenterToTarget extends CommandBase {
     // You need this because it keeps calling the value instead of only once because the robot is moving
     centerx = Limelight.get_tx();
     centery = Limelight.get_ty();
-    TurnSpeed = Tpid.calculate(centerx) * 0.3;
-    FowardSpeed = Fpid.calculate(Limelight.getDistance_Test() * 0.3);
+    TurnSpeed = Tpid.calculate(centerx) * 0.7;
+    FowardSpeed = Fpid.calculate(Limelight.getDistance_Test() * 0.7);
     
     /* 
     if(Math.abs(distance) < 11.3){
@@ -90,7 +93,7 @@ public class CenterToTarget extends CommandBase {
     }
     */
     
-    dt.tankDrive(FowardSpeed+TurnSpeed, FowardSpeed-TurnSpeed);
+    dt.tankDrive(FowardSpeed-TurnSpeed, FowardSpeed+TurnSpeed);
     SmartDashboard.putNumber("Speed", FowardSpeed);
 }
   
@@ -104,7 +107,8 @@ public class CenterToTarget extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Tpid.atSetpoint() && Fpid.atSetpoint();
+    //return Tpid.atSetpoint() && Fpid.atSetpoint();
+    return Tpid.atSetpoint();
     //return false;
   }
 }

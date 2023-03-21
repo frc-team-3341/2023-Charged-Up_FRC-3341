@@ -92,7 +92,8 @@ public class RobotContainer {
     JoystickButton triggerClawRest = new JoystickButton(joystick1, Constants.ButtonMap.clawCube); //changed from joystick1 to joystick2
     triggerClawRest.onTrue(new SetClawPos(claw, 155/2)); //previously 155
 
-    JoystickButton triggerClawClosed = new JoystickButton(joystick1, Constants.ButtonMap.clawCone);
+    JoystickButton triggerClawC
+    losed = new JoystickButton(joystick1, Constants.ButtonMap.clawCone);
     triggerClawClosed.onTrue(new SetClawPos(claw, 100/2)); //previously 100
 
     JoystickButton triggerClawOpen = new JoystickButton(joystick1, Constants.ButtonMap.clawOpen);

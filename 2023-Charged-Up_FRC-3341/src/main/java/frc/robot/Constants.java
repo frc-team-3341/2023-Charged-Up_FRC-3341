@@ -35,7 +35,6 @@ public final class Constants {
     public static final int Zero = 0;
     public static final int One = 1;
     
-    public static final int kDriverControllerPort = 0;
     public static final int armPort = 10; // ID 2 for testing
     public static final boolean armInvert = true; 
     public static final int clawPinchPort = 20;
