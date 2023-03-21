@@ -4,52 +4,53 @@
 
 package frc.robot;
 
-
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.*;
-import frc.robot.subsystems.*;
-
+import frc.robot.commands.CenterToTarget;
+import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.LockOnTarget;
+import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.Limelight2;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
+ * subsystems, commands, and button mappings) should be declared here.
  */
-
-
 public class RobotContainer {
+  // The robot's subsystems and commands are defined here...
+  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+  
+  //We have to initialize these objects for the SpinToTarget, ProtoTurret, and AutoTurret commands
+  private final static Limelight lime = new Limelight();
+  private final static Limelight2 lime2 = new Limelight2();
+  private final static LockOnTarget lock = new LockOnTarget(dt, lime, 0);
+  private final static CenterToTarget center = new CenterToTarget(lime, dt);
   public static final Joystick joystick0 = new Joystick(0);
   public static final Joystick joystick1 = new Joystick(1);
   public static final Joystick joystick2 = new Joystick(2);
   private final TankDrive tankDrive;
   private static DriveTrain dt;
-  
-  // The robot's subsystems and commands are defined here...
-
-
   public final Arm arm = new Arm();
   public final Claw claw = new Claw();
   public final PoweredIntake poweredIntake = new PoweredIntake();
 
   // final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-
-    configureBindings();
-    // Configure the button bindings
     dt = new DriveTrain();
-     tankDrive = new TankDrive(dt, joystick0, joystick1);
-    
+    tankDrive = new TankDrive(dt, joystick0, joystick1);
 
+    configureButtonBindings();
   }
-
 
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
@@ -57,8 +58,10 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-
-  private void configureBindings() {
+  private void configureButtonBindings() {
+    JoystickButton toTarget = new JoystickButton(joy1, 4);
+    toTarget.onTrue( new CenterToTarget(lime, dt));
+    
     JoystickButton triggerStowPos = new JoystickButton(joystick0, Constants.ButtonMap.stowPosition);
     triggerStowPos.onTrue(new Rotate(arm, 0));
 
@@ -117,18 +120,16 @@ public class RobotContainer {
     triggerFlywheelOut.onFalse(new SetPoweredClawFlywheel(poweredIntake, 0.0));
   }
 
-
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
-
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
+    // We have to return the name of the object, which is lock for LockOnTarget in this case or the code will not work
+    // We have to specify which command to run as autonomous command 
     return null;
   }
-
   public static Joystick getJoy1() {
     return joystick0;
   }
@@ -140,8 +141,27 @@ public class RobotContainer {
 public static Joystick getJoy3() {
   return joystick2;
 }
-  
+
 public static DriveTrain getDriveTrain(){
     return dt;
   }
+  public static Limelight getLime(){
+    return lime;
+  }
+  public static Limelight2 getLime2(){
+    return lime2;
+  }
+  public static double get_tv() {
+    return 0;
+  }
+  public static double get_tv2() {
+    return 0;
+  }
+  public static double get_ty() {
+    return 0;
+  }
+  public static double get_ty2() {
+    return 0;
+  }
+
 }
