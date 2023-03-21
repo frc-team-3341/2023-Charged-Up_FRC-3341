@@ -44,6 +44,11 @@ public class RobotContainer {
   public final Arm arm = new Arm();
   public final Claw claw = new Claw();
   public final PoweredIntake poweredIntake = new PoweredIntake();
+  private final MagicDrive magicDrive;
+  private final AutoTurn turn;
+  private final AutoDrive forward;
+  private final AutoBalance balance;
+  private final Docking dock;
 
   // final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
@@ -51,8 +56,15 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     //dt = new DriveTrain();
+    dt.resetEncoders();
+    dt.coast();
     tankDrive = new TankDrive(dt, joystick0, joystick1);
 
+    magicDrive = new MagicDrive(dt, 1.0);
+    turn = new AutoTurn(dt, 90);
+    forward = new AutoDrive(dt, 5.69);
+    balance = new AutoBalance(dt);
+    dock = new Docking(dt);
     configureButtonBindings();
   }
 
@@ -132,7 +144,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // We have to return the name of the object, which is lock for LockOnTarget in this case or the code will not work
     // We have to specify which command to run as autonomous command 
-    return center;
+    return dock;
   }
   public static Joystick getJoy1() {
     return joystick0;
