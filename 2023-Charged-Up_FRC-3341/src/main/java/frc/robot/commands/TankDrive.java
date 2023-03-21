@@ -8,16 +8,16 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.Constants;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.DriveTrain;
 
 
 public class TankDrive extends CommandBase {
   /** Creates a new TankDrive. */
-  private final Drivetrain _driveTrain; // declares drive train
+  private final DriveTrain _driveTrain; // declares drive train
   private final Joystick _leftJoystick; // declares left joystick
   private final Joystick _rightJoystick; //declares rightjoystick
 
-  public TankDrive(Drivetrain dt, Joystick leftJ, Joystick rightJ) {
+  public TankDrive(DriveTrain dt, Joystick leftJ, Joystick rightJ) {
     // Use addRequirements() here to declare subsystem dependencies.
     _driveTrain = dt; //initializes drive train
     _leftJoystick = leftJ; // initializes left joystick

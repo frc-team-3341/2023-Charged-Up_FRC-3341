@@ -8,12 +8,17 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.CenterToTarget;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.LockOnTarget;
+import frc.robot.commands.Rotate;
+import frc.robot.commands.SetPoweredClawFlywheel;
+import frc.robot.commands.SetPoweredClawPos;
+import frc.robot.commands.SetWristPosPI;
+import frc.robot.commands.TankDrive;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.Limelight2;
+import frc.robot.subsystems.PoweredIntake;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 /**
@@ -24,19 +29,18 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
-  
+ 
   //We have to initialize these objects for the SpinToTarget, ProtoTurret, and AutoTurret commands
   private final static Limelight lime = new Limelight();
-  private final static Limelight2 lime2 = new Limelight2();
-  private final static LockOnTarget lock = new LockOnTarget(dt, lime, 0);
-  private final static CenterToTarget center = new CenterToTarget(lime, dt);
+
   public static final Joystick joystick0 = new Joystick(0);
   public static final Joystick joystick1 = new Joystick(1);
   public static final Joystick joystick2 = new Joystick(2);
   private final TankDrive tankDrive;
-  private static DriveTrain dt;
+  private static DriveTrain dt= new DriveTrain();
+  
+  private final static LockOnTarget lock = new LockOnTarget(dt, lime, 0);
+  private final static CenterToTarget center = new CenterToTarget(lime, dt);
   public final Arm arm = new Arm();
   public final Claw claw = new Claw();
   public final PoweredIntake poweredIntake = new PoweredIntake();
@@ -46,7 +50,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    dt = new DriveTrain();
+    //dt = new DriveTrain();
     tankDrive = new TankDrive(dt, joystick0, joystick1);
 
     configureButtonBindings();
@@ -59,8 +63,8 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    JoystickButton toTarget = new JoystickButton(joy1, 4);
-    toTarget.onTrue( new CenterToTarget(lime, dt));
+    JoystickButton toTarget = new JoystickButton(joystick2, 4);
+    toTarget.toggleWhenPressed( new CenterToTarget(lime, dt));
     
     JoystickButton triggerStowPos = new JoystickButton(joystick0, Constants.ButtonMap.stowPosition);
     triggerStowPos.onTrue(new Rotate(arm, 0));
@@ -128,7 +132,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // We have to return the name of the object, which is lock for LockOnTarget in this case or the code will not work
     // We have to specify which command to run as autonomous command 
-    return null;
+    return center;
   }
   public static Joystick getJoy1() {
     return joystick0;
@@ -147,9 +151,6 @@ public static DriveTrain getDriveTrain(){
   }
   public static Limelight getLime(){
     return lime;
-  }
-  public static Limelight2 getLime2(){
-    return lime2;
   }
   public static double get_tv() {
     return 0;
