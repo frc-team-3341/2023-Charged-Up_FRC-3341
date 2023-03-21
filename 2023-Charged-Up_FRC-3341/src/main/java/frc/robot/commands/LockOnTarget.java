@@ -5,7 +5,7 @@
 package frc.robot.commands;
 
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Limelight;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -14,7 +14,7 @@ public class LockOnTarget extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
 
   private final Limelight lime;
-  private final Drivetrain drive;
+  private final DriveTrain dt;
   private double target;
   private double error; 
   
@@ -48,7 +48,7 @@ public class LockOnTarget extends CommandBase {
     if(Math.abs(speed) < .2){
       speed = .2 * Math.abs(error)/error;
     }
-    drive.tankDrive(-speed, speed);
+    dt.tankDrive(-speed, speed);
   }
 
   // Called once the command ends or is interrupted.
@@ -56,7 +56,7 @@ public class LockOnTarget extends CommandBase {
   public void end(boolean interrupted) {
 
     // This is called when there is a target in sight, so the chassis will stop turning completely
-    drive.tankDrive(0, 0);
+    dt.tankDrive(0, 0);
   }
 
   // Returns true when the command should end.
