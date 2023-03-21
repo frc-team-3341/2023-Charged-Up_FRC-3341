@@ -3,7 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Limelight;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.controller.PIDController;
@@ -17,7 +17,7 @@ public class CenterToTarget extends CommandBase {
   public double centerx;
   public double centery;
   private final TankDrive tankDrive;
-  private static Drivetrain drive;
+  private static DriveTrain dt;
   public PIDController Tpid;
   public PIDController Fpid;
   double TurnSpeed = 0.0;  
@@ -25,12 +25,12 @@ public class CenterToTarget extends CommandBase {
 
   public CenterToTarget(Limelight lime, Drivetrain drive) {
     // Use addRequirements() here to declare subsystem dependencies.
-    tankDrive = new TankDrive(drive, null, null);
+    tankDrive = new TankDrive(dt, null, null);
     this.lime = lime;
-    this.drive = drive;
+    this.dt = dt;
 
     // Connects limelight subsystem to this command
-    addRequirements(drive, lime);
+    addRequirements(dt, lime);
     centerx = Limelight.get_tx();
     centery = Limelight.get_ty();
 
@@ -62,7 +62,7 @@ public class CenterToTarget extends CommandBase {
   public void initialize() {
     centerx = Limelight.get_tx();
     centery = Limelight.get_ty();
-    drive.resetEncoders();
+    dt.resetEncoders();
     Tpid.setSetpoint(0.0);
     Fpid.setSetpoint(0.0);
     
@@ -90,7 +90,7 @@ public class CenterToTarget extends CommandBase {
     }
     */
     
-    drive.tankDrive(FowardSpeed+TurnSpeed, FowardSpeed-TurnSpeed);
+    dt.tankDrive(FowardSpeed+TurnSpeed, FowardSpeed-TurnSpeed);
     SmartDashboard.putNumber("Speed", FowardSpeed);
 }
   
@@ -98,7 +98,7 @@ public class CenterToTarget extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    drive.tankDrive(0.0, 0.0);
+    dt.tankDrive(0.0, 0.0);
   }
 
   // Returns true when the command should end.
