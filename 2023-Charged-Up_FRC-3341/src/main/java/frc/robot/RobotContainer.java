@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.CenterToTarget;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.LockOnTarget;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Limelight2;
@@ -30,8 +30,8 @@ public class RobotContainer {
   //We have to initialize these objects for the SpinToTarget, ProtoTurret, and AutoTurret commands
   private final static Limelight lime = new Limelight();
   private final static Limelight2 lime2 = new Limelight2();
-  private final static LockOnTarget lock = new LockOnTarget(drive, lime, 0);
-  private final static CenterToTarget center = new CenterToTarget(lime, drive);
+  private final static LockOnTarget lock = new LockOnTarget(dt, lime, 0);
+  private final static CenterToTarget center = new CenterToTarget(lime, dt);
   public static final Joystick joystick0 = new Joystick(0);
   public static final Joystick joystick1 = new Joystick(1);
   public static final Joystick joystick2 = new Joystick(2);
@@ -60,7 +60,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     JoystickButton toTarget = new JoystickButton(joy1, 4);
-    toTarget.onTrue( new CenterToTarget(lime, drive));
+    toTarget.onTrue( new CenterToTarget(lime, dt));
     
     JoystickButton triggerStowPos = new JoystickButton(joystick0, Constants.ButtonMap.stowPosition);
     triggerStowPos.onTrue(new Rotate(arm, 0));
