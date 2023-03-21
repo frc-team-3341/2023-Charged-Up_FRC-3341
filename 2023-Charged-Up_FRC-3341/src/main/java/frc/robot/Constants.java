@@ -49,6 +49,9 @@ public final class Constants {
     public static final int rightStarClawServo = 4;
     public static final int leftFlywheelPort = 30;
     public static final int rightFlywheelPort = 31; 
+    
+    public static final double angleThreshhold = 5.0;
+    public static final double tickstoMeters = 15.5*Math.PI/(100.0*4096.0);
   }
 
   public static class PIDConstants {
