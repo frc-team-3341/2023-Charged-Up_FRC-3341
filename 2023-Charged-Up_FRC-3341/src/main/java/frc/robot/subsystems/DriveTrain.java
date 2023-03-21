@@ -37,7 +37,10 @@ public class DriveTrain extends SubsystemBase
   
   private final VictorSPX _leftDriveVictor;
   private final VictorSPX _rightDriveVictor;
-
+  
+  private final AHRS navX;
+  public boolean logOverride = false;
+  public DoubleLogEntry anglelog;
   
   public DriveTrain() 
   {
