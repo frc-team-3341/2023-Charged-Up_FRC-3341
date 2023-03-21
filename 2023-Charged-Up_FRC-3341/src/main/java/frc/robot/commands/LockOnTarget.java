@@ -18,8 +18,8 @@ public class LockOnTarget extends CommandBase {
   private double target;
   private double error; 
   
-  public LockOnTarget(Drivetrain drive, Limelight lime, double target) {
-    this.drive = drive;
+  public LockOnTarget(DriveTrain dt, Limelight lime, double target) {
+    this.dt = dt;
     this.lime = lime;
     this.target = target;
 
