@@ -94,6 +94,16 @@ public class DriveTrain extends SubsystemBase
 
   }
 
+  public void brake(){
+    leftDriveTalon.setNeutralMode(NeutralMode.Brake);
+    rightDriveTalon.setNeutralMode(NeutralMode.Brake);
+  }
+
+  public void coast(){
+    leftDriveTalon.setNeutralMode(NeutralMode.Coast);
+    rightDriveTalon.setNeutralMode(NeutralMode.Coast);
+  }
+
   /**
    * Sets the Talons in Coast mode
    */
@@ -118,6 +128,50 @@ public class DriveTrain extends SubsystemBase
 
   public double getTicks() {
     return (leftDriveTalon.getSelectedSensorPosition(0) + rightDriveTalon.getSelectedSensorPosition(0)) / 2.0;
+  }
+  
+   public void setPowerLimits(double limit){
+    leftDriveTalon.configPeakOutputForward(limit);
+    leftDriveTalon.configPeakOutputReverse(limit);
+    rightDriveTalon.configPeakOutputForward(limit);
+    rightDriveTalon.configPeakOutputReverse(limit);
+
+  }
+  
+    public void magicDrive(double displacement){
+    leftDriveTalon.set(ControlMode.MotionMagic, Constants.OperatorConstants.tickstoMeters*displacement);
+    rightDriveTalon.set(ControlMode.MotionMagic, Constants.OperatorConstants.tickstoMeters*displacement);
+  }
+  
+    public void resetNavX(){
+    navX.reset();
+  }
+  public double getTicksLeft() {
+    return leftDriveTalon.getSelectedSensorPosition();
+  }
+
+  public double getDisplacementLeft(){
+    return (getTicksLeft() * Constants.OperatorConstants.tickstoMeters);
+  }
+
+  public double getTicksRight() {
+    return rightDriveTalon.getSelectedSensorPosition();
+  }
+
+  public double getDisplacementRight(){
+    return (getTicksRight() * Constants.OperatorConstants.tickstoMeters);
+  }
+
+  public double getDisplacement(){
+    return (getDisplacementLeft() + getDisplacementRight()) / 2.0;
+  }
+
+  public double getYAngle(){
+    return navX.getRoll();
+  }
+
+  public double getAngle(){
+    return navX.getAngle();
   }
 
 
