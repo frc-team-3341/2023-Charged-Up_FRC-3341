@@ -114,7 +114,7 @@ public class Arm extends SubsystemBase {
     extendPID.setTolerance(0.2);
 
     // Tolerance from reaching the setpoint
-    armPID.setTolerance(2);
+    armPID.setTolerance(Constants.Measurements.armPIDTolerance);
 
     // Integration range, if we are using the integral term of PID
     // Meaning that the controller only takes the integral when it
@@ -202,10 +202,10 @@ public class Arm extends SubsystemBase {
   }
 
   public void updateExtendPID() {
-    if(RobotContainer.getJoy1().getPOV() == 0 &&getLeadScrewPos() > Constants.Measurements.maxExtension-1){
+    if(RobotContainer.getJoy1().getPOV() == 0 && getLeadScrewPos() > Constants.Measurements.maxExtension - 1){
       extendingTalon.set(ControlMode.PercentOutput, Constants.Measurements.extLimitPower);
     }
-    else if(RobotContainer.getJoy1().getPOV() == 180 &&getLeadScrewPos()<0.5){
+    else if(RobotContainer.getJoy1().getPOV() == 180 && getLeadScrewPos() < 0.5){
       extendingTalon.set(ControlMode.PercentOutput, -2*Constants.Measurements.extLimitPower);
     }
     
@@ -386,14 +386,11 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putNumber("Current", rotTalon.getStatorCurrent());
     SmartDashboard.putNumber("Ext Current", extendingTalon.getStatorCurrent());
 
-    
-
     SmartDashboard.putNumber("Rot Reverse", rotTalon.isRevLimitSwitchClosed());
     SmartDashboard.putNumber("Rot Forward", rotTalon.isFwdLimitSwitchClosed());
 
     SmartDashboard.putNumber("Ext Reverse", extendingTalon.isRevLimitSwitchClosed());
     SmartDashboard.putNumber("Ext Forward", extendingTalon.isFwdLimitSwitchClosed());
-   
     
     SmartDashboard.putNumber("Extension Current", extendingTalon.getStatorCurrent());
     SmartDashboard.putNumber("Extension PID", extendPID.calculate(getLeadScrewPos()));

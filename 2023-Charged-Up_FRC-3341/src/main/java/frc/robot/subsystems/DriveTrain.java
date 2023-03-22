@@ -44,6 +44,8 @@ public class DriveTrain extends SubsystemBase
   
   public DriveTrain() 
   {
+    navX = new AHRS(SPI.Port.kMXP);
+
     leftDriveTalon.setNeutralMode(NeutralMode.Coast);
     rightDriveTalon.setNeutralMode(NeutralMode.Coast);
 

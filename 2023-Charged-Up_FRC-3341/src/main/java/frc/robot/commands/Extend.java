@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Arm;
@@ -42,6 +43,7 @@ public class Extend extends CommandBase {
   public void execute() {
     // Extends the arm with some amount of power multiplied by a direction
     arm.extendArm(Constants.ButtonMap.extensionPower*direction);
+    SmartDashboard.putString("Current Command: ", "Extend");
   }
 
   // Called once the command ends or is interrupted.

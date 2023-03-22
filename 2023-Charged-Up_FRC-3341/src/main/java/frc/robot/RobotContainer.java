@@ -7,8 +7,14 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.commands.AutoBalance;
+import frc.robot.commands.AutoDrive;
+import frc.robot.commands.AutoTurn;
+import frc.robot.commands.BlueLeft;
 import frc.robot.commands.CenterToTarget;
+import frc.robot.commands.Docking;
 import frc.robot.commands.LockOnTarget;
+import frc.robot.commands.MagicDrive;
 import frc.robot.commands.Rotate;
 import frc.robot.commands.SetPoweredClawFlywheel;
 import frc.robot.commands.SetPoweredClawPos;
@@ -50,6 +56,8 @@ public class RobotContainer {
   private final AutoBalance balance;
   private final Docking dock;
 
+  private final BlueLeft blueLeft;
+
   // final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
 
@@ -65,6 +73,7 @@ public class RobotContainer {
     forward = new AutoDrive(dt, 5.69);
     balance = new AutoBalance(dt);
     dock = new Docking(dt);
+    blueLeft = new BlueLeft(dt, arm, poweredIntake);
     configureButtonBindings();
   }
 
@@ -77,7 +86,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     JoystickButton toTarget = new JoystickButton(joystick2, 4);
     toTarget.toggleWhenPressed( new CenterToTarget(lime, dt));
-    
+
     JoystickButton triggerStowPos = new JoystickButton(joystick0, Constants.ButtonMap.stowPosition);
     triggerStowPos.onTrue(new Rotate(arm, 0));
 
@@ -144,7 +153,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // We have to return the name of the object, which is lock for LockOnTarget in this case or the code will not work
     // We have to specify which command to run as autonomous command 
-    return dock;
+    return blueLeft;
   }
   public static Joystick getJoy1() {
     return joystick0;

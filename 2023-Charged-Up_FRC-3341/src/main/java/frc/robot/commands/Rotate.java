@@ -4,7 +4,11 @@
 
 package frc.robot.commands;
 
+import com.fasterxml.jackson.databind.introspect.ConcreteBeanPropertyBase;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.*;
 
 public class Rotate extends CommandBase {
@@ -39,16 +43,19 @@ public class Rotate extends CommandBase {
   public void execute() {
     // Constantly set the target angle of the PID
     arm.setTargetAngle(angle);
+    SmartDashboard.putString("Current Command: ", "Arm");
+    //SmartDashboard.putNumber("Diff in arm angle: ", Math.abs(angle - arm.getAngle()));
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     // Stop when the arm is within the setpoint by a certain margin
-    return arm.withinSetpoint();
+    return Constants.Measurements.armPIDTolerance >= Math.abs(angle - arm.getAngle());
   }
 }

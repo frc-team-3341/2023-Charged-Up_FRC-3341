@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.commands.SetWristPos;
 
 public class PoweredIntake extends SubsystemBase {
   /** Creates a new StarClaw. */
@@ -22,8 +23,8 @@ public class PoweredIntake extends SubsystemBase {
   public TalonSRX leftFlywheel;
   public TalonSRX rightFlywheel;
 
-  private double clawPosition = 0.0;
-  private double wristAngle = 0.0;
+  private double clawPosition;
+  private double wristAngle;
 
   // Timer for controls
   private Timer controlsTimer = new Timer();
@@ -40,9 +41,12 @@ public class PoweredIntake extends SubsystemBase {
     leftFlywheel.setInverted(true);
     rightFlywheel.setInverted(false);
 
-    leftClawServo.set(0);
-    rightClawServo.set(0);
+    //leftClawServo.set(0);
+    //rightClawServo.set(0);
     //wristServo.set(0.5);
+    setClawPos(Constants.Measurements.poweredIntakeConePinchCanRotatePos);
+    setWristServoPos(0);
+
     controlsTimer.reset();
     
   }
@@ -94,33 +98,31 @@ public class PoweredIntake extends SubsystemBase {
       // If POV is Down, then decrement
       if (RobotContainer.getJoy2().getPOV() == 180 && clawPosition > 0.0 && controlsTimer.get() <= Constants.ButtonMap.controlsDelay) {
         clawPosition -= 0.005;
-        setClawPos(clawPosition);
         controlsTimer.reset();
       }
       // If POV is Up, then increment
       else if (RobotContainer.getJoy2().getPOV() == 0 && clawPosition < Constants.Measurements.starClawPositionLimit && controlsTimer.get() <= Constants.ButtonMap.controlsDelay) {
         clawPosition += 0.005;
-        setClawPos(clawPosition);
         controlsTimer.reset();
       } else if (controlsTimer.get() >= Constants.ButtonMap.controlsDelay) {
         controlsTimer.reset();
       }
     }
+    setClawPos(clawPosition);
 
     // If Y of joystick is Down, > 0, then decrement
     if (RobotContainer.getJoy2().getY() > 0.2 && wristAngle > Constants.Measurements.wristLowerLimit && controlsTimer.get() <= Constants.ButtonMap.controlsDelay) {
       wristAngle -= Constants.ButtonMap.wristIncrement;
-      setWristServoPos(wristAngle);
       controlsTimer.reset();
     }
     // If Y of joystick is Up, < 0, then increment
     else if (RobotContainer.getJoy2().getY() < -0.2 && wristAngle < Constants.Measurements.wristUpperLimit && controlsTimer.get() <= Constants.ButtonMap.controlsDelay) {
       wristAngle += Constants.ButtonMap.wristIncrement;
-      setWristServoPos(wristAngle);
       controlsTimer.reset();
     } else if (controlsTimer.get() >= Constants.ButtonMap.controlsDelay) {
       controlsTimer.reset();
     }
+    setWristServoPos(wristAngle);
 
     SmartDashboard.putNumber("Claw Raw Servo Position", (leftClawServo.get() + rightClawServo.get()) / 2.0);
     SmartDashboard.putNumber("Claw Servo Position:", clawPosition);

@@ -54,7 +54,7 @@ public final class Constants {
   }
 
   public static class PIDConstants {
-    public static final double armPID_P = 0.015;
+    public static final double armPID_P = 0.05;
     public static final double armPID_I = 0.00005;
     public static final double armPID_D = 0.0;
     public static final double armPID_K = 1.2; // Used to calculate kP, from the difference in angle
@@ -97,6 +97,8 @@ public final class Constants {
     public static final double wristLowerLimit = -225.0; 
 
     public static final double clawGearRatio = 2.0/1.0;
+
+    public static final double armPIDTolerance = 2;
   }
 
   public static class ButtonMap {
@@ -117,7 +119,7 @@ public final class Constants {
 
     // Power of extension command for Auto
     // Range: 0.0 to 1.0
-    public static final double extensionPower = 0.3; 
+    public static final double extensionPower = 0.75; 
 
     // Potentially temporary buttons
     // Useful for testing autonomous commands

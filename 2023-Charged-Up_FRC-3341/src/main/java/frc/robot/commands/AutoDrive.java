@@ -20,7 +20,6 @@ public class AutoDrive extends CommandBase {
   public AutoDrive(DriveTrain dt, double distance) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.dt = dt;
-    pid = new PIDController(0.4, 0, 0);
     speed = 0.55;
     this.distance = distance;
     addRequirements(dt);
