@@ -54,8 +54,8 @@ public final class Constants {
   }
 
   public static class PIDConstants {
-    public static final double armPID_P = 0.05;
-    public static final double armPID_I = 0.00005;
+    public static final double armPID_P = 0.1;
+    public static final double armPID_I = 0.001;
     public static final double armPID_D = 0.0;
     public static final double armPID_K = 1.2; // Used to calculate kP, from the difference in angle
     public static final double extPID_P = 0.05; 
@@ -85,7 +85,8 @@ public final class Constants {
 
     public static final double clawAngleLimit = 245.0; // Limit for servo movement (degrees)
 
-    public static final double starClawPositionLimit = 1.34;
+    public static final double starClawPositionLimit = 1.36;
+    // public static final double starClawPositionLimit = 0.0;
     public static final double poweredIntakeConePinch = 1.32;
     public static final double poweredIntakeCubePinch = .75;
     public static final double poweredIntakeOpenPinch = 0;
@@ -128,25 +129,25 @@ public final class Constants {
     public static final int logButton = 12;
 
     // Wrist Presets
-    public static final int wristNinety = 5;
-    public static final int wristOneEighty = 6;
+    public static final int wristNinety = 6;
+    public static final int wristOneEighty = 4;
     public static final int wristCenter = 4;
 
     // Claw Presets
-    public static final int clawOpen = 9;
+    public static final int clawOpen = 5;
     public static final int clawClosed = 10;
 
     // For powered claw
     //public static final int clawRest = 12;
 
-    public static final int poweredIntakeConePinchCanRotate = 10;
+    public static final int poweredIntakeConePinchCanRotate = 4;
 
-    public static final int clawCube = 11;
-    public static final int clawCone = 12;
+    public static final int clawCube = 3;
+    public static final int clawCone = 6;
 
     // Powered flywheel control on the left joystick
-    public static final int flywheelIn = 7;
-    public static final int flywheelOut = 8;
+    public static final int flywheelIn = 5;
+    public static final int flywheelOut = 3;
 
     // Seconds until control (angle, etc.) is incremented/decremented
     public static final double controlsDelay = 0.02; //changed to 0.1 from 0.02

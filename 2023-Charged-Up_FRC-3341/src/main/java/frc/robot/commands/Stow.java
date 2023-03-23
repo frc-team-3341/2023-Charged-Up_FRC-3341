@@ -5,16 +5,19 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.PoweredIntake;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class RedLeft extends SequentialCommandGroup {
-  /** Creates a new RedLeft. */
-  public RedLeft(DriveTrain dt) {
+public class Stow extends SequentialCommandGroup {
+  /** Creates a new BlueLeft. */
+  public Stow(DriveTrain dt, Arm arm, PoweredIntake poweredIntake) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands();
+    addCommands(new SetPoweredClawPos(poweredIntake, Constants.Measurements.poweredIntakeOpenPinch), new SetWristPosPI(poweredIntake, 0), new Extend(arm, 0), new Rotate(arm, 0));
   }
 }

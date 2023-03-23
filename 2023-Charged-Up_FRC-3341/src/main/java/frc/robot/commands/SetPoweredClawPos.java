@@ -38,6 +38,6 @@ public class SetPoweredClawPos extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return claw.getClawPos() == Math.abs(position);
+    return true;
   }
 }

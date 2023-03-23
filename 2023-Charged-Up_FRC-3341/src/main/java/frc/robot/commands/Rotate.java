@@ -43,7 +43,7 @@ public class Rotate extends CommandBase {
   public void execute() {
     // Constantly set the target angle of the PID
     arm.setTargetAngle(angle);
-    SmartDashboard.putString("Current Command: ", "Arm");
+    SmartDashboard.putString("Current Command: ", "Rotate");
     //SmartDashboard.putNumber("Diff in arm angle: ", Math.abs(angle - arm.getAngle()));
   }
 

@@ -20,7 +20,6 @@ public class AutoBalance extends CommandBase {
   double maxSpeed;
   double balanceDistance;
   double angleThreshhold;
-  double initialYaw;
   double waitTime;
   boolean nearTop = false;
   boolean isbalanced =false;
@@ -88,6 +87,7 @@ public class AutoBalance extends CommandBase {
     SmartDashboard.putNumber("Balancing Timer: ", balanceTime.get());
     SmartDashboard.putNumber("Delta Angle: ", deltaAngle);
     SmartDashboard.putBoolean("Balanced: ", isbalanced);
+    SmartDashboard.putString("Current Command: ", "AutoBalance");
 
     if(10 > Math.abs(dt.getYAngle())) pid.reset();
 

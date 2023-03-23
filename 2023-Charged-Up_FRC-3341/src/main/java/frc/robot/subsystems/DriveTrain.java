@@ -185,14 +185,16 @@ public class DriveTrain extends SubsystemBase
     double maxSpeed = SmartDashboard.getNumber("MaxSpeed: ", 0.4);
     Constants.Measurements.maxDriveSpeed = maxSpeed;
 
-    tankDrive(Math.pow(Math.abs(RobotContainer.getJoy3().getY()), 1.8)*Math.signum(RobotContainer.getJoy3().getY())*-maxSpeed, Math.pow(Math.abs(RobotContainer.getJoy3().getThrottle()), 1.8)*Math.signum(RobotContainer.getJoy3().getThrottle())*-maxSpeed);
+    tankDrive(Math.pow(Math.abs(RobotContainer.getJoy3().getY()), 1.2)*Math.signum(RobotContainer.getJoy3().getY())*-maxSpeed, Math.pow(Math.abs(RobotContainer.getJoy3().getThrottle()), 1.2)*Math.signum(RobotContainer.getJoy3().getThrottle())*-maxSpeed);
 
     SmartDashboard.putNumber("left motor current", leftDriveTalon.getStatorCurrent());
     SmartDashboard.putNumber("right motor current", rightDriveTalon.getStatorCurrent());
-    SmartDashboard.putNumber("right motor joystick", Math.pow(Math.abs(RobotContainer.getJoy3().getY()), 1.8)*Math.signum(RobotContainer.getJoy3().getY())*-maxSpeed);
-    SmartDashboard.putNumber("left motor joystick",  Math.pow(Math.abs(RobotContainer.getJoy3().getThrottle()), 1.8)*Math.signum(RobotContainer.getJoy3().getThrottle())*-maxSpeed);
+    SmartDashboard.putNumber("right motor joystick", Math.pow(Math.abs(RobotContainer.getJoy3().getY()), 1.2)*Math.signum(RobotContainer.getJoy3().getY())*-maxSpeed);
+    SmartDashboard.putNumber("left motor joystick",  Math.pow(Math.abs(RobotContainer.getJoy3().getThrottle()), 1.2)*Math.signum(RobotContainer.getJoy3().getThrottle())*-maxSpeed);
 
-
+    SmartDashboard.putNumber("Yaw Angle: ", getAngle());
+    SmartDashboard.putNumber("Y Angle: ", getYAngle());
+    SmartDashboard.putNumber("Displacement: ", getDisplacement());
   }
 
   @Override

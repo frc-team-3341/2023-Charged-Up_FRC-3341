@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import com.ctre.phoenix.sensors.Pigeon2;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -14,14 +16,21 @@ public class AutoDrive extends CommandBase {
   /** Creates a new AutoDrive. */
   DriveTrain dt;
   PIDController pid;
+  PIDController yawPID;
   double speed;
+  double minSpeed;
   double distance;
+  boolean pidDrive;
 
-  public AutoDrive(DriveTrain dt, double distance) {
+  public AutoDrive(DriveTrain dt, double distance, boolean pidDrive) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.dt = dt;
+    pid = new PIDController(0.8, 0, 0.4);
+    yawPID = new PIDController(0.03, 0, 0);
     speed = 0.55;
+    minSpeed = 0.35;
     this.distance = distance;
+    this.pidDrive = pidDrive;
     addRequirements(dt);
   }
 
@@ -29,14 +38,22 @@ public class AutoDrive extends CommandBase {
   @Override
   public void initialize() {
     dt.resetEncoders();
-    pid.setSetpoint(distance);
+    pid.setSetpoint(dt.getDisplacement() + distance);
+    yawPID.setSetpoint(dt.getAngle());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //speed = pid.calculate(dt.getDisplacement());
-    dt.tankDrive(speed, speed);
+    if(pidDrive) {
+      speed = pid.calculate(dt.getDisplacement());
+      if(speed < minSpeed) speed = minSpeed;
+      double turningSpeed = yawPID.calculate(dt.getAngle());
+      dt.tankDrive(speed + turningSpeed, speed - turningSpeed);
+    }else{
+      dt.tankDrive(speed, speed);
+    }
+    SmartDashboard.putString("Current Command: ", "AutoDrive");
   }
 
   // Called once the command ends or is interrupted.
