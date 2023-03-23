@@ -25,8 +25,8 @@ public class AutoDrive extends CommandBase {
   public AutoDrive(DriveTrain dt, double distance, boolean pidDrive) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.dt = dt;
-    pid = new PIDController(0.8, 0, 0.4);
-    yawPID = new PIDController(0.03, 0, 0);
+    pid = new PIDController(0.6, 0, 0);
+    yawPID = new PIDController(0.02, 0, 0);
     speed = 0.55;
     minSpeed = 0.35;
     this.distance = distance;
@@ -47,7 +47,7 @@ public class AutoDrive extends CommandBase {
   public void execute() {
     if(pidDrive) {
       speed = pid.calculate(dt.getDisplacement());
-      if(speed < minSpeed) speed = minSpeed;
+      if(Math.abs(speed) < minSpeed) speed = minSpeed * Math.signum(speed);
       double turningSpeed = yawPID.calculate(dt.getAngle());
       dt.tankDrive(speed + turningSpeed, speed - turningSpeed);
     }else{
@@ -65,6 +65,7 @@ public class AutoDrive extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    //return false;
     return 0.1 >= Math.abs(distance - dt.getDisplacement()) || Constants.OperatorConstants.angleThreshhold + 3 <= Math.abs(dt.getYAngle());
   }
 }

@@ -57,7 +57,7 @@ public final class Constants {
     public static final double armPID_P = 0.1;
     public static final double armPID_I = 0.001;
     public static final double armPID_D = 0.0;
-    public static final double armPID_K = 1.2; // Used to calculate kP, from the difference in angle
+    public static final double armPID_K = 2.0; // Used to calculate kP, from the difference in angle
     public static final double extPID_P = 0.05; 
     public static final double armHoldingVoltage = 1.1; // Used to calculate Feedforward
     public static final double armManualHoldingVoltage = 1.9; // Manual holding voltage

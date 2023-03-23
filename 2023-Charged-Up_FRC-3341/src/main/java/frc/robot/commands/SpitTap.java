@@ -15,6 +15,7 @@ public class SpitTap extends CommandBase {
   double power;
   Timer timer;
   int taps;
+  int tapsDone;
 
   public SpitTap(PoweredIntake poweredIntake, double power, int taps) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -22,6 +23,7 @@ public class SpitTap extends CommandBase {
     this.power = power;
     this.taps = taps;
     timer = new Timer();
+    tapsDone=0;
     addRequirements(poweredIntake);
   }
 
@@ -29,17 +31,19 @@ public class SpitTap extends CommandBase {
   @Override
   public void initialize() {
     timer.start();
+    timer.reset();
+    tapsDone=0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    while (taps > 0){
+    while (taps > tapsDone){
       if(timer.get() < 0.05){
         poweredIntake.setFlywheelPower(power);
       }else if(timer.get() > 0.2){
         timer.reset();
-        taps--;
+        tapsDone++;
       }else if(timer.get() > 0.05){
         poweredIntake.setFlywheelPower(0);
       }
@@ -56,6 +60,6 @@ public class SpitTap extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return taps == 0;
+    return taps == tapsDone;
   }
 }

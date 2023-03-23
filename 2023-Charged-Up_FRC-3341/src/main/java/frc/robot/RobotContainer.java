@@ -74,7 +74,7 @@ public class RobotContainer {
 
     magicDrive = new MagicDrive(dt, 1.0);
     turn = new AutoTurn(dt, 90);
-    forward = new AutoDrive(dt, 0.2, true);
+    forward = new AutoDrive(dt, 0, true);
     balance = new AutoBalance(dt);
     dock = new Docking(dt);
     autoCone = new AutoCone(dt, arm, poweredIntake);
@@ -166,7 +166,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // We have to return the name of the object, which is lock for LockOnTarget in this case or the code will not work
     // We have to specify which command to run as autonomous command 
-    return autoCone;
+    return dock;
   }
   public static Joystick getJoy1() {
     return joystick0;

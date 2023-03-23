@@ -169,7 +169,7 @@ public class DriveTrain extends SubsystemBase
   }
 
   public double getYAngle(){
-    return navX.getRoll();
+    return -1 * navX.getRoll();
   }
 
   public double getAngle(){

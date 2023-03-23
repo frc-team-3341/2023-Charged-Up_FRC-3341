@@ -19,6 +19,6 @@ public class AutoCone extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     poweredIntake.setClawPos(Constants.Measurements.poweredIntakeConePinchCanRotatePos);
-    addCommands(new SetPoweredClawPos(poweredIntake, Constants.Measurements.poweredIntakeConePinchCanRotatePos), new Rotate(arm, 92), new Extend(arm, 15.65), new SetWristPosPI(poweredIntake, -225), new SpitTap(poweredIntake, 0.6, 5), new Stow(dt, arm, poweredIntake), new AutoDrive(dt, -5, true));
+    addCommands(new SetPoweredClawPos(poweredIntake, Constants.Measurements.poweredIntakeConePinchCanRotatePos), new Rotate(arm, 92), new Extend(arm, 15.65), new SetWristPosPI(poweredIntake, -225), new SpitTap(poweredIntake, 0.5, 5), new Stow(dt, arm, poweredIntake), new AutoDrive(dt, -5.0, true));
   }
 }

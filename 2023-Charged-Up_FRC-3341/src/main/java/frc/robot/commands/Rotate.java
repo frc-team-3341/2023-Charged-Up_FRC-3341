@@ -56,6 +56,7 @@ public class Rotate extends CommandBase {
   @Override
   public boolean isFinished() {
     // Stop when the arm is within the setpoint by a certain margin
+    if(angle == 0 && 5 >= Math.abs(angle - arm.getAngle())) return true;
     return Constants.Measurements.armPIDTolerance >= Math.abs(angle - arm.getAngle());
   }
 }
