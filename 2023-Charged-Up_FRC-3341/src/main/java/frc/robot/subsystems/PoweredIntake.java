@@ -43,7 +43,7 @@ public class PoweredIntake extends SubsystemBase {
 
     //leftClawServo.set(0);
     //rightClawServo.set(0);
-    //wristServo.set(0.5);
+    //wristServo.set(0);
 
     controlsTimer.reset();
     

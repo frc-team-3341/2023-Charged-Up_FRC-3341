@@ -7,13 +7,17 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.AutoBalance;
 import frc.robot.commands.AutoCone;
 import frc.robot.commands.AutoCube;
 import frc.robot.commands.AutoDrive;
 import frc.robot.commands.AutoTurn;
+import frc.robot.commands.BrakeMode;
 import frc.robot.commands.CenterToTarget;
+import frc.robot.commands.CoastMode;
 import frc.robot.commands.Docking;
+import frc.robot.commands.Extend;
 import frc.robot.commands.LockOnTarget;
 import frc.robot.commands.MagicDrive;
 import frc.robot.commands.Rotate;
@@ -21,6 +25,7 @@ import frc.robot.commands.SetPoweredClawFlywheel;
 import frc.robot.commands.SetPoweredClawPos;
 import frc.robot.commands.SetWristPosPI;
 import frc.robot.commands.Stow;
+import frc.robot.commands.StraightDrive;
 import frc.robot.commands.TankDrive;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
@@ -40,6 +45,8 @@ public class RobotContainer {
  
   //We have to initialize these objects for the SpinToTarget, ProtoTurret, and AutoTurret commands
   private final static Limelight lime = new Limelight();
+
+  private static final SendableChooser<Command> chooser = new SendableChooser<Command>();
 
   public static final Joystick joystick0 = new Joystick(0);
   public static final Joystick joystick1 = new Joystick(1);
@@ -62,6 +69,8 @@ public class RobotContainer {
   private final AutoCube autoCube;
   private final Stow stow;
 
+
+
   // final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
 
@@ -74,13 +83,19 @@ public class RobotContainer {
 
     magicDrive = new MagicDrive(dt, 1.0);
     turn = new AutoTurn(dt, 90);
-    forward = new AutoDrive(dt, 0, true);
+    forward = new AutoDrive(dt, 0, -0.5, false, false);
     balance = new AutoBalance(dt);
     dock = new Docking(dt);
     autoCone = new AutoCone(dt, arm, poweredIntake);
     autoCube = new AutoCube(dt, arm, poweredIntake);
     stow = new Stow(dt, arm, poweredIntake);
 
+    //chooser.setDefaultOption("Auto Balance", dock);
+    chooser.setDefaultOption("Auto Cube", autoCube);
+   // chooser.addOption("Auto Cone", autoCone);
+    chooser.addOption("Auto Cone", autoCone);
+    chooser.addOption("Auto Balance", balance);
+    chooser.addOption("Auto Drive", forward);
     configureButtonBindings();
   }
 
@@ -91,8 +106,18 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    JoystickButton toTarget = new JoystickButton(joystick2, 4);
+    JoystickButton toTarget = new JoystickButton(joystick2, 6); //RB
     toTarget.toggleWhenPressed( new CenterToTarget(lime, dt));
+
+    JoystickButton toBrake = new JoystickButton(joystick2, 1);
+    toBrake.onTrue(new BrakeMode(dt));
+
+    JoystickButton toCoast = new JoystickButton(joystick2, 2);
+    toCoast.onTrue(new CoastMode(dt));
+
+    JoystickButton toBalance = new JoystickButton(joystick2, 3);
+    toBalance.onTrue(new AutoDrive(dt, 0, 0.1, false, false));
+    toBalance.onFalse(new AutoDrive(dt, 0, 0, true, true));
 /* 
     JoystickButton triggerStowPos = new JoystickButton(joystick0, Constants.ButtonMap.stowPosition);
     triggerStowPos.onTrue(new Rotate(arm, 0));
@@ -134,8 +159,8 @@ public class RobotContainer {
    JoystickButton triggerStarClawRest = new JoystickButton(joystick0, Constants.ButtonMap.clawOpen);
     triggerStarClawRest.onTrue(new SetPoweredClawPos(poweredIntake, Constants.Measurements.poweredIntakeOpenPinch));
 
-    JoystickButton triggerStarClawClosed = new JoystickButton(joystick0, Constants.ButtonMap.clawCone);
-    triggerStarClawClosed.onTrue(new SetPoweredClawPos(poweredIntake, Constants.Measurements.poweredIntakeConePinch));
+    //JoystickButton triggerStarClawClosed = new JoystickButton(joystick0, Constants.ButtonMap.clawCone);
+    //triggerStarClawClosed.onTrue(new SetPoweredClawPos(poweredIntake, Constants.Measurements.poweredIntakeConePinch));
 
     JoystickButton triggerStarClawClosedCanRotate = new JoystickButton(joystick0, Constants.ButtonMap.poweredIntakeConePinchCanRotate);
     triggerStarClawClosedCanRotate.onTrue(new SetPoweredClawPos(poweredIntake, Constants.Measurements.poweredIntakeConePinchCanRotatePos));
@@ -156,6 +181,15 @@ public class RobotContainer {
 
     JoystickButton stowButton = new JoystickButton(joystick0, 11);
     stowButton.onTrue(stow);
+
+    JoystickButton driveStraight = new JoystickButton(joystick2, Constants.ButtonMap.driveStraight);
+    driveStraight.onTrue(new StraightDrive(dt, joystick2));
+
+    JoystickButton pivot90 = new JoystickButton(joystick0, 6);
+    pivot90.onTrue(new Rotate(arm, 85));
+
+    //JoystickButton retract = new JoystickButton(joystick0, 6);
+    //retract.onTrue(new Extend(arm, 0));
   }
 
   /**
@@ -163,10 +197,10 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
+  public static Command getAutonomousCommand() {
     // We have to return the name of the object, which is lock for LockOnTarget in this case or the code will not work
     // We have to specify which command to run as autonomous command 
-    return dock;
+    return chooser.getSelected();
   }
   public static Joystick getJoy1() {
     return joystick0;
@@ -199,4 +233,9 @@ public static DriveTrain getDriveTrain(){
     return 0;
   }
 
+
+
+public static SendableChooser<Command> getChooser() {
+  return chooser;
+}
 }

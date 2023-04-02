@@ -14,12 +14,17 @@ import frc.robot.subsystems.PoweredIntake;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutoCube extends SequentialCommandGroup {
-  /** Creates a new BlueLeft. */
+  /**
+   * Creates a new AutoCube
+   * @param dt - Drivetrain Subsystem
+   * @param arm - Arm Subsystem
+   * @param poweredIntake - Powered Intake Subsystem
+   */
   public AutoCube(DriveTrain dt, Arm arm, PoweredIntake poweredIntake) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     poweredIntake.setWristServoPos(0);
     poweredIntake.setClawPos(Constants.Measurements.poweredIntakeCubePinch);
-    addCommands(new Rotate(arm, 95), new AutoDrive(dt, 0.2, true), new Extend(arm, 15.65), new SetPoweredClawPos(poweredIntake, Constants.Measurements.poweredIntakeOpenPinch));
+    addCommands(new Rotate(arm, 95), new AutoDrive(dt, 0.2, 0, true, true), new Extend(arm, 15.65), new SetPoweredClawPos(poweredIntake, Constants.Measurements.poweredIntakeOpenPinch), new Stow(dt, arm, poweredIntake), new AutoDrive(dt, -1.0, -0.8, false, false));
   }
 }

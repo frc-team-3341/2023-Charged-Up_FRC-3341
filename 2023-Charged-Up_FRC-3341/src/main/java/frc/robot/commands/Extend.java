@@ -42,7 +42,7 @@ public class Extend extends CommandBase {
   @Override
   public void execute() {
     // Extends the arm with some amount of power multiplied by a direction
-    arm.configSoftLimits(false);
+    //arm.configSoftLimits(false);
     arm.extendArm(Constants.ButtonMap.extensionPower*direction);
     SmartDashboard.putString("Current Command: ", "Extend");
   }
@@ -75,7 +75,8 @@ public class Extend extends CommandBase {
      and the arm's position is equal to or greater than the 
      desired position, then stop.
     */
-    if (direction > 0 && position <= arm.getLeadScrewPos()) {
+    if (direction > 0 && 
+    position <= arm.getLeadScrewPos()) {
       return true;
     } else {
       // Continue the motion

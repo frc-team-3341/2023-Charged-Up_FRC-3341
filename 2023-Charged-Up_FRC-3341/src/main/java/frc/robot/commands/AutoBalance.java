@@ -38,7 +38,7 @@ public class AutoBalance extends CommandBase {
   public AutoBalance( DriveTrain dt) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.dt = dt;
-    pid = new PIDController(0.2, 0.4*20, 0.4);
+    pid = new PIDController(0.3, 0.4*20, 0.4);
     yawPID = new PIDController(0.03, 0, 0);
     angleThreshhold = Constants.OperatorConstants.angleThreshhold;
     timer = new Timer();
@@ -66,14 +66,14 @@ public class AutoBalance extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(dt.getDisplacement() > 1) maxSpeed = 0.45;
-    else if(dt.getDisplacement() > .5) maxSpeed = 0.45;
+    if(dt.getDisplacement() > 1) maxSpeed = 0.7;
+    else if(dt.getDisplacement() > .5) maxSpeed = 0.7;
 
     currentAngle = dt.getYAngle();
     deltaAngle = (currentAngle - previousAngle) / executeTimer.get();
 
     double bootlegPID = 2 * (balanceDistance - dt.getDisplacement());
-    double pidSpeed = Math.max((bootlegPID), Math.abs(pid.calculate(dt.getDisplacement())));
+    double pidSpeed = Math.max(bootlegPID, Math.abs(pid.calculate(dt.getDisplacement())));
     double speed = Math.min(pidSpeed, maxSpeed) * Math.abs(pidSpeed)/pidSpeed;
     double turningSpeed = yawPID.calculate(dt.getAngle());
     double minSpeed = 0.27 * Math.abs(dt.getYAngle())/dt.getYAngle();

@@ -77,7 +77,7 @@ public class CenterToTarget extends CommandBase {
     // You need this because it keeps calling the value instead of only once because the robot is moving
     centerx = Limelight.get_tx();
     centery = Limelight.get_ty();
-    TurnSpeed = Tpid.calculate(centerx) * 0.7;
+    TurnSpeed = Tpid.calculate(centerx) * 0.9;
     FowardSpeed = Fpid.calculate(Limelight.getDistance_Test() * 0.7);
     
     /* 

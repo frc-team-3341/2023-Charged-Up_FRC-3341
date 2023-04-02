@@ -14,11 +14,16 @@ import frc.robot.subsystems.PoweredIntake;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutoCone extends SequentialCommandGroup {
-  /** Creates a new BlueLeft. */
+  /**
+   * Creates a new AutoCone SequentialCommandGroup
+   * @param dt - Drivetrain Subsystem
+   * @param arm - Arm Subsystem
+   * @param poweredIntake - Powered Intake Subsystem
+   */
   public AutoCone(DriveTrain dt, Arm arm, PoweredIntake poweredIntake) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     poweredIntake.setClawPos(Constants.Measurements.poweredIntakeConePinchCanRotatePos);
-    addCommands(new SetPoweredClawPos(poweredIntake, Constants.Measurements.poweredIntakeConePinchCanRotatePos), new Rotate(arm, 92), new Extend(arm, 15.65), new SetWristPosPI(poweredIntake, -225), new SpitTap(poweredIntake, 0.5, 5), new Stow(dt, arm, poweredIntake), new AutoDrive(dt, -5.0, true));
+    addCommands(new SetPoweredClawPos(poweredIntake, Constants.Measurements.poweredIntakeConePinchCanRotatePos), new Rotate(arm, 99), new Extend(arm, 15.65), new SetWristPosPI(poweredIntake, -225), new SpitTap(poweredIntake, 0.5, 5), new SetPoweredClawPos(poweredIntake, Constants.Measurements.poweredIntakeCubePinch), new Stow(dt, arm, poweredIntake), new AutoDrive(dt, -1.0, 0, true, true));
   }
 }

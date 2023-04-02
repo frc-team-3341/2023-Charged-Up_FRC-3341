@@ -110,32 +110,32 @@ public class Limelight extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
 
-     if (RobotContainer.getJoy3().getRawButtonPressed(1)) {
-      pipeline = 0; // reflective tape Button X on Xbox controller
-      changepipeline(pipeline);
-
-    } else if (RobotContainer.getJoy3().getRawButtonPressed(2)) {
-      pipeline = 1; // cone
-      changepipeline(pipeline);
-
-    } else if (RobotContainer.getJoy3().getRawButtonPressed(3)) {
-      pipeline = 2; // square
-      changepipeline(pipeline);
-
-    } else if (RobotContainer.getJoy3().getRawButtonPressed(5)) {
-      pipeline = 3; // april tag 1 or 5 (LB)
-      changepipeline(pipeline);
-
-    } else if (RobotContainer.getJoy3().getRawButtonPressed(6)) {
-      pipeline = 4; // april tag 2 or 6 (RB)
+     if (RobotContainer.getJoy3().getRawButtonPressed(5)) {
+      pipeline = 0; // reflective tape LB
       changepipeline(pipeline);
 
     } else if (RobotContainer.getJoy3().getRawButtonPressed(7)) {
-      pipeline = 5; // april tag 3 or 7 (LT)
+      pipeline = 1; // cone
       changepipeline(pipeline);
 
-    } else if (RobotContainer.getJoy3().getRawButtonPressed(8)) {
-      pipeline = 6; // april tag 4 or 8 (RT)
+    } //else if (RobotContainer.getJoy3().getRawButtonPressed(2)) {
+      //pipeline = 2; // square
+      //changepipeline(pipeline);}
+      
+      else if (RobotContainer.getJoy3().getRawButtonPressed(1)) {
+      pipeline = 3; // april tag 1 or 5 X
+      changepipeline(pipeline);
+
+    } else if (RobotContainer.getJoy3().getRawButtonPressed(2)) {
+      pipeline = 4; // april tag 2 or 6 A
+      changepipeline(pipeline);
+
+    } else if (RobotContainer.getJoy3().getRawButtonPressed(3)) {
+      pipeline = 5; // april tag 3 or 7 B
+      changepipeline(pipeline);
+
+    } else if (RobotContainer.getJoy3().getRawButtonPressed(4)) {
+      pipeline = 6; // april tag 4 or 8 Y
       changepipeline(pipeline);
     } 
 

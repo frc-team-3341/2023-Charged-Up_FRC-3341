@@ -21,16 +21,28 @@ public class AutoDrive extends CommandBase {
   double minSpeed;
   double distance;
   boolean pidDrive;
+  boolean finishCommand;
 
-  public AutoDrive(DriveTrain dt, double distance, boolean pidDrive) {
+  /**
+   * Auto Drives the chassis to a set position (meters)
+   * @param dt - DriveTrain
+   * @param distance - Distance Travelled
+   * @param speed - Power at which the robot drives
+   * @param pidDrive - Whether or not to use PID Controller
+   * @param finishCommand - Whether or not to not finish the command
+   * @apiNote For finishCommand: true - Command does not finish
+   * @apiNote For finishCommand: false - Command does finish
+   */
+  public AutoDrive(DriveTrain dt, double distance, double speed, boolean pidDrive, boolean finishCommand) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.dt = dt;
     pid = new PIDController(0.6, 0, 0);
     yawPID = new PIDController(0.02, 0, 0);
-    speed = 0.55;
+    this.speed = speed;
     minSpeed = 0.35;
     this.distance = distance;
     this.pidDrive = pidDrive;
+    this.finishCommand = finishCommand;
     addRequirements(dt);
   }
 
@@ -65,7 +77,13 @@ public class AutoDrive extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    //return false;
-    return 0.1 >= Math.abs(distance - dt.getDisplacement()) || Constants.OperatorConstants.angleThreshhold + 3 <= Math.abs(dt.getYAngle());
+    if(!finishCommand) return false;
+    if (pidDrive) {
+     return 0.15 >= Math.abs(distance - dt.getDisplacement()) || Constants.OperatorConstants.angleThreshhold + 3 <= Math.abs(dt.getYAngle());
+    } else if (!pidDrive) {
+      return (distance >= Math.abs(dt.getDisplacement()));
+    } else {
+      return false;
+    }
   }
 }

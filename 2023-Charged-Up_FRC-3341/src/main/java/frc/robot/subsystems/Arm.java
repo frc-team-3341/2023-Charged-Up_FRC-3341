@@ -86,6 +86,7 @@ public class Arm extends SubsystemBase {
     rotTalon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
     rotTalon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
 
+
     rotTalon.setInverted(Constants.OperatorConstants.armInvert);
 
     // Very important - sets max output, so that PID doesn't output an output that it too high
@@ -227,10 +228,25 @@ public class Arm extends SubsystemBase {
   }
 
   public void configSoftLimits(boolean config){
-    extendingTalon.configForwardSoftLimitEnable(config);
+      extendingTalon.configForwardSoftLimitEnable(config);
       extendingTalon.configReverseSoftLimitEnable(config);
       rotTalon.configForwardSoftLimitEnable(config);
       rotTalon.configReverseSoftLimitEnable(config);
+  }
+
+  public void configHardLimits(boolean config){
+    if(config){
+      extendingTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+      extendingTalon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
+      extendingTalon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
+      extendingTalon.configForwardSoftLimitThreshold(((Constants.Measurements.upperScrewBound*Constants.Measurements.gearRatio)/Constants.Measurements.threadLength)*4096.0);
+      extendingTalon.configReverseSoftLimitThreshold(((Constants.Measurements.lowerScrewBound*Constants.Measurements.gearRatio)/Constants.Measurements.threadLength)*4096.0);
+      //extendingTalon.configForwardSoftLimitEnable(true);
+      //extendingTalon.configReverseSoftLimitEnable(false);
+    }else{
+      extendingTalon.configFactoryDefault();
+      extendingTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+    }
   }
 
   /**
@@ -293,12 +309,12 @@ public class Arm extends SubsystemBase {
     if (RobotContainer.getJoy1().getPOV() == 0) {
       //Max extension 16.67 inches
       // Move extension forward at POV pos of 0
-      extendPID.setSetpoint(9.0);
+      extendPID.setSetpoint(11.0);
 
       //extendArm(power);
     }  else if (RobotContainer.getJoy1().getPOV() == 180) {
       // Move extension backward at POV pos of 180
-      extendPID.setSetpoint(-9.0);
+      extendPID.setSetpoint(-11.0);
       //extendArm(-1*power);
     }
     else {
@@ -307,8 +323,14 @@ public class Arm extends SubsystemBase {
 
     if (RobotContainer.getJoy1().getRawButton(Constants.ButtonMap.extLimitReset)) {
       configSoftLimits(false);
-    } else if (RobotContainer.getJoy1().getRawButton(Constants.ButtonMap.extLimitReset) == false) {
+    }else{
       configSoftLimits(true);
+    }
+
+    if (RobotContainer.getJoy1().getRawButton(8)) {
+      configHardLimits(false);
+    } else {
+      configHardLimits(true);
     }
     
 
@@ -402,5 +424,6 @@ public class Arm extends SubsystemBase {
     
     SmartDashboard.putNumber("Extension Current", extendingTalon.getStatorCurrent());
     SmartDashboard.putNumber("Extension PID", extendPID.calculate(getLeadScrewPos()));
+
   }
 }

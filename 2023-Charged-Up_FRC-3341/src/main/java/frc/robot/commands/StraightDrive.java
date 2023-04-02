@@ -4,36 +4,31 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Timer;
-
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.PoweredIntake;
+import frc.robot.Constants;
+import frc.robot.subsystems.DriveTrain;
 
-public class SetPoweredClawPos extends CommandBase {
-  /** Creates a new SetStarClawPos. */
-
-  public PoweredIntake claw;
-  public double position;
-  public Timer timer;
-
-  public SetPoweredClawPos(PoweredIntake claw, double position) {
-    this.claw = claw;
-    this.position = position;
-    timer = new Timer();
+public class StraightDrive extends CommandBase {
+  /** Creates a new StraightDrive. */
+DriveTrain dt;
+Joystick joy;
+  public StraightDrive(DriveTrain dt, Joystick joy) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(claw);
+    this.dt = dt;
+    this.joy = joy;
+    addRequirements(dt);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    timer.start();
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    claw.setClawPos(position);
+    double avgSpeed = (Math.abs(joy.getY()) + Math.abs(joy.getThrottle())) / -2.0;
+    dt.tankDrive(avgSpeed * Math.signum(joy.getY()), avgSpeed * Math.signum(joy.getThrottle()));
   }
 
   // Called once the command ends or is interrupted.
@@ -43,6 +38,6 @@ public class SetPoweredClawPos extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return timer.get() > 0.75;
+    return !joy.getRawButton(Constants.ButtonMap.driveStraight);
   }
 }
