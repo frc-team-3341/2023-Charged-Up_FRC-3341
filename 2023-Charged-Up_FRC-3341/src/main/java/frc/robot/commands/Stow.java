@@ -18,7 +18,7 @@ public class Stow extends SequentialCommandGroup {
   public Stow(DriveTrain dt, Arm arm, PoweredIntake poweredIntake) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new SetPoweredClawPos(poweredIntake, Constants.Measurements.poweredIntakeOpenPinch), new Extend(arm, 3), new AutoDrive(dt, -0.5, 0, true, true), new Rotate(arm, 15));
+    addCommands(new SetPoweredClawPos(poweredIntake, Constants.Measurements.poweredIntakeOpenPinch), new Extend(arm, 3), new Rotate(arm, 15));
 
     //addCommands(new SetPoweredClawPos(poweredIntake, Constants.Measurements.poweredIntakeOpenPinch), new SetWristPosPI(poweredIntake, 0), new Extend(arm, 3), new AutoDrive(dt, -0.5, 0, true, true), new Rotate(arm, 15));
   }

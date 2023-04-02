@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.AutoBalance;
 import frc.robot.commands.AutoCone;
 import frc.robot.commands.AutoCube;
+import frc.robot.commands.AutoCubeStrip;
 import frc.robot.commands.AutoDrive;
 import frc.robot.commands.AutoTurn;
 import frc.robot.commands.BrakeMode;
@@ -67,6 +68,7 @@ public class RobotContainer {
 
   private final AutoCone autoCone;
   private final AutoCube autoCube;
+  private final AutoCubeStrip autoCubeStrip;
   private final Stow stow;
 
 
@@ -80,7 +82,7 @@ public class RobotContainer {
     dt.resetEncoders();
     dt.coast();
     tankDrive = new TankDrive(dt, joystick0, joystick1);
-
+    
     magicDrive = new MagicDrive(dt, 1.0);
     turn = new AutoTurn(dt, 90);
     forward = new AutoDrive(dt, 0, -0.5, false, false);
@@ -88,11 +90,13 @@ public class RobotContainer {
     dock = new Docking(dt);
     autoCone = new AutoCone(dt, arm, poweredIntake);
     autoCube = new AutoCube(dt, arm, poweredIntake);
+    autoCubeStrip = new AutoCubeStrip(dt, arm, poweredIntake);
     stow = new Stow(dt, arm, poweredIntake);
 
     //chooser.setDefaultOption("Auto Balance", dock);
     chooser.setDefaultOption("Auto Cube", autoCube);
    // chooser.addOption("Auto Cone", autoCone);
+   chooser.addOption("Auto Cube Strip", autoCubeStrip);
     chooser.addOption("Auto Cone", autoCone);
     chooser.addOption("Auto Balance", balance);
     chooser.addOption("Auto Drive", forward);

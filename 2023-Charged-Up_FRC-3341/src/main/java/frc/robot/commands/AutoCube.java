@@ -21,10 +21,13 @@ public class AutoCube extends SequentialCommandGroup {
    * @param poweredIntake - Powered Intake Subsystem
    */
   public AutoCube(DriveTrain dt, Arm arm, PoweredIntake poweredIntake) {
+
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     poweredIntake.setWristServoPos(0);
     poweredIntake.setClawPos(Constants.Measurements.poweredIntakeCubePinch);
-    addCommands(new Rotate(arm, 95), new AutoDrive(dt, 0.2, 0, true, true), new Extend(arm, 15.65), new SetPoweredClawPos(poweredIntake, Constants.Measurements.poweredIntakeOpenPinch), new Stow(dt, arm, poweredIntake), new AutoDrive(dt, -1.0, -0.8, false, false));
+    addCommands(new Rotate(arm, 87), new SpitTap(poweredIntake, 1, 5), new Rotate(arm, 5), new AutoDriveFixed(dt, -1, -0.5));
+
+    //addCommands(new Rotate(arm, 95), new AutoDrive(dt, 0.2, 0, true, true), new Extend(arm, 15.65), new SetPoweredClawPos(poweredIntake, Constants.Measurements.poweredIntakeOpenPinch), new Stow(dt, arm, poweredIntake), new AutoDrive(dt, -1.0, -0.8, false, false));
   }
 }
