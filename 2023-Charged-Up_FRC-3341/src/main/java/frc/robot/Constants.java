@@ -50,14 +50,19 @@ public final class Constants {
     public static final int rightFlywheelPort = 31; 
     
     public static final double angleThreshhold = 5.0;
-    public static final double tickstoMeters = 15.5*Math.PI/(100.0*4096.0);
+    public static final double MetersPerInch = 0.0254;
+    public static final double WheelCircumferenceMeters = 6.0 * Math.PI * 0.0254;
+    public static final double EncoderTicksPerRevolution = 4096.0;
+    public static final double EncoderTicksPerMeter = ((1 / MetersPerInch) / (6.0 * Math.PI)) * EncoderTicksPerRevolution;
+    public static final double tickstoMeters = WheelCircumferenceMeters / EncoderTicksPerRevolution;
+    //public static final double tickstoMeters = 15.5*Math.PI/(100.0*4096.0);
   }
 
   public static class PIDConstants {
-    public static final double armPID_P = 0.015;
-    public static final double armPID_I = 0.00005;
+    public static final double armPID_P = 0.1;
+    public static final double armPID_I = 0.001;
     public static final double armPID_D = 0.0;
-    public static final double armPID_K = 1.2; // Used to calculate kP, from the difference in angle
+    public static final double armPID_K = 2.0; // Used to calculate kP, from the difference in angle
     public static final double extPID_P = 0.05; 
     public static final double armHoldingVoltage = 1.1; // Used to calculate Feedforward
     public static final double armManualHoldingVoltage = 1.9; // Manual holding voltage
@@ -74,20 +79,21 @@ public final class Constants {
     public static final double bumperAngleBound = 15.0; // Soft Limit for Arm resting on Bumper
 
     public static final double upperAngleBound = 105; // Maximum pos of Arm in degrees, when stowed
-    public static final double lowerScrewBound = 0.5; // Lower bound for motion of screw (inches)
-    public static final double upperScrewBound = 15.67; // Upper bound for motion of screw (inches)
+    public static final double lowerScrewBound = 1.0; // Lower bound for motion of screw (inches)
+    public static final double upperScrewBound = 16.67; // Upper bound for motion of screw (inches)
     public static final double fullyExtendedLeadScrewThreshold = 5.0;
     public static final double degreesToTicks = 4096.0/360.0;
     public static final double ticksToInches = threadLength/4096.0; //4096 ticks per rotation times threadLength
     public static final double maxExtension = 16.67; //in inches
-    public static final double baseExtendPower = 0.7; //Percent of full power/100
-    public static final double extLimitPower = 0.3; //Percent of full power/100. Power when extention is close to to limit switch
+    public static final double baseExtendPower = 0.8; //Percent of full power/100
+    public static final double extLimitPower = 0.4; //Percent of full power/100. Power when extention is close to to limit switch
 
     public static final double clawAngleLimit = 245.0; // Limit for servo movement (degrees)
 
-    public static final double starClawPositionLimit = 1.34;
+    public static final double starClawPositionLimit = 1.36;
+    // public static final double starClawPositionLimit = 0.0;
     public static final double poweredIntakeConePinch = 1.32;
-    public static final double poweredIntakeCubePinch = .75;
+    public static final double poweredIntakeCubePinch = .65;
     public static final double poweredIntakeOpenPinch = 0;
     public static final double poweredIntakeConePinchCanRotatePos =1.235833;
 
@@ -97,6 +103,8 @@ public final class Constants {
     public static final double wristLowerLimit = -225.0; 
 
     public static final double clawGearRatio = 2.0/1.0;
+
+    public static final double armPIDTolerance = 2;
   }
 
   public static class ButtonMap {
@@ -104,7 +112,7 @@ public final class Constants {
     // Trigger button is used for incrementing and decrementing angle of arm
 
     // Manual override button
-    public static final int manualOverride = 2;
+    public static final int manualOverride = 1;
 
     // Buttons for Arm rotation
     public static final int stowPosition = 3;
@@ -117,7 +125,7 @@ public final class Constants {
 
     // Power of extension command for Auto
     // Range: 0.0 to 1.0
-    public static final double extensionPower = 0.3; 
+    public static final double extensionPower = 0.9; 
 
     // Potentially temporary buttons
     // Useful for testing autonomous commands
@@ -126,25 +134,25 @@ public final class Constants {
     public static final int logButton = 12;
 
     // Wrist Presets
-    public static final int wristNinety = 5;
-    public static final int wristOneEighty = 6;
+    public static final int wristNinety = 6;
+    public static final int wristOneEighty = 4;
     public static final int wristCenter = 4;
 
     // Claw Presets
-    public static final int clawOpen = 9;
+    public static final int clawOpen = 5;
     public static final int clawClosed = 10;
 
     // For powered claw
     //public static final int clawRest = 12;
 
-    public static final int poweredIntakeConePinchCanRotate = 10;
+    public static final int poweredIntakeConePinchCanRotate = 4;
 
-    public static final int clawCube = 11;
-    public static final int clawCone = 12;
+    public static final int clawCube = 3;
+    public static final int clawCone = 6;
 
     // Powered flywheel control on the left joystick
-    public static final int flywheelIn = 7;
-    public static final int flywheelOut = 8;
+    public static final int flywheelIn = 5;
+    public static final int flywheelOut = 3;
 
     // Seconds until control (angle, etc.) is incremented/decremented
     public static final double controlsDelay = 0.02; //changed to 0.1 from 0.02
@@ -152,7 +160,10 @@ public final class Constants {
     public static final int wristIncrement = 3; // Wrist increment in degrees for semi-auto control
     public static final double clawIncrement = 5; //claw increment
 
+    public static final int driveStraight = 8;
   }
+
+  public static boolean endBrakeMode;
 
   public static final int leftPort = 1;
   public static final int rightPort = 2;

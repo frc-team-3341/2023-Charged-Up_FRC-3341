@@ -86,6 +86,7 @@ public class Arm extends SubsystemBase {
     rotTalon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
     rotTalon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
 
+
     rotTalon.setInverted(Constants.OperatorConstants.armInvert);
 
     // Very important - sets max output, so that PID doesn't output an output that it too high
@@ -114,7 +115,7 @@ public class Arm extends SubsystemBase {
     extendPID.setTolerance(0.2);
 
     // Tolerance from reaching the setpoint
-    armPID.setTolerance(2);
+    armPID.setTolerance(Constants.Measurements.armPIDTolerance);
 
     // Integration range, if we are using the integral term of PID
     // Meaning that the controller only takes the integral when it
@@ -202,10 +203,10 @@ public class Arm extends SubsystemBase {
   }
 
   public void updateExtendPID() {
-    if(RobotContainer.getJoy1().getPOV() == 0 &&getLeadScrewPos() > Constants.Measurements.maxExtension-1){
+    if(RobotContainer.getJoy1().getPOV() == 0 && getLeadScrewPos() > Constants.Measurements.maxExtension - 1){
       extendingTalon.set(ControlMode.PercentOutput, Constants.Measurements.extLimitPower);
     }
-    else if(RobotContainer.getJoy1().getPOV() == 180 &&getLeadScrewPos()<0.5){
+    else if(RobotContainer.getJoy1().getPOV() == 180 && getLeadScrewPos() < 0.5){
       extendingTalon.set(ControlMode.PercentOutput, -2*Constants.Measurements.extLimitPower);
     }
     
@@ -218,6 +219,35 @@ public class Arm extends SubsystemBase {
     
   }
 
+  public boolean fullyExtended(){
+    return extendingTalon.isFwdLimitSwitchClosed() == 0.0;
+  }
+
+  public boolean fullyRetracted(){
+    return extendingTalon.isRevLimitSwitchClosed() == 0.0;
+  }
+
+  public void configSoftLimits(boolean config){
+      extendingTalon.configForwardSoftLimitEnable(config);
+      extendingTalon.configReverseSoftLimitEnable(config);
+      rotTalon.configForwardSoftLimitEnable(config);
+      rotTalon.configReverseSoftLimitEnable(config);
+  }
+
+  public void configHardLimits(boolean config){
+    if(config){
+      extendingTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+      extendingTalon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
+      extendingTalon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
+      extendingTalon.configForwardSoftLimitThreshold(((Constants.Measurements.upperScrewBound*Constants.Measurements.gearRatio)/Constants.Measurements.threadLength)*4096.0);
+      extendingTalon.configReverseSoftLimitThreshold(((Constants.Measurements.lowerScrewBound*Constants.Measurements.gearRatio)/Constants.Measurements.threadLength)*4096.0);
+      //extendingTalon.configForwardSoftLimitEnable(true);
+      //extendingTalon.configReverseSoftLimitEnable(false);
+    }else{
+      extendingTalon.configFactoryDefault();
+      extendingTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+    }
+  }
 
   /**
   Whether the PID controller is at the setpoint.
@@ -279,12 +309,12 @@ public class Arm extends SubsystemBase {
     if (RobotContainer.getJoy1().getPOV() == 0) {
       //Max extension 16.67 inches
       // Move extension forward at POV pos of 0
-      extendPID.setSetpoint(7.0);
+      extendPID.setSetpoint(11.0);
 
       //extendArm(power);
     }  else if (RobotContainer.getJoy1().getPOV() == 180) {
       // Move extension backward at POV pos of 180
-      extendPID.setSetpoint(-7.0);
+      extendPID.setSetpoint(-11.0);
       //extendArm(-1*power);
     }
     else {
@@ -292,15 +322,15 @@ public class Arm extends SubsystemBase {
     }
 
     if (RobotContainer.getJoy1().getRawButton(Constants.ButtonMap.extLimitReset)) {
-      extendingTalon.configForwardSoftLimitEnable(false);
-      extendingTalon.configReverseSoftLimitEnable(false);
-      rotTalon.configForwardSoftLimitEnable(false);
-      rotTalon.configReverseSoftLimitEnable(false);
-    } else if (RobotContainer.getJoy1().getRawButton(Constants.ButtonMap.extLimitReset) == false) {
-      extendingTalon.configForwardSoftLimitEnable(true);
-      extendingTalon.configReverseSoftLimitEnable(true);
-      rotTalon.configForwardSoftLimitEnable(true);
-      rotTalon.configReverseSoftLimitEnable(true);
+      configSoftLimits(false);
+    }else{
+      configSoftLimits(true);
+    }
+
+    if (RobotContainer.getJoy1().getRawButton(8)) {
+      configHardLimits(false);
+    } else {
+      configHardLimits(true);
     }
     
 
@@ -365,10 +395,10 @@ public class Arm extends SubsystemBase {
       rotTalon.setSelectedSensorPosition(0);
     }
 
-    if (extendingTalon.isRevLimitSwitchClosed() == 0.0) {
+    if (fullyRetracted()) {
       extendingTalon.setSelectedSensorPosition(0);
     }
-    if(extendingTalon.isFwdLimitSwitchClosed() == 0.0) {
+    if(fullyExtended()) {
       extendingTalon.setSelectedSensorPosition(Constants.Measurements.maxExtension/Constants.Measurements.ticksToInches);
     }
 
@@ -386,16 +416,14 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putNumber("Current", rotTalon.getStatorCurrent());
     SmartDashboard.putNumber("Ext Current", extendingTalon.getStatorCurrent());
 
-    
-
     SmartDashboard.putNumber("Rot Reverse", rotTalon.isRevLimitSwitchClosed());
     SmartDashboard.putNumber("Rot Forward", rotTalon.isFwdLimitSwitchClosed());
 
     SmartDashboard.putNumber("Ext Reverse", extendingTalon.isRevLimitSwitchClosed());
     SmartDashboard.putNumber("Ext Forward", extendingTalon.isFwdLimitSwitchClosed());
-   
     
     SmartDashboard.putNumber("Extension Current", extendingTalon.getStatorCurrent());
     SmartDashboard.putNumber("Extension PID", extendPID.calculate(getLeadScrewPos()));
+
   }
 }

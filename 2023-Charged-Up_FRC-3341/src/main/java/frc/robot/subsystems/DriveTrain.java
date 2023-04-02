@@ -19,8 +19,10 @@ import edu.wpi.first.wpilibj.AnalogAccelerometer;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.RobotContainer;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -41,9 +43,13 @@ public class DriveTrain extends SubsystemBase
   private final AHRS navX;
   public boolean logOverride = false;
   public DoubleLogEntry anglelog;
+
+  public boolean brakeOverride;
   
   public DriveTrain() 
   {
+    navX = new AHRS(SPI.Port.kMXP);
+
     leftDriveTalon.setNeutralMode(NeutralMode.Coast);
     rightDriveTalon.setNeutralMode(NeutralMode.Coast);
 
@@ -76,18 +82,18 @@ public class DriveTrain extends SubsystemBase
     //rightDriveTalon.enableCurrentLimit(true);
     
     // Week 4 Motion Magic
-   leftDriveTalon.config_kP(0, 3, 10);
+   leftDriveTalon.config_kP(0, 0.7, 10);
    leftDriveTalon.config_kI(0, 0, 10);
-   leftDriveTalon.config_kD(0, 0, 10);
-   leftDriveTalon.configMotionAcceleration(220, 10);
+   leftDriveTalon.config_kD(0, 0.05, 10);
+   leftDriveTalon.configMotionAcceleration(200, 900);
    leftDriveTalon.configMotionCruiseVelocity(400, 10);
    // If Left Velocity is 200
    // then Left Accel 120
 
-   rightDriveTalon.config_kP(0, 3, 10);
+   rightDriveTalon.config_kP(0, 0.7, 10);
    rightDriveTalon.config_kI(0, 0, 10);
-   rightDriveTalon.config_kD(0, 0, 10);
-   rightDriveTalon.configMotionAcceleration(200, 10);
+   rightDriveTalon.config_kD(0, 0.05, 10);
+   rightDriveTalon.configMotionAcceleration(200, 900);
    rightDriveTalon.configMotionCruiseVelocity(400, 10);
    // If  Right Velocity is 200
    // then Right Accel 90
@@ -97,11 +103,15 @@ public class DriveTrain extends SubsystemBase
   public void brake(){
     leftDriveTalon.setNeutralMode(NeutralMode.Brake);
     rightDriveTalon.setNeutralMode(NeutralMode.Brake);
+    _leftDriveVictor.setNeutralMode(NeutralMode.Brake);
+    _rightDriveVictor.setNeutralMode(NeutralMode.Brake);
   }
 
   public void coast(){
     leftDriveTalon.setNeutralMode(NeutralMode.Coast);
     rightDriveTalon.setNeutralMode(NeutralMode.Coast);
+    _leftDriveVictor.setNeutralMode(NeutralMode.Coast);
+    _rightDriveVictor.setNeutralMode(NeutralMode.Coast);
   }
 
   /**
@@ -110,7 +120,6 @@ public class DriveTrain extends SubsystemBase
   public static void setCoastMode() {
     leftDriveTalon.setNeutralMode(NeutralMode.Coast);
     rightDriveTalon.setNeutralMode(NeutralMode.Coast);
-    
   }
 
   public void tankDrive(double leftSpeed, double rightSpeed) {
@@ -166,8 +175,16 @@ public class DriveTrain extends SubsystemBase
     return (getDisplacementLeft() + getDisplacementRight()) / 2.0;
   }
 
+  public double getLeftSpeed(){
+    return leftDriveTalon.getSelectedSensorVelocity() * 10 * Constants.OperatorConstants.tickstoMeters;
+  }
+
+  public double getRightSpeed(){
+    return rightDriveTalon.getSelectedSensorVelocity() * 10 * Constants.OperatorConstants.tickstoMeters;
+  }
+
   public double getYAngle(){
-    return navX.getRoll();
+    return -1 * navX.getRoll();
   }
 
   public double getAngle(){
@@ -177,20 +194,42 @@ public class DriveTrain extends SubsystemBase
 
   @Override
   public void periodic() {
-    setCoastMode();
+    //setCoastMode();
 
     SmartDashboard.putNumber("MaxSpeed: ", Constants.Measurements.maxDriveSpeed);
-    double maxSpeed = SmartDashboard.getNumber("MaxSpeed: ", 0.4);
+    double maxSpeed = SmartDashboard.getNumber("MaxSpeed: ", 0.8);
     Constants.Measurements.maxDriveSpeed = maxSpeed;
 
-    tankDrive(Math.pow(Math.abs(RobotContainer.getJoy3().getY()), 1.8)*Math.signum(RobotContainer.getJoy3().getY())*-maxSpeed, Math.pow(Math.abs(RobotContainer.getJoy3().getThrottle()), 1.8)*Math.signum(RobotContainer.getJoy3().getThrottle())*-maxSpeed);
+    if(RobotContainer.getJoy3().getRawButton(2)) Constants.endBrakeMode = true;
+    else if(RobotContainer.getJoy3().getRawButton(1)) Constants.endBrakeMode = false;
+
+    // Left Drive Input - whether or not we use an Xbox
+    double leftDriveInput = RobotContainer.getJoy3().getY();
+    // Left Drive Function - Limits power based upon exponential function (e^x)
+    double leftDriveFunction = Math.pow(Math.abs(leftDriveInput), 1.2)*Math.signum(leftDriveInput)*-maxSpeed;
+
+    // Right Drive Input - whether or not we use an Xbox
+    double rightDriveInput = RobotContainer.getJoy3().getThrottle();
+    // Right Drive Function - Limits power based upon exponential function (e^x)
+    double rightDriveFunction =  Math.pow(Math.abs(rightDriveInput), 1.2)*Math.signum(rightDriveInput)*-maxSpeed;
+
+    if(!RobotContainer.getJoy3().getRawButton(Constants.ButtonMap.driveStraight)) this.tankDrive(leftDriveFunction, rightDriveFunction);
+
+    // tankDrive(Math.pow(Math.abs(RobotContainer.getJoy3().getY()), 1.2)*Math.signum(RobotContainer.getJoy3().getY())*-maxSpeed, Math.pow(Math.abs(RobotContainer.getJoy3().getThrottle()), 1.2)*Math.signum(RobotContainer.getJoy3().getThrottle())*-maxSpeed);
 
     SmartDashboard.putNumber("left motor current", leftDriveTalon.getStatorCurrent());
     SmartDashboard.putNumber("right motor current", rightDriveTalon.getStatorCurrent());
-    SmartDashboard.putNumber("right motor joystick", Math.pow(Math.abs(RobotContainer.getJoy3().getY()), 1.8)*Math.signum(RobotContainer.getJoy3().getY())*-maxSpeed);
-    SmartDashboard.putNumber("left motor joystick",  Math.pow(Math.abs(RobotContainer.getJoy3().getThrottle()), 1.8)*Math.signum(RobotContainer.getJoy3().getThrottle())*-maxSpeed);
+    SmartDashboard.putNumber("right motor joystick", Math.pow(Math.abs(RobotContainer.getJoy3().getY()), 1.2)*Math.signum(RobotContainer.getJoy3().getY())*-maxSpeed);
+    SmartDashboard.putNumber("left motor joystick",  Math.pow(Math.abs(RobotContainer.getJoy3().getThrottle()), 1.2)*Math.signum(RobotContainer.getJoy3().getThrottle())*-maxSpeed);
 
-
+    SmartDashboard.putNumber("Yaw Angle: ", getAngle());
+    SmartDashboard.putNumber("Y Angle: ", getYAngle());
+    SmartDashboard.putNumber("Displacement: ", getDisplacement());
+    SmartDashboard.putNumber("LeftSpeed: ", getLeftSpeed());
+    SmartDashboard.putNumber("RightSpeed: ", getRightSpeed());
+    SmartDashboard.putData("Chooser:", RobotContainer.getChooser());
+    SmartDashboard.putString("Current Command:", RobotContainer.getAutonomousCommand().toString());
+    SmartDashboard.putBoolean("Brake Mode: ", !Constants.endBrakeMode);
   }
 
   @Override

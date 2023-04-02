@@ -32,6 +32,7 @@ public class Limelight extends SubsystemBase {
   private static double CloseAprilTagDistance;
   private static double FarAprilTagDistance;
   private static double Distance_Test;
+  public static int offset = 4;
 
   // This gets the tx, or the horizontal offset
   // from the crosshair in degrees (-27.0 to 27.0)
@@ -69,7 +70,8 @@ public class Limelight extends SubsystemBase {
   }
 
   public static double get_tx() {
-    return txNum;
+    // We have offset since the camera is mounted on the left of the chassis
+    return txNum - offset;
   }
 
   public static double get_ty() {
@@ -108,32 +110,32 @@ public class Limelight extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
 
-     if (RobotContainer.getJoy2().getRawButtonPressed(1)) {
-      pipeline = 0; // reflective tape Button X on Xbox controller
+     if (RobotContainer.getJoy3().getRawButtonPressed(5)) {
+      pipeline = 0; // reflective tape LB
       changepipeline(pipeline);
 
-    } else if (RobotContainer.getJoy2().getRawButtonPressed(2)) {
+    } else if (RobotContainer.getJoy3().getRawButtonPressed(7)) {
       pipeline = 1; // cone
-      //changepipeline(pipeline);
-
-    } else if (RobotContainer.getJoy2().getRawButtonPressed(3)) {
-      pipeline = 2; // square
-      //changepipeline(pipeline);
-
-    } else if (RobotContainer.getJoy2().getRawButtonPressed(5)) {
-      pipeline = 3; // april tag 1 or 5 (LB)
       changepipeline(pipeline);
 
-    } else if (RobotContainer.getJoy2().getRawButtonPressed(6)) {
-      pipeline = 4; // april tag 2 or 6 (RB)
+    } //else if (RobotContainer.getJoy3().getRawButtonPressed(2)) {
+      //pipeline = 2; // square
+      //changepipeline(pipeline);}
+      
+      else if (RobotContainer.getJoy3().getRawButtonPressed(1)) {
+      pipeline = 3; // april tag 1 or 5 X
       changepipeline(pipeline);
 
-    } else if (RobotContainer.getJoy2().getRawButtonPressed(7)) {
-      pipeline = 5; // april tag 3 or 7 (LT)
+    } else if (RobotContainer.getJoy3().getRawButtonPressed(2)) {
+      pipeline = 4; // april tag 2 or 6 A
       changepipeline(pipeline);
 
-    } else if (RobotContainer.getJoy2().getRawButtonPressed(8)) {
-      pipeline = 6; // april tag 4 or 8 (RT)
+    } else if (RobotContainer.getJoy3().getRawButtonPressed(3)) {
+      pipeline = 5; // april tag 3 or 7 B
+      changepipeline(pipeline);
+
+    } else if (RobotContainer.getJoy3().getRawButtonPressed(4)) {
+      pipeline = 6; // april tag 4 or 8 Y
       changepipeline(pipeline);
     } 
 
@@ -234,6 +236,7 @@ public class Limelight extends SubsystemBase {
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0);
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta").getDouble(0);
+
     
   }
 }

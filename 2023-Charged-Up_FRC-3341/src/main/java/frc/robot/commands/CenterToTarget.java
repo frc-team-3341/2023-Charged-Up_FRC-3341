@@ -51,11 +51,11 @@ public class CenterToTarget extends CommandBase {
           the slope of the change in error 
 
     */
-    Tpid = new PIDController(0.0093825*2, 0.0, 0.0);
-    Fpid = new PIDController(0.0093825*2, 0.0, 0.0);
+    Tpid = new PIDController(0.0093825*2, 0.0001, 0.0);
+    Fpid = new PIDController(0.0093825*2, 0.0001, 0.0);
 
-    Tpid.setTolerance(4);
-    Fpid.setTolerance(4);
+    Tpid.setTolerance(1);
+    Fpid.setTolerance(1);
 
     addRequirements(lime, dt);
   }
@@ -77,7 +77,7 @@ public class CenterToTarget extends CommandBase {
     // You need this because it keeps calling the value instead of only once because the robot is moving
     centerx = Limelight.get_tx();
     centery = Limelight.get_ty();
-    TurnSpeed = Tpid.calculate(centerx) * 0.7;
+    TurnSpeed = Tpid.calculate(centerx) * 0.9;
     FowardSpeed = Fpid.calculate(Limelight.getDistance_Test() * 0.7);
     
     /* 

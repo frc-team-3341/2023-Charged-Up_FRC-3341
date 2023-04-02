@@ -20,7 +20,6 @@ public class AutoBalance extends CommandBase {
   double maxSpeed;
   double balanceDistance;
   double angleThreshhold;
-  double initialYaw;
   double waitTime;
   boolean nearTop = false;
   boolean isbalanced =false;
@@ -39,8 +38,8 @@ public class AutoBalance extends CommandBase {
   public AutoBalance( DriveTrain dt) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.dt = dt;
-    pid = new PIDController(0.2, 0.4, 0.4);
-    yawPID = new PIDController(0.02, 0, 0);
+    pid = new PIDController(0.3, 0.4*20, 0.4);
+    yawPID = new PIDController(0.03, 0, 0);
     angleThreshhold = Constants.OperatorConstants.angleThreshhold;
     timer = new Timer();
     executeTimer = new Timer();
@@ -58,8 +57,8 @@ public class AutoBalance extends CommandBase {
     balanceTime.start();
     executeTimer.start();
 
-    maxSpeed = 0.6;
-    balanceDistance = 1.25;
+    maxSpeed = 0.7;
+    balanceDistance = 1.23;
     waitTime = 0.6;
     isbalanced = false;
   }
@@ -67,14 +66,14 @@ public class AutoBalance extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(dt.getDisplacement() > 1) maxSpeed = 0.4;
-    else if(dt.getDisplacement() > .5) maxSpeed = 0.45;
+    if(dt.getDisplacement() > 1) maxSpeed = 0.7;
+    else if(dt.getDisplacement() > .5) maxSpeed = 0.7;
 
     currentAngle = dt.getYAngle();
     deltaAngle = (currentAngle - previousAngle) / executeTimer.get();
 
     double bootlegPID = 2 * (balanceDistance - dt.getDisplacement());
-    double pidSpeed = Math.max(Math.abs(bootlegPID), Math.abs(pid.calculate(dt.getDisplacement())));
+    double pidSpeed = Math.max(bootlegPID, Math.abs(pid.calculate(dt.getDisplacement())));
     double speed = Math.min(pidSpeed, maxSpeed) * Math.abs(pidSpeed)/pidSpeed;
     double turningSpeed = yawPID.calculate(dt.getAngle());
     double minSpeed = 0.27 * Math.abs(dt.getYAngle())/dt.getYAngle();
@@ -88,11 +87,13 @@ public class AutoBalance extends CommandBase {
     SmartDashboard.putNumber("Balancing Timer: ", balanceTime.get());
     SmartDashboard.putNumber("Delta Angle: ", deltaAngle);
     SmartDashboard.putBoolean("Balanced: ", isbalanced);
+    SmartDashboard.putString("Current Command: ", "AutoBalance");
 
-    if(10 > Math.abs(dt.getYAngle())) pid.reset();
+    if(2*angleThreshhold > Math.abs(dt.getYAngle())) pid.reset();
 
     if(!isbalanced){
       if(dt.getDisplacement() > 1 && angleThreshhold > Math.abs(dt.getYAngle())){
+        SmartDashboard.putNumber("Angle at Reset: ", dt.getYAngle());
         isbalanced = true;
         timer.reset();
         dt.brake();

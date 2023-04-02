@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Arm;
@@ -41,13 +42,16 @@ public class Extend extends CommandBase {
   @Override
   public void execute() {
     // Extends the arm with some amount of power multiplied by a direction
+    //arm.configSoftLimits(false);
     arm.extendArm(Constants.ButtonMap.extensionPower*direction);
+    SmartDashboard.putString("Current Command: ", "Extend");
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     // Stops the arm when interrupted
+    arm.configSoftLimits(true);
     arm.extendArm(0);
   }
 
@@ -59,6 +63,10 @@ public class Extend extends CommandBase {
      and the arm's position is equal to or less than the 
      desired position, then stop.
     */
+    if(arm.fullyExtended() && position != 0) return true;
+
+    if((arm.fullyRetracted() && position == 0)) return true;
+
     if (direction < 0 && position >= arm.getLeadScrewPos()) {
       return true;
     }
@@ -67,7 +75,8 @@ public class Extend extends CommandBase {
      and the arm's position is equal to or greater than the 
      desired position, then stop.
     */
-    if (direction > 0 && position <= arm.getLeadScrewPos()) {
+    if (direction > 0 && 
+    position <= arm.getLeadScrewPos()) {
       return true;
     } else {
       // Continue the motion

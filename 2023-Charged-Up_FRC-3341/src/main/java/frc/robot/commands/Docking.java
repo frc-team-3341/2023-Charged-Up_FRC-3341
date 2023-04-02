@@ -15,6 +15,6 @@ public class Docking extends SequentialCommandGroup {
   public Docking(DriveTrain dt) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new AutoDrive(dt, 2.0), new AutoBalance(dt));
+    addCommands(new AutoDrive(dt, 2.0, 0.87, false, true), new AutoBalance(dt));
   }
 }

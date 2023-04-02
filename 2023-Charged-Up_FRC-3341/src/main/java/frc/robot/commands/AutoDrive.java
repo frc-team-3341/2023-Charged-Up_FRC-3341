@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import com.ctre.phoenix.sensors.Pigeon2;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -14,15 +16,33 @@ public class AutoDrive extends CommandBase {
   /** Creates a new AutoDrive. */
   DriveTrain dt;
   PIDController pid;
+  PIDController yawPID;
   double speed;
+  double minSpeed;
   double distance;
+  boolean pidDrive;
+  boolean finishCommand;
 
-  public AutoDrive(DriveTrain dt, double distance) {
+  /**
+   * Auto Drives the chassis to a set position (meters)
+   * @param dt - DriveTrain
+   * @param distance - Distance Travelled
+   * @param speed - Power at which the robot drives
+   * @param pidDrive - Whether or not to use PID Controller
+   * @param finishCommand - Whether or not to not finish the command
+   * @apiNote For finishCommand: true - Command does not finish
+   * @apiNote For finishCommand: false - Command does finish
+   */
+  public AutoDrive(DriveTrain dt, double distance, double speed, boolean pidDrive, boolean finishCommand) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.dt = dt;
-    pid = new PIDController(0.4, 0, 0);
-    speed = 0.55;
+    pid = new PIDController(0.6, 0, 0);
+    yawPID = new PIDController(0.02, 0, 0);
+    this.speed = speed;
+    minSpeed = 0.35;
     this.distance = distance;
+    this.pidDrive = pidDrive;
+    this.finishCommand = finishCommand;
     addRequirements(dt);
   }
 
@@ -30,14 +50,22 @@ public class AutoDrive extends CommandBase {
   @Override
   public void initialize() {
     dt.resetEncoders();
-    pid.setSetpoint(distance);
+    pid.setSetpoint(dt.getDisplacement() + distance);
+    yawPID.setSetpoint(dt.getAngle());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //speed = pid.calculate(dt.getDisplacement());
-    dt.tankDrive(speed, speed);
+    if(pidDrive) {
+      speed = pid.calculate(dt.getDisplacement());
+      if(Math.abs(speed) < minSpeed) speed = minSpeed * Math.signum(speed);
+      double turningSpeed = yawPID.calculate(dt.getAngle());
+      dt.tankDrive(speed + turningSpeed, speed - turningSpeed);
+    }else{
+      dt.tankDrive(speed, speed);
+    }
+    SmartDashboard.putString("Current Command: ", "AutoDrive");
   }
 
   // Called once the command ends or is interrupted.
@@ -49,6 +77,13 @@ public class AutoDrive extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return 0.1 >= Math.abs(distance - dt.getDisplacement()) || Constants.OperatorConstants.angleThreshhold + 3 <= Math.abs(dt.getYAngle());
+    if(!finishCommand) return false;
+    if (pidDrive) {
+     return 0.15 >= Math.abs(distance - dt.getDisplacement()) || Constants.OperatorConstants.angleThreshhold + 3 <= Math.abs(dt.getYAngle());
+    } else if (!pidDrive) {
+      return (distance >= Math.abs(dt.getDisplacement()));
+    } else {
+      return false;
+    }
   }
 }
