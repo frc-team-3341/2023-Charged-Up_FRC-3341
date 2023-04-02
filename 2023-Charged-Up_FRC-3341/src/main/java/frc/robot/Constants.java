@@ -80,12 +80,12 @@ public final class Constants {
 
     public static final double upperAngleBound = 105; // Maximum pos of Arm in degrees, when stowed
     public static final double lowerScrewBound = 1.0; // Lower bound for motion of screw (inches)
-    public static final double upperScrewBound = 16.67; // Upper bound for motion of screw (inches)
+    public static final double upperScrewBound = 18.5; // Upper bound for motion of screw (inches)
     public static final double fullyExtendedLeadScrewThreshold = 5.0;
     public static final double degreesToTicks = 4096.0/360.0;
     public static final double ticksToInches = threadLength/4096.0; //4096 ticks per rotation times threadLength
-    public static final double maxExtension = 16.67; //in inches
-    public static final double baseExtendPower = 0.8; //Percent of full power/100
+    public static final double maxExtension = 18.5; //in inches
+    public static final double baseExtendPower = 1; //Percent of full power/100
     public static final double extLimitPower = 0.4; //Percent of full power/100. Power when extention is close to to limit switch
 
     public static final double clawAngleLimit = 245.0; // Limit for servo movement (degrees)
